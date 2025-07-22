@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Admin",
+    "description": "Sitenin tam yetkili yöneticisi."
+  },
+  {
+    "id": 2,
+    "name": "User",
+    "description": "Standart site kullanıcısı."
+  }
+]

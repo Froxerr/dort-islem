@@ -1,0 +1,12 @@
+[
+  { "level": 1, "xp_required_for_next": 100 },
+  { "level": 2, "xp_required_for_next": 250 },
+  { "level": 3, "xp_required_for_next": 450 },
+  { "level": 4, "xp_required_for_next": 700 },
+  { "level": 5, "xp_required_for_next": 1000 },
+  { "level": 6, "xp_required_for_next": 1350 },
+  { "level": 7, "xp_required_for_next": 1750 },
+  { "level": 8, "xp_required_for_next": 2200 },
+  { "level": 9, "xp_required_for_next": 2700 },
+  { "level": 10, "xp_required_for_next": 3250 }
+]

@@ -1,0 +1,17 @@
+[
+  {
+      "name": "Kaşif Ruhu",
+      "description": "Maceraya ilk adımını attın ve ilk testini tamamladın!",
+      "icon_filename": "badge_first_step.svg"
+  },
+  {
+      "name": "Toplama Ustası",
+      "description": "Toplama işleminde 5000 puana ulaştın.",
+      "icon_filename": "badge_addition_master.svg"
+  },
+  {
+      "name": "Karınca Çalışkanlığı",
+      "description": "Toplamda 100 test tamamladın.",
+      "icon_filename": "badge_ant_worker.svg"
+  }
+]

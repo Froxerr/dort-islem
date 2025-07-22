@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Kolay",
+    "xp_multiplier": 1.00
+  },
+  {
+    "id": 2,
+    "name": "Orta",
+    "xp_multiplier": 1.50
+  },
+  {
+    "id": 3,
+    "name": "Zor",
+    "xp_multiplier": 2.00
+  },
+  {
+    "id": 4,
+    "name": "Deha",
+    "xp_multiplier": 3.00
+  }
+]

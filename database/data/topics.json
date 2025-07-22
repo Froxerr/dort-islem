@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Toplama",
+    "slug": "toplama",
+    "description": "Sayıları bir araya getirme işlemi.",
+    "icon_path": "icons/plus.png",
+    "is_active": true
+  },
+  {
+    "name": "Çıkarma",
+    "slug": "cikarma",
+    "description": "Bir sayıdan diğerini eksiltme işlemi.",
+    "icon_path": "icons/minus.png",
+    "is_active": true
+  },
+  {
+    "name": "Çarpma",
+    "slug": "carpma",
+    "description": "Tekrarlı toplama işlemi.",
+    "icon_path": "icons/multiply.png",
+    "is_active": true
+  },
+  {
+    "name": "Bölme",
+    "slug": "bolme",
+    "description": "Bir sayıyı eşit parçalara ayırma işlemi.",
+    "icon_path": "icons/divide.png",
+    "is_active": true
+  }
+]
