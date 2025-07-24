@@ -13,8 +13,13 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'level',
-        'xp'
+        'xp',
+        'level'
+    ];
+
+    protected $attributes = [
+        'xp' => 0,
+        'level' => 1
     ];
 
     protected $hidden = [

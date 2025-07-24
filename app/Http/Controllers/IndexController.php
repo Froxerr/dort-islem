@@ -9,6 +9,10 @@ class IndexController extends Controller
 {
     public function index()
     {
+        if (auth()->check()) {
+            return redirect()->route('main');
+        }
+
         $activeTopics = Topic::where('is_active', 1)
             ->select('id', 'name', 'icon_path')
             ->get()

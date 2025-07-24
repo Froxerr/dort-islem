@@ -21,18 +21,25 @@ class QuizSession extends Model
         'correct_answers'
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $casts = [
+        'score' => 'integer',
+        'xp_earned' => 'integer',
+        'total_questions' => 'integer',
+        'correct_answers' => 'integer'
+    ];
 
     public function topic()
     {
         return $this->belongsTo(Topic::class);
     }
 
-    public function difficulty_level()
+    public function difficultyLevel()
     {
         return $this->belongsTo(DifficultyLevel::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
