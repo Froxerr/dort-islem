@@ -377,16 +377,53 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(responseData.message || 'Quiz session kaydedilemedi');
             }
 
+            // Bildirimleri kontrol et ve göster
+            console.log('Bildirimler kontrol ediliyor:', responseData.notifications);
+            
+            if (responseData.notifications && responseData.notifications.length > 0) {
+                console.log('Bildirimler bulundu:', responseData.notifications.length);
+                
+                // Bildirimleri sıraya koy
+                const notifications = [...responseData.notifications];
+                
+                // İlk bildirimi hemen göster
+                showNextNotification();
+
+                function showNextNotification() {
+                    if (notifications.length === 0) return;
+                    
+                    const notification = notifications.shift();
+                    console.log('İşlenen bildirim:', notification);
+                    
+                    if (notification.type === 'App\\Notifications\\LevelUpEarned') {
+                        console.log('Level up bildirimi gösteriliyor:', notification);
+                        showLevelUpNotification(notification);
+                    } 
+                    else if (notification.type === 'App\\Notifications\\BadgeEarned') {
+                        console.log('Rozet bildirimi gösteriliyor:', notification);
+                        showBadgeNotification(notification);
+                    }
+
+                    // Bir sonraki bildirimi göstermek için event dinleyicisi ekle
+                    const modal = document.querySelector('.achievement-modal');
+                    if (modal) {
+                        const continueBtn = modal.querySelector('.continue-btn');
+                        if (continueBtn) {
+                            const originalClick = continueBtn.onclick;
+                            continueBtn.onclick = function(e) {
+                                if (originalClick) originalClick.call(this, e);
+                                setTimeout(showNextNotification, 500);
+                            };
+                        }
+                    }
+                }
+            } else {
+                console.log('Bildirim bulunamadı');
+            }
+
             console.log('Quiz session başarıyla kaydedildi:', responseData);
         } catch (error) {
-            console.error('Quiz session kaydetme hatası:', {
-                error: error.message,
-                selectedTopicId,
-                selectedLevelId,
-                scoreData,
-                correctCount,
-                wrongCount
-            });
+            console.error('Quiz session kaydetme hatası:', error);
             throw error;
         }
     }
@@ -417,6 +454,44 @@ document.addEventListener('DOMContentLoaded', function() {
             checkAnswer();
         }
     });
+
+    function showCorrectEffect() {
+        // Body ve container için flash efekti
+        document.body.classList.add('correct-flash');
+        document.querySelector('.main-container').classList.add('correct-flash');
+        document.querySelector('.calculation-area').classList.add('correct-flash');
+
+        // Doğru sayacı için parlama efekti
+        const correctCounter = document.querySelector('.correct-answers');
+        correctCounter.classList.add('glow');
+
+        // Efektleri temizle
+        setTimeout(() => {
+            document.body.classList.remove('correct-flash');
+            document.querySelector('.main-container').classList.remove('correct-flash');
+            document.querySelector('.calculation-area').classList.remove('correct-flash');
+            correctCounter.classList.remove('glow');
+        }, 500);
+    }
+
+    function showWrongEffect() {
+        // Body ve container için flash efekti
+        document.body.classList.add('wrong-flash');
+        document.querySelector('.main-container').classList.add('wrong-flash');
+        document.querySelector('.calculation-area').classList.add('wrong-flash');
+
+        // Yanlış sayacı için parlama efekti
+        const wrongCounter = document.querySelector('.wrong-answers');
+        wrongCounter.classList.add('glow');
+
+        // Efektleri temizle
+        setTimeout(() => {
+            document.body.classList.remove('wrong-flash');
+            document.querySelector('.main-container').classList.remove('wrong-flash');
+            document.querySelector('.calculation-area').classList.remove('wrong-flash');
+            wrongCounter.classList.remove('glow');
+        }, 500);
+    }
 
     function checkAnswer() {
         if (!isGameActive) return;
@@ -451,11 +526,13 @@ document.addEventListener('DOMContentLoaded', function() {
             correctCount++;
             correctCountDisplay.textContent = correctCount;
             speechBubble.textContent = 'Harika! Devam et!';
+            showCorrectEffect();
             generateQuestion(selectedTopicId, selectedLevelId);
         } else {
             wrongCount++;
             wrongCountDisplay.textContent = wrongCount;
             speechBubble.textContent = 'Tekrar dene!';
+            showWrongEffect();
             answerInput.value = '';
             answerInput.focus();
         }

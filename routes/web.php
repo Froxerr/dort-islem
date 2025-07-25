@@ -21,4 +21,12 @@ Route::get('/main', [MainController::class, 'main'])->name('main');
 
 // Quiz session route
 Route::post('/quiz-sessions', [QuizSessionController::class, 'store'])->name('quiz-sessions.store');
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+
+// Profil Hub ve ilgili rotalar
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile-hub', [ProfileController::class, 'hub'])->name('profile.hub');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.details');
+    Route::get('/profile/achievements', [ProfileController::class, 'achievements'])->name('profile.achievements');
+    Route::get('/profile/history', [ProfileController::class, 'history'])->name('profile.history');
+    Route::get('/profile/settings', [ProfileController::class, 'settings'])->name('profile.settings');
+});

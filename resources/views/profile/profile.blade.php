@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-<a href="{{ route('main') }}" class="back-button">
+<a href="{{ route('profile.hub') }}" class="back-button">
     <i class="fas fa-arrow-left"></i>
 </a>
 
@@ -47,7 +47,7 @@
             <div class="levelup-animation">
                 <div class="levelup-shine"></div>
             </div>
-            <img src="{{ asset('assets/img/trees/level_' . floor($user->level/10) . '.png') }}" 
+            <img src="{{ asset('assets/img/trees/level_' . min(9, floor($user->level/10)) . '.png') }}" 
                  alt="Seviye Ağacı" 
                  class="tree-image">
         </div>

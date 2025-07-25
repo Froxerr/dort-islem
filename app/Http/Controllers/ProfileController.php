@@ -9,9 +9,16 @@ use App\Models\User;
 use App\Models\QuizSession;
 use App\Models\Badge;
 use Illuminate\Support\Facades\Log;
+use App\Models\Topic;
+use App\Models\Achievement;
 
 class ProfileController extends Controller
 {
+    public function hub()
+    {
+        return view('profile.profile-hub');
+    }
+
     public function show()
     {
         try {
@@ -81,11 +88,11 @@ class ProfileController extends Controller
                 'new_badges' => $userBadges->where('is_new', 1)->count()
             ]);
 
-            // Son aktiviteleri al (son 5 quiz)
+            // Son aktiviteleri al (son 2 quiz)
             $recentActivities = QuizSession::with(['topic', 'difficultyLevel'])
                 ->where('user_id', $user->id)
                 ->orderBy('created_at', 'desc')
-                ->limit(5)
+                ->limit(2) // 5'ten 2'ye değiştirildi
                 ->get()
                 ->map(function ($session) {
                     $topicName = $session->topic ? $session->topic->name : 'Bilinmeyen Konu';
@@ -108,7 +115,7 @@ class ProfileController extends Controller
                 'average_accuracy' => $averageAccuracy
             ]);
 
-            return view('profile', compact(
+            return view('profile.profile', compact(
                 'user',
                 'xpProgressPercentage',
                 'xpNeeded',
@@ -131,5 +138,239 @@ class ProfileController extends Controller
                 ->back()
                 ->with('error', 'Profil bilgileri yüklenirken bir hata oluştu.');
         }
+    }
+
+    public function achievements()
+    {
+        Log::info('=== ACHIEVEMENTS METODU BAŞLADI ===');
+        
+        $user = auth()->user();
+        Log::info('Kullanıcı bilgileri:', [
+            'user_id' => $user->id,
+            'username' => $user->username,
+            'level' => $user->level,
+            'xp' => $user->xp
+        ]);
+        
+        $topics = Topic::all();
+        Log::info('Konular yüklendi:', [
+            'topic_count' => $topics->count(),
+            'topics' => $topics->map(function($topic) {
+                return [
+                    'id' => $topic->id,
+                    'name' => $topic->name
+                ];
+            })->toArray()
+        ]);
+        
+        Log::info('=== ROZETLER YÜKLENIYOR ===');
+        // Rozetleri getir - Eager loading ile performans iyileştirmesi
+        $badges = Badge::with(['achievement', 'triggers', 'users' => function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        }])
+        ->get();
+        
+        Log::info('Rozetler yüklendi:', [
+            'badge_count' => $badges->count(),
+            'badges' => $badges->map(function($badge) {
+                $trigger = $badge->triggers->first();
+                return [
+                    'id' => $badge->id,
+                    'name' => $badge->name,
+                    'topic_id' => $trigger ? $trigger->topic_id : null,
+                    'topic_name' => $trigger && $trigger->topic ? $trigger->topic->name : null
+                ];
+            })->toArray()
+        ]);
+        
+        Log::info('=== ROZETLER İŞLENİYOR ===');
+        $badges = $badges->map(function ($badge) use ($user) {
+            // Kullanıcının bu rozeti kazanıp kazanmadığını kontrol et
+            $badge->is_earned = $badge->users->isNotEmpty();
+            
+            $trigger = $badge->triggers->first();
+            Log::info("Rozet işleniyor: {$badge->name}", [
+                'badge_id' => $badge->id,
+                'topic_id' => $trigger ? $trigger->topic_id : null,
+                'topic_name' => $trigger && $trigger->topic ? $trigger->topic->name : null,
+                'is_earned' => $badge->is_earned,
+                'has_triggers' => $badge->triggers->isNotEmpty()
+            ]);
+            
+            // Rozet için ilerlemeyi hesapla
+            if ($trigger) {
+                Log::info("Rozet tetikleyicisi bulundu:", [
+                    'badge_name' => $badge->name,
+                    'trigger_type' => $trigger->trigger_type,
+                    'required_score' => $trigger->required_score,
+                    'required_count' => $trigger->required_count,
+                    'topic_id' => $trigger->topic_id
+                ]);
+                
+                switch ($trigger->trigger_type) {
+                    case 'required_score':
+                        $bestScore = QuizSession::where('user_id', $user->id)
+                            ->when($trigger->topic_id, function($query) use ($trigger) {
+                                return $query->where('topic_id', $trigger->topic_id);
+                            })
+                            ->max('score');
+                        $badge->progress = round(min(100, ($bestScore / $trigger->required_score) * 100));
+                        Log::info("Skor bazlı ilerleme hesaplandı:", [
+                            'best_score' => $bestScore,
+                            'required_score' => $trigger->required_score,
+                            'progress' => $badge->progress,
+                            'topic_id' => $trigger->topic_id
+                        ]);
+                        break;
+                        
+                    case 'required_count':
+                        $completedCount = QuizSession::where('user_id', $user->id)
+                            ->when($trigger->topic_id, function($query) use ($trigger) {
+                                return $query->where('topic_id', $trigger->topic_id);
+                            })
+                            ->when($trigger->required_score, function($query) use ($trigger) {
+                                return $query->where('score', '>=', $trigger->required_score);
+                            })
+                            ->count();
+                        $badge->progress = round(min(100, ($completedCount / $trigger->required_count) * 100));
+                        Log::info("Sayı bazlı ilerleme hesaplandı:", [
+                            'completed_count' => $completedCount,
+                            'required_count' => $trigger->required_count,
+                            'progress' => $badge->progress,
+                            'topic_id' => $trigger->topic_id
+                        ]);
+                        break;
+                        
+                    case 'streak':
+                        $query = QuizSession::where('user_id', $user->id)
+                            ->when($trigger->topic_id, function($query) use ($trigger) {
+                                return $query->where('topic_id', $trigger->topic_id);
+                            });
+                            
+                        if ($trigger->required_score) {
+                            $query->where('score', '>=', $trigger->required_score);
+                        }
+                        
+                        $currentStreak = $query->orderBy('created_at', 'desc')
+                            ->limit($trigger->required_count)
+                            ->count();
+                            
+                        $badge->progress = round(min(100, ($currentStreak / $trigger->required_count) * 100));
+                        Log::info("Seri bazlı ilerleme hesaplandı:", [
+                            'current_streak' => $currentStreak,
+                            'required_count' => $trigger->required_count,
+                            'required_score' => $trigger->required_score,
+                            'progress' => $badge->progress,
+                            'topic_id' => $trigger->topic_id
+                        ]);
+                        break;
+                        
+                    default:
+                        $badge->progress = 0;
+                        Log::warning("Bilinmeyen tetikleyici tipi:", [
+                            'trigger_type' => $trigger->trigger_type
+                        ]);
+                }
+            } else {
+                $badge->progress = $badge->is_earned ? 100 : 0;
+                Log::info("Tetikleyici olmayan rozet işlendi:", [
+                    'badge_name' => $badge->name,
+                    'progress' => $badge->progress
+                ]);
+            }
+            
+            return $badge;
+        });
+        
+        Log::info('=== BAŞARIMLAR YÜKLENIYOR ===');
+        // Başarımları getir - Eager loading ile performans iyileştirmesi
+        $achievements = Achievement::with(['badges', 'badges.users' => function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        }])->get();
+        
+        Log::info('Başarımlar yüklendi:', [
+            'achievement_count' => $achievements->count(),
+            'achievements' => $achievements->map(function($achievement) {
+                return [
+                    'id' => $achievement->id,
+                    'name' => $achievement->name,
+                    'badge_count' => $achievement->badges->count()
+                ];
+            })->toArray()
+        ]);
+        
+        Log::info('=== BAŞARIMLAR İŞLENİYOR ===');
+        $achievements = $achievements->map(function ($achievement) use ($user) {
+            // Başarımın durumunu kontrol et
+            $progressInfo = $achievement->checkProgress($user);
+            
+            $achievement->is_completed = $progressInfo['is_completed'];
+            $achievement->progress = $progressInfo['progress'];
+            
+            Log::info("Başarım işlendi: {$achievement->name}", [
+                'achievement_id' => $achievement->id,
+                'requirement_type' => $achievement->requirement_type,
+                'current_value' => $progressInfo['current_value'],
+                'required_value' => $progressInfo['required_value'],
+                'is_completed' => $achievement->is_completed,
+                'progress' => $achievement->progress,
+                'status' => $achievement->is_completed ? 'completed' : 'in-progress'
+            ]);
+            
+            return $achievement;
+        });
+        
+        Log::info('=== İSTATİSTİKLER HESAPLANIYOR ===');
+        // İstatistikleri tek sorguda hesapla
+        $stats = DB::table('badges')
+            ->selectRaw('COUNT(*) as total_badges')
+            ->selectRaw('(SELECT COUNT(*) FROM user_badges WHERE user_id = ?) as earned_badges', [$user->id])
+            ->first();
+            
+        $completionRate = $stats->total_badges > 0 
+            ? round(($stats->earned_badges / $stats->total_badges) * 100)
+            : 0;
+            
+        Log::info('İstatistikler hesaplandı:', [
+            'total_badges' => $stats->total_badges,
+            'earned_badges' => $stats->earned_badges,
+            'completion_rate' => $completionRate,
+            'total_xp' => $user->xp
+        ]);
+        
+        Log::info('=== VIEW RENDER EDİLİYOR ===');
+        Log::info('View parametreleri:', [
+            'badge_count' => $badges->count(),
+            'achievement_count' => $achievements->count(),
+            'topic_count' => $topics->count(),
+            'total_badges' => $stats->total_badges,
+            'earned_badges' => $stats->earned_badges,
+            'total_xp' => $user->xp,
+            'completion_rate' => $completionRate
+        ]);
+        
+        return view('profile.profile-achievements', [
+            'badges' => $badges,
+            'achievements' => $achievements,
+            'topics' => $topics,
+            'totalBadges' => $stats->total_badges,
+            'earnedBadges' => $stats->earned_badges,
+            'totalXP' => $user->xp,
+            'completionRate' => $completionRate
+        ]);
+    }
+
+    public function history()
+    {
+        // Şimdilik basit bir yönlendirme
+        return redirect()->route('profile.details')
+            ->with('info', 'Bu özellik yakında kullanıma sunulacak!');
+    }
+
+    public function settings()
+    {
+        // Şimdilik basit bir yönlendirme
+        return redirect()->route('profile.details')
+            ->with('info', 'Bu özellik yakında kullanıma sunulacak!');
     }
 }

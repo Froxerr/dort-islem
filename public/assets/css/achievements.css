@@ -1,0 +1,254 @@
+.achievement-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.7);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    opacity: 0;
+    animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    z-index: 1000;
+}
+
+.achievement-icon {
+    width: 120px;
+    height: 120px;
+    margin: -80px auto 20px;
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: white;
+    box-shadow: 0 8px 16px rgba(255, 165, 0, 0.3);
+    animation: iconBounce 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.achievement-icon img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.achievement-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 20px 0 10px;
+    opacity: 0;
+    animation: fadeInUp 0.5s 0.3s forwards;
+}
+
+.achievement-description {
+    color: #7f8c8d;
+    margin-bottom: 25px;
+    opacity: 0;
+    animation: fadeInUp 0.5s 0.4s forwards;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+    opacity: 0;
+    animation: fadeInUp 0.5s 0.5s forwards;
+}
+
+.stat-item {
+    background: rgba(236, 240, 241, 0.8);
+    padding: 15px;
+    border-radius: 12px;
+    transition: transform 0.3s;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #95a5a6;
+    text-transform: uppercase;
+}
+
+.progress-bar {
+    background: #ecf0f1;
+    height: 8px;
+    border-radius: 4px;
+    margin: 20px 0;
+    overflow: hidden;
+    opacity: 0;
+    animation: fadeInUp 0.5s 0.6s forwards;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+    width: 0;
+    border-radius: 4px;
+    transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.action-buttons {
+    margin-top: 25px;
+    opacity: 0;
+    animation: fadeInUp 0.5s 0.7s forwards;
+}
+
+.continue-btn {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.continue-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.share-btn {
+    background: none;
+    border: none;
+    color: #7f8c8d;
+    margin-left: 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.share-btn:hover {
+    color: #2c3e50;
+}
+
+.achievement-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%);
+    animation: glowPulse 2s infinite;
+    z-index: -1;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    z-index: 999;
+}
+
+/* Level Up Modal Styles */
+.level-up-modal .achievement-icon {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+    box-shadow: 0 8px 16px rgba(76, 175, 80, 0.3);
+}
+
+.level-up-modal .progress-fill {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+}
+
+.level-up-modal .continue-btn {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+}
+
+.level-up-modal .achievement-glow {
+    background: radial-gradient(circle, rgba(76,175,80,0.2) 0%, rgba(76,175,80,0) 70%);
+}
+
+/* Badge Modal Styles */
+.badge-modal .achievement-icon {
+    background: linear-gradient(45deg, #FF9800, #FFC107);
+    box-shadow: 0 8px 16px rgba(255, 152, 0, 0.3);
+}
+
+.badge-modal .progress-fill {
+    background: linear-gradient(45deg, #FF9800, #FFC107);
+}
+
+.badge-modal .continue-btn {
+    background: linear-gradient(45deg, #FF9800, #FFC107);
+}
+
+.badge-modal .achievement-glow {
+    background: radial-gradient(circle, rgba(255,152,0,0.2) 0%, rgba(255,152,0,0) 70%);
+}
+
+@keyframes modalPop {
+    0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes iconBounce {
+    0% {
+        transform: scale(0.3);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glowPulse {
+    0% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+} 

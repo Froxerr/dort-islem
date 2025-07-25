@@ -1,17 +1,28 @@
 body {
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
-    padding: 2rem 0;
+    margin: 0;
+    overflow-x: hidden; /* Yatay scroll'u engelle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+html {
+    height: 100%;
+    overflow-y: auto; /* Dikey scroll sadece gerektiğinde */
 }
 
 .profile-container {
-    position: relative;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    min-height: 80vh;
     padding: 2rem;
     gap: 2rem;
     max-width: 1400px;
-    margin: 0 auto;
+    width: 100%;
 }
 
 .profile-container::before {
@@ -37,6 +48,10 @@ body {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     z-index: 1;
+}
+
+.right-section.profile-section {
+    overflow: hidden; /* Taşan içeriği gizle */
 }
 
 .profile-section:hover {
@@ -207,6 +222,27 @@ body {
 
 .activities {
     margin-top: 2rem;
+    max-height: 300px; /* Sabit yükseklik */
+    z-index: -2;
+}
+
+/* Scroll bar stilini özelleştir */
+.activities::-webkit-scrollbar {
+    width: 8px;
+}
+
+.activities::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+}
+
+.activities::-webkit-scrollbar-thumb {
+    background: rgba(76, 175, 80, 0.3);
+    border-radius: 4px;
+}
+
+.activities::-webkit-scrollbar-thumb:hover {
+    background: rgba(76, 175, 80, 0.5);
 }
 
 .activity-item {

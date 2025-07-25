@@ -11,18 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('badges', function (Blueprint $table) {
+        Schema::create('topics', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->string('description');
-            $table->string('icon_filename',255);
-            $table->string('type',50);
+            $table->string('icon_path');
+            $table->tinyInteger('is_active')->default(1);
             $table->timestamps();
-            $table->foreignId('achievement_id')
-                ->nullable()
-                ->constrained('achievements')
-                ->nullOnDelete();
-
         });
     }
 
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('badges');
+        Schema::dropIfExists('topics');
     }
 };

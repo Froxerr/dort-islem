@@ -2,28 +2,26 @@
 
 namespace Database\Seeders;
 
+use App\Models\UserAchievement;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Badge;
 
-class BadgeSeeder extends Seeder
+class UserAchievementSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $jsonData = $this->getDecode("badges");
+        $jsonData = $this->getDecode("user_achievements");
         foreach ($jsonData as $data)
         {
-            Badge::create([
-                'name' => $data->name,
-                'description' => $data->description,
-                'icon_filename' => $data->icon_filename,
-                'type' => $data->type,
-                'achievement_id' => $data->achievement_id ?? null,
-                'created_at' => $data->created_at ?? null,
-                'updated_at' => $data->updated_at ?? null,
+            UserAchievement::create([
+                'progress' => $data->progress,
+                'completed' => $data->completed,
+                'completed_at' => $data->completed_at,
+                'user_id' => $data->user_id,
+                'achievement_id' => $data->achievement_id
             ]);
         }
     }

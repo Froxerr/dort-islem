@@ -2,28 +2,28 @@
 
 namespace Database\Seeders;
 
+use App\Models\BadgeTrigger;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Badge;
 
-class BadgeSeeder extends Seeder
+class BadgeTriggerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $jsonData = $this->getDecode("badges");
+        $jsonData = $this->getDecode("badge_triggers");
         foreach ($jsonData as $data)
         {
-            Badge::create([
-                'name' => $data->name,
-                'description' => $data->description,
-                'icon_filename' => $data->icon_filename,
-                'type' => $data->type,
-                'achievement_id' => $data->achievement_id ?? null,
-                'created_at' => $data->created_at ?? null,
-                'updated_at' => $data->updated_at ?? null,
+            BadgeTrigger::create([
+                'trigger_type' => $data->trigger_type,
+                'required_count' => $data->required_count,
+                'required_score' => $data->required_score,
+                'time_limit' => $data->time_limit ?? null,
+                'badge_id' => $data->badge_id,
+                'topic_id' => $data->topic_id,
+
             ]);
         }
     }

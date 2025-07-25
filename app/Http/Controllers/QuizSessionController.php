@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Events\QuizCompleted;
 
 class QuizSessionController extends Controller
 {
@@ -160,15 +161,64 @@ class QuizSessionController extends Controller
                     throw new \Exception('Achievement işlemi başarısız oldu');
                 }
 
+                // Quiz tamamlanma event'ini tetikle
+                Log::info('Quiz tamamlanma event\'i tetikleniyor', [
+                    'user_id' => $user->id,
+                    'score' => $calculatedScore,
+                    'correct_answers' => $validatedData['correct_answers']
+                ]);
+
+                event(new QuizCompleted(
+                    $user,
+                    $calculatedScore,
+                    $validatedData['correct_answers'],
+                    [
+                        'topic_id' => $validatedData['topic_id'],
+                        'correct' => $validatedData['correct_answers']
+                    ]
+                ));
+
+                Log::info('Quiz tamamlanma event\'i tetiklendi');
+
                 // Transaction'ı commit et
                 DB::commit();
                 Log::info('Transaction başarıyla tamamlandı');
 
-                return response()->json([
+                // Bildirimleri al
+                $notifications = $user->notifications()
+                    ->whereIn('type', [
+                        'App\\Notifications\\BadgeEarned',
+                        'App\\Notifications\\LevelUpEarned'
+                    ])
+                    ->where('created_at', '>=', now()->subSeconds(5))
+                    ->get()
+                    ->map(function($notification) {
+                        return [
+                            'id' => $notification->id,
+                            'type' => $notification->type,
+                            'data' => $notification->data
+                        ];
+                    })
+                    ->values()
+                    ->toArray();
+
+                Log::info('Bildirimler alındı', [
+                    'notification_count' => count($notifications),
+                    'notifications' => $notifications
+                ]);
+
+                $response = [
                     'success' => true,
                     'message' => 'Quiz session başarıyla kaydedildi',
-                    'data' => $quizSession
+                    'data' => $quizSession,
+                    'notifications' => $notifications
+                ];
+
+                Log::info('Response hazırlandı', [
+                    'response' => $response
                 ]);
+
+                return response()->json($response);
 
             } catch (\Exception $e) {
                 // Hata durumunda rollback yap

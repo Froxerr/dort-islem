@@ -5,7 +5,9 @@
 @section('css')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <link rel="stylesheet" href="{{asset('assets/css/main.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/achievements.css')}}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 @endsection
 
 @section('content')
@@ -36,7 +38,7 @@
         </button>
     </form>
 
-    <a href="{{ route('profile') }}" style="position: absolute; top: 90px; right: 20px; z-index: 2;">
+    <a href="{{ route('profile.hub') }}" style="position: absolute; top: 90px; right: 20px; z-index: 2;">
         <img src="{{ asset('assets/img/bulut/profil-bulut.png') }}" alt="Profil Bulutu" class="profile-cloud-secondary cloud">
     </a>
 
@@ -128,4 +130,7 @@
 @section('js')
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{ asset('assets/js/questionGenerator.js') }}"></script>
+<script src="{{ asset('assets/js/achievements.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 @endsection

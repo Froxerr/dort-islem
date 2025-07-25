@@ -14,14 +14,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            TopicSeeder::class,
+            AchievementSeeder::class,
             RoleSeeder::class,
             BadgeSeeder::class,
             DifficultyLevelSeeder::class,
-            LevelsSeeder::class,
-            TopicSeeder::class,
+            LevelsSeeder::class,    
+            BadgeTriggerSeeder::class,
             UserSeeder::class,
             UserBadgeSeeder::class,
             QuizSessionSeeder::class,
+            UserAchievementSeeder::class
         ]);
     }
 }

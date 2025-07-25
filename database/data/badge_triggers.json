@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "badge_id": 1,
+        "trigger_type": "required_count",
+        "required_count": 1,
+        "required_score": null,
+        "topic_id": null,
+        "description": "İlk testi tamamla",
+        "created_at": "2024-03-21 00:00:00",
+        "updated_at": "2024-03-21 00:00:00"
+    },
+    {
+        "id": 2,
+        "badge_id": 2,
+        "trigger_type": "required_count",
+        "required_count": 5,
+        "required_score": null,
+        "topic_id": 1,
+        "description": "Toplama kategorisinde 5 test tamamla",
+        "created_at": "2024-03-21 00:00:00",
+        "updated_at": "2024-03-21 00:00:00"
+    },
+    {
+        "id": 3,
+        "badge_id": 3,
+        "trigger_type": "required_score",
+        "required_count": null,
+        "required_score": 80,
+        "topic_id": 2,
+        "description": "Çıkarma kategorisinde %80 başarı oranına ulaş",
+        "created_at": "2024-03-21 00:00:00",
+        "updated_at": "2024-03-21 00:00:00"
+    },
+    {
+        "id": 4,
+        "badge_id": 4,
+        "trigger_type": "required_score",
+        "required_count": null,
+        "required_score": 100,
+        "topic_id": 3,
+        "description": "Çarpma kategorisinde tam puan al",
+        "created_at": "2024-03-21 00:00:00",
+        "updated_at": "2024-03-21 00:00:00"
+    },
+    {
+        "id": 5,
+        "badge_id": 5,
+        "trigger_type": "streak",
+        "required_count": 3,
+        "required_score": null,
+        "topic_id": 4,
+        "description": "Bölme kategorisinde 3 test üst üste başarıyla tamamla",
+        "created_at": "2024-03-21 00:00:00",
+        "updated_at": "2024-03-21 00:00:00"
+    }
+]

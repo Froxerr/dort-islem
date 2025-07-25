@@ -3,6 +3,18 @@ body {
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color 0.3s ease;
+}
+
+/* Arka plan flaş efekti için */
+body.correct-flash {
+    animation: backgroundFlash 0.5s ease;
+}
+
+@keyframes backgroundFlash {
+    0% { background: linear-gradient(135deg, #E3F2FD, #FFEBEE); }
+    20% { background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), #FFEBEE); }
+    100% { background: linear-gradient(135deg, #E3F2FD, #FFEBEE); }
 }
 
 .main-container {
@@ -13,6 +25,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* Container flaş efekti için */
+.main-container.correct-flash {
+    animation: containerFlash 0.5s ease;
+}
+
+@keyframes containerFlash {
+    0% { box-shadow: none; }
+    20% { box-shadow: 0 0 50px rgba(76, 175, 80, 0.3); }
+    100% { box-shadow: none; }
 }
 
 .cloud {
@@ -130,10 +154,10 @@ body {
     top: 40px;
     left: 235px;
     background-color: #fff;
-    padding: 15px;
+    padding: 15px 20px;
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 180px;
+    max-width: 200px;
     z-index: 3;
     font-family: 'Comic Sans MS', cursive;
     font-size: 15px;
@@ -142,16 +166,33 @@ body {
     transform: translateY(0);
     transition: all 0.3s ease;
     pointer-events: none;
+    border: 2px solid #e0e0e0;
 }
 
 .speech-bubble::before {
     content: '';
     position: absolute;
-    left: -15px;
-    top: 25px;
+    left: -12px;
+    top: 20px;
+    width: 0;
+    height: 0;
     border-style: solid;
-    border-width: 12px 16px 12px 0;
+    border-width: 10px 12px 10px 0;
+    border-color: transparent #e0e0e0 transparent transparent;
+    z-index: 1;
+}
+
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    left: -9px;
+    top: 20px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 12px 10px 0;
     border-color: transparent #fff transparent transparent;
+    z-index: 2;
 }
 
 .speech-bubble.hide {
@@ -360,6 +401,24 @@ body {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
     border-radius: 25px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+}
+
+/* Hesaplama alanı flaş efekti için */
+.calculation-area.correct-flash {
+    animation: calculationFlash 0.5s ease;
+}
+
+@keyframes calculationFlash {
+    0% { border-color: transparent; }
+    20% { 
+        border-color: #4CAF50;
+        box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2);
+    }
+    100% { 
+        border-color: transparent;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .game-header {
@@ -418,12 +477,16 @@ body {
     margin-left: 50px;
 }
 
+/* Doğru/Yanlış sayaçları için efektler */
 .correct-answers, .wrong-answers {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 1.2em;
     font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .correct-answers {
@@ -432,6 +495,82 @@ body {
 
 .wrong-answers {
     color: #dc2626;
+}
+
+/* Sayaç parlama efektleri */
+.correct-answers.glow {
+    animation: correctGlow 0.5s ease;
+}
+
+.wrong-answers.glow {
+    animation: wrongGlow 0.5s ease;
+}
+
+@keyframes correctGlow {
+    0% { 
+        box-shadow: 0 0 0 rgba(22, 163, 74, 0);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 15px rgba(22, 163, 74, 0.3);
+        transform: scale(1.1);
+    }
+    100% { 
+        box-shadow: 0 0 0 rgba(22, 163, 74, 0);
+        transform: scale(1);
+    }
+}
+
+@keyframes wrongGlow {
+    0% { 
+        box-shadow: 0 0 0 rgba(220, 38, 38, 0);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+        transform: scale(1.1);
+    }
+    100% { 
+        box-shadow: 0 0 0 rgba(220, 38, 38, 0);
+        transform: scale(1);
+    }
+}
+
+/* Yanlış cevap için flash efekti */
+body.wrong-flash {
+    animation: wrongBackgroundFlash 0.5s ease;
+}
+
+.main-container.wrong-flash {
+    animation: wrongContainerFlash 0.5s ease;
+}
+
+.calculation-area.wrong-flash {
+    animation: wrongCalculationFlash 0.5s ease;
+}
+
+@keyframes wrongBackgroundFlash {
+    0% { background: linear-gradient(135deg, #E3F2FD, #FFEBEE); }
+    20% { background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), #FFEBEE); }
+    100% { background: linear-gradient(135deg, #E3F2FD, #FFEBEE); }
+}
+
+@keyframes wrongContainerFlash {
+    0% { box-shadow: none; }
+    20% { box-shadow: 0 0 50px rgba(220, 38, 38, 0.3); }
+    100% { box-shadow: none; }
+}
+
+@keyframes wrongCalculationFlash {
+    0% { border-color: transparent; }
+    20% { 
+        border-color: #dc2626;
+        box-shadow: 0 10px 20px rgba(220, 38, 38, 0.2);
+    }
+    100% { 
+        border-color: transparent;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .question-container {
