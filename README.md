@@ -119,6 +119,7 @@ npm run dev
 - [ ] Liderlik tablosu
 - [✔️] Başarı rozetleri
 - [ ] İstatistik paneli
+- [ ] Kapsamlı ayarlar paneli
 - [✔️] Seviye Sistemi
 - [ ] Blog ortamı
 
