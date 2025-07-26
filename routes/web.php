@@ -67,21 +67,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messages/unread/{conversationId}', [MessageController::class, 'getUnreadCount'])->name('messages.unread');
     Route::get('/messages/unread-total', [MessageController::class, 'getTotalUnreadCount'])->name('messages.unread-total');
     Route::post('/messages/typing', [MessageController::class, 'typing'])->name('messages.typing');
-    
-    // Debug route for broadcasting auth
-    Route::post('/test-broadcast-auth', function(\Illuminate\Http\Request $request) {
-        \Log::info('Test broadcast auth called', [
-            'user_id' => auth()->id(),
-            'is_authenticated' => auth()->check(),
-            'request_data' => $request->all(),
-            'headers' => $request->headers->all()
-        ]);
-        
-        return response()->json([
-            'authenticated' => auth()->check(),
-            'user_id' => auth()->id(),
-            'request_data' => $request->all()
-        ]);
-    })->name('test.broadcast.auth');
+
 });
 

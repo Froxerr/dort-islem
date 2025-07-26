@@ -181,6 +181,9 @@ class MessageController extends Controller
         // Kullanıcı bu mesajın sahibi değilse okundu işareti koyabilir
         if ($message->user_id != Auth::id()) {
             $message->update(['read_at' => now()]);
+            
+            // Real-time read status broadcast
+            broadcast(new \App\Events\MessageRead($message))->toOthers();
         }
 
         return response()->json(['success' => true]);

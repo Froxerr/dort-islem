@@ -18,29 +18,12 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('conversation.{conversationId}', function ($user, $conversationId) {
-    // Debug logging
-    \Log::info('Channel auth attempt', [
-        'user_id' => $user->id,
-        'conversation_id' => $conversationId,
-        'channel' => "conversation.{$conversationId}"
-    ]);
-    
     // Kullanıcının bu conversation'a katılma yetkisi var mı kontrol et
     $conversation = \App\Models\Conversation::find($conversationId);
     
     if (!$conversation) {
-        \Log::warning('Conversation not found', ['conversation_id' => $conversationId]);
         return false;
     }
     
-    $hasAccess = $conversation->participants->contains('id', $user->id);
-    
-    \Log::info('Channel auth result', [
-        'user_id' => $user->id,
-        'conversation_id' => $conversationId,
-        'has_access' => $hasAccess,
-        'participants' => $conversation->participants->pluck('id')->toArray()
-    ]);
-    
-    return $hasAccess;
+    return $conversation->participants->contains('id', $user->id);
 }); 

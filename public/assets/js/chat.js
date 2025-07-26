@@ -41,17 +41,28 @@ class ChatWidget {
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                             'Accept': 'application/json',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/x-www-form-urlencoded'  // Pusher default format
                         }
                     }
                 });
-                console.log('Pusher initialized successfully');
+                
+                // Connection event listeners - silent
+                this.pusher.connection.bind('connected', () => {
+                    // Connection established
+                });
+                
+                this.pusher.connection.bind('disconnected', () => {
+                    // Connection lost
+                });
+                
+                this.pusher.connection.bind('error', (error) => {
+                    // Connection error - fallback to polling
+                    this.enablePollingMode();
+                });
             } else {
-                console.warn('Pusher not available. Using polling mode.');
                 this.enablePollingMode();
             }
         } catch (error) {
-            console.error('Pusher initialization failed:', error);
             this.enablePollingMode();
         }
     }
@@ -61,7 +72,7 @@ class ChatWidget {
      */
     enablePollingMode() {
         this.pusher = null;
-        console.log('Chat running in polling mode');
+        // Fallback to polling mode
     }
     
     createWidget() {
@@ -197,7 +208,6 @@ class ChatWidget {
                 this.renderFriendsList();
             }
         } catch (error) {
-            console.error('Arkadaşlar yüklenirken hata:', error);
             this.showError('Arkadaşlar yüklenemedi');
         }
     }
@@ -270,7 +280,6 @@ class ChatWidget {
                 this.startMessagePolling();
             }
         } catch (error) {
-            console.error('Sohbet açılırken hata:', error);
             this.showError('Sohbet açılamadı');
         }
     }
@@ -427,7 +436,6 @@ class ChatWidget {
                 input.style.height = 'auto';
             }
         } catch (error) {
-            console.error('Mesaj gönderilirken hata:', error);
             this.showError('Mesaj gönderilemedi');
         }
     }
@@ -464,7 +472,7 @@ class ChatWidget {
                 }
             }
         } catch (error) {
-            console.error('Mesajlar yenilenirken hata:', error);
+            // Silent error - continue polling
         }
     }
     
@@ -476,7 +484,7 @@ class ChatWidget {
                 this.updateUnreadBadge(data.count);
             }
         } catch (error) {
-            console.error('Okunmamış mesajlar kontrol edilirken hata:', error);
+            // Silent error
         }
     }
     
@@ -493,7 +501,6 @@ class ChatWidget {
     }
     
     showError(message) {
-        console.error(message);
         // Burada toast notification gösterebilirsiniz
     }
     
@@ -528,7 +535,7 @@ class ChatWidget {
                 // Mesajı yerel olarak okundu olarak işaretle
                 message.read_at = new Date().toISOString();
             } catch (error) {
-                console.error('Mesaj okundu olarak işaretlenirken hata:', error);
+                // Silent error
             }
         }
     }
@@ -547,81 +554,46 @@ class ChatWidget {
             // Önceki channel'dan unsubscribe ol
             this.unsubscribeFromPusherChannel();
             
-            // Geçici test: Public channel dene
-            const channelName = `test-channel`;
-            console.log('Trying public channel first:', channelName);
-            
+            // Direkt private channel'ı dene
+            const channelName = `private-conversation.${this.currentConversation.id}`;
             this.currentChannel = this.pusher.subscribe(channelName);
             
             this.currentChannel.bind('pusher:subscription_succeeded', () => {
-                console.log('✅ Public channel subscription successful!');
-                
-                // Şimdi private channel'ı dene
-                this.subscribeToPrivateChannel();
+                // Successfully subscribed to real-time channel
             });
             
             this.currentChannel.bind('pusher:subscription_error', (error) => {
-                console.error('❌ Public channel subscription failed:', error);
-                this.startMessagePolling();
+                // Failed to subscribe - try again in 5 seconds
+                setTimeout(() => {
+                    this.subscribeToPusherChannel();
+                }, 5000);
             });
             
+            // Yeni mesaj geldiğinde
+            this.currentChannel.bind('message.sent', (data) => {
+                this.handleNewMessage(data.message);
+            });
+            
+            // Typing indicator
+            this.currentChannel.bind('user.typing', (data) => {
+                this.handleTypingIndicator(data);
+            });
+            
+            // Message read status
+            this.currentChannel.bind('message.read', (data) => {
+                this.handleMessageRead(data);
+            });
+            
+            
         } catch (error) {
-            console.error('Failed to subscribe to Pusher channel:', error);
-            // Fallback to polling
-            this.startMessagePolling();
+            // Failed to subscribe - try again in 5 seconds
+            setTimeout(() => {
+                this.subscribeToPusherChannel();
+            }, 5000);
         }
     }
     
-    /**
-     * Private channel'a subscribe ol
-     */
-    subscribeToPrivateChannel() {
-        console.log('Now trying private channel...');
-        console.log('Current conversation:', this.currentConversation);
-        console.log('Participants array:', this.currentConversation.participants);
-        console.log('Participants length:', this.currentConversation.participants.length);
-        console.log('Current user ID:', document.querySelector('meta[name="user-id"]')?.getAttribute('content'));
-        
-        // Auth debug
-        console.log('CSRF Token:', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'));
-        console.log('Auth endpoint:', '/broadcasting/auth');
-        
-        // Manual auth test
-        this.testBroadcastAuth();
-        this.testGeneralAuth();
-        
-        // Public channel'dan çık
-        if (this.currentChannel) {
-            this.pusher.unsubscribe(this.currentChannel.name);
-        }
-        
-        const channelName = `private-conversation.${this.currentConversation.id}`;
-        console.log('Private channel name:', channelName);
-        
-        this.currentChannel = this.pusher.subscribe(channelName);
-        
-        this.currentChannel.bind('pusher:subscription_succeeded', () => {
-            console.log('✅ Private channel subscription successful!');
-        });
-        
-        this.currentChannel.bind('pusher:subscription_error', (error) => {
-            console.error('❌ Private channel subscription failed:', error);
-            console.log('Falling back to polling mode');
-            this.startMessagePolling();
-        });
-        
-        // Yeni mesaj geldiğinde
-        this.currentChannel.bind('message.sent', (data) => {
-            this.handleNewMessage(data.message);
-        });
-        
-        // Typing indicator
-        this.currentChannel.bind('user.typing', (data) => {
-            this.handleTypingIndicator(data);
-        });
-        
-                 console.log(`Subscribed to private channel: ${channelName}`);
-     }
+    
     
     /**
      * Pusher channel'dan unsubscribe ol
@@ -650,6 +622,20 @@ class ChatWidget {
         
         // Unread count güncelle
         this.checkUnreadMessages();
+    }
+    
+    /**
+     * Mesaj okundu durumu güncellendiğinde çalışır
+     */
+    handleMessageRead(data) {
+        if (this.currentConversation && data.conversation_id == this.currentConversation.id) {
+            // İlgili mesajı bul ve read_at'ini güncelle
+            const message = this.currentConversation.messages.find(m => m.id == data.message_id);
+            if (message) {
+                message.read_at = data.read_at;
+                this.renderMessages(); // Tick durumunu güncelle
+            }
+        }
     }
     
     /**
@@ -710,68 +696,7 @@ class ChatWidget {
         }
     }
     
-    /**
-     * Manual broadcast auth test
-     */
-    async testBroadcastAuth() {
-        console.log('🧪 Testing broadcast auth manually...');
-        
-        try {
-            const response = await fetch('/broadcasting/auth', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `channel_name=private-conversation.${this.currentConversation.id}&socket_id=test123`
-            });
-            
-            console.log('📊 Manual auth response:', {
-                status: response.status,
-                statusText: response.statusText,
-                headers: Object.fromEntries(response.headers.entries())
-            });
-            
-            if (response.ok) {
-                const data = await response.text();
-                console.log('✅ Manual auth success:', data);
-            } else {
-                const errorText = await response.text();
-                console.log('❌ Manual auth failed:', errorText);
-            }
-        } catch (error) {
-            console.error('🚫 Manual auth error:', error);
-        }
-    }
-    
-    /**
-     * Test general authentication
-     */
-    async testGeneralAuth() {
-        console.log('🧪 Testing general auth...');
-        
-        try {
-            const response = await fetch('/test-broadcast-auth', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({test: 'data'})
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                console.log('✅ General auth test success:', data);
-            } else {
-                console.log('❌ General auth test failed:', response.status);
-            }
-        } catch (error) {
-            console.error('🚫 General auth test error:', error);
-        }
-    }
+
     
     /**
      * Typing durumunu gönder
@@ -795,7 +720,7 @@ class ChatWidget {
                 })
             });
         } catch (error) {
-            console.error('Typing status gönderilirken hata:', error);
+            // Silent error
         }
     }
 }

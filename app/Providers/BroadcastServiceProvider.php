@@ -12,14 +12,7 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Broadcast::routes(['middleware' => ['web', 'auth', \App\Http\Middleware\LogBroadcastAuth::class]]);
-
-        // Debug: Broadcast auth isteklerini logla
-        \Illuminate\Support\Facades\Event::listen('Illuminate\Broadcasting\BroadcastEvent', function ($event) {
-            \Log::info('Broadcast event triggered', [
-                'event' => get_class($event)
-            ]);
-        });
+        Broadcast::routes(['middleware' => ['web', 'auth']]);
 
         require base_path('routes/channels.php');
     }
