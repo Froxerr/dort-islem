@@ -115,11 +115,11 @@ npm run dev
 ## 🎯 Gelecek Özellikler
 
 - [✔️] Kayıt Sistemi
-- [ ] Arkadaş sistemi
-- [ ] Liderlik tablosu
+- [✔️] Arkadaş sistemi
+- [✔️] Liderlik tablosu
 - [✔️] Başarı rozetleri
-- [ ] İstatistik paneli
-- [ ] Kapsamlı ayarlar paneli
+- [✔️] İstatistik paneli
+- [✔️] Kapsamlı ayarlar paneli
 - [✔️] Seviye Sistemi
 - [ ] Blog ortamı
 
