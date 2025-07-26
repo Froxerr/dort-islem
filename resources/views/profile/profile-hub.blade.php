@@ -26,9 +26,9 @@
 
     .hub-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        max-width: 1200px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        max-width: 1000px;
         width: 100%;
         padding: 2rem;
         position: relative;
@@ -39,7 +39,7 @@
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border-radius: 24px;
-        padding: 2.5rem 2rem;
+        padding: 2rem 1.5rem;
         text-align: center;
         transition: all 0.3s ease;
         cursor: pointer;
@@ -49,7 +49,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        min-height: 300px;
+        min-height: 220px;
         text-decoration: none;
         color: inherit;
         position: relative;
@@ -78,8 +78,8 @@
     }
 
     .hub-card i {
-        font-size: 3.5rem;
-        margin-bottom: 1.5rem;
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
         color: #4CAF50;
         transition: all 0.3s ease;
         animation: float 3s ease-in-out infinite;
@@ -91,8 +91,8 @@
     }
 
     .hub-card h2 {
-        font-size: 1.8rem;
-        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        margin-bottom: 0.8rem;
         color: #2c3e50;
         font-family: 'Comic Sans MS', cursive;
         position: relative;
@@ -117,9 +117,9 @@
 
     .hub-card p {
         color: #666;
-        line-height: 1.6;
-        font-size: 1.1rem;
-        margin-top: 1rem;
+        line-height: 1.5;
+        font-size: 0.95rem;
+        margin-top: 0.8rem;
     }
 
     .back-button {
@@ -167,23 +167,39 @@
 
     @media (max-width: 1024px) {
         .hub-grid {
-            gap: 1.5rem;
-            padding: 1rem;
+            gap: 1.2rem;
+            padding: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         }
 
         .hub-card {
-            padding: 2rem 1.5rem;
-            min-height: 280px;
+            padding: 1.5rem 1.2rem;
+            min-height: 200px;
         }
 
         .hub-card h2 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+        }
+        
+        .hub-card i {
+            font-size: 2.5rem;
         }
     }
 
     @media (max-width: 768px) {
         .hub-grid {
             grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        
+        .hub-card {
+            min-height: 180px;
+            padding: 1.2rem 1rem;
+        }
+        
+        .hub-card i {
+            font-size: 2.2rem;
         }
 
         .back-button {
@@ -223,6 +239,12 @@
             <i class="fas fa-cog"></i>
             <h2>Ayarlar</h2>
             <p>Profil ayarlarını düzenle ve tercihlerini güncelle</p>
+        </a>
+        
+        <a href="{{ route('friends.index') }}" class="hub-card">
+            <i class="fas fa-users"></i>
+            <h2>Arkadaşlarım</h2>
+            <p>Arkadaşlarınızla birlikte matematik öğrenin ve yarışın</p>
         </a>
     </div>
 </div>

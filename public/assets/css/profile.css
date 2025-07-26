@@ -362,26 +362,35 @@ html {
     background: #4CAF50;
     color: white;
     border: none;
-    padding: 1rem;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-    transition: all 0.3s ease;
-    z-index: 100;
     width: 50px;
     height: 50px;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 
+        0 4px 15px rgba(76, 175, 80, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
 
 .back-button:hover {
     transform: translateY(-2px) scale(1.1);
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    box-shadow: 
+        0 6px 20px rgba(76, 175, 80, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .back-button i {
     font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover i {
+    transform: translateX(-2px);
 }
 
 /* Pırıltı efektleri */

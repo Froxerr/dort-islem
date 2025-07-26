@@ -47,11 +47,11 @@
             <div class="levelup-animation">
                 <div class="levelup-shine"></div>
             </div>
-            <img src="{{ asset('assets/img/trees/level_' . min(9, floor($user->level/10)) . '.png') }}" 
-                 alt="Seviye Ağacı" 
+            <img src="{{ asset('assets/img/trees/level_' . min(9, floor($user->level/10)) . '.png') }}"
+                 alt="Seviye Ağacı"
                  class="tree-image">
         </div>
-        
+
         <div class="xp-progress">
             <div class="xp-bar" style="width: {{ $xpProgressPercentage }}%"></div>
         </div>
@@ -63,10 +63,10 @@
         <h3>Rozetlerim</h3>
         <div class="badge-grid">
             @foreach($userBadges as $badge)
-            <div class="badge-item badge-glow {{ $badge->is_new ? 'new' : '' }}" 
+            <div class="badge-item badge-glow {{ $badge->is_new ? 'new' : '' }}"
                  data-earned="{{ $badge->earned_at }}"
                  title="{{ $badge->description }}">
-                <img src="{{ asset('assets/img/badges/' . ($badge->image ?? 'default.png')) }}" 
+                <img src="{{ asset('assets/img/badges/' . ($badge->image ?? 'default.png')) }}"
                      alt="{{ $badge->name }}">
                 <div class="badge-name">{{ $badge->name }}</div>
             </div>
@@ -96,17 +96,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function createSparkle() {
         const sparkle = document.createElement('div');
         sparkle.className = 'sparkle';
-        
+
         // Rastgele pozisyon
         const treeContainer = document.querySelector('.tree-sparkles');
         const x = Math.random() * treeContainer.offsetWidth;
         const y = Math.random() * treeContainer.offsetHeight;
-        
+
         sparkle.style.left = x + 'px';
         sparkle.style.top = y + 'px';
-        
+
         treeContainer.appendChild(sparkle);
-        
+
         // Animasyon bitince elementi kaldır
         sparkle.addEventListener('animationend', () => {
             sparkle.remove();
@@ -119,12 +119,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Level up animasyonu
     function playLevelUpAnimation() {
         const shine = document.querySelector('.levelup-shine');
-        
-        gsap.fromTo(shine, 
+
+        gsap.fromTo(shine,
             { opacity: 0, scale: 0.8 },
-            { 
-                opacity: 1, 
-                scale: 1.2, 
+            {
+                opacity: 1,
+                scale: 1.2,
                 duration: 1,
                 ease: "power2.out",
                 onComplete: () => {
@@ -163,4 +163,4 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 </script>
-@endsection 
+@endsection

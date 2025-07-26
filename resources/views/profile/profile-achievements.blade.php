@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).classList.remove('active');
         document.querySelector(`.tab-btn[data-tab="${newTab}"]`).classList.add('active');
 
-        // Slider'ı resetle
+        // Slider'ı resetle ve güncelle
         const swiper = newTab === 'badges' ? badgesSwiper : achievementsSwiper;
         swiper.el.classList.remove('filtering');
         swiper.slides.forEach(slide => {
@@ -260,6 +260,10 @@ document.addEventListener('DOMContentLoaded', function() {
             slide.style.transform = '';
             slide.style.opacity = '';
         });
+
+        // Swiper'ı güncelle ve sarsıntısız başlangıç
+        swiper.update();
+        swiper.slideTo(1, 0, false);
 
         // Aktif filtreyi uygula
         const activeFilter = newContent.querySelector('.filter-btn.active');
@@ -272,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Kısa bir süre sonra yeni tıklamalara izin ver
         setTimeout(() => {
             isProcessing = false;
-        }, 100);
+        }, 200);
     }
 
     // Tab butonlarına tıklama olayı

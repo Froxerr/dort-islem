@@ -128,6 +128,10 @@
 @endsection
 
 @section('js')
+<script>
+    // Kullanıcı tercihleri
+    window.userSettings = @json($userSettings);
+</script>
 <script src="{{ asset('assets/js/main.js') }}"></script>
 <script src="{{ asset('assets/js/questionGenerator.js') }}"></script>
 <script src="{{ asset('assets/js/achievements.js') }}"></script>

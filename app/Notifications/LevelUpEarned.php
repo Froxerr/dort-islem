@@ -31,7 +31,29 @@ class LevelUpEarned extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+        
+        // E-posta bildirimi ayarı açıksa e-posta da gönder
+        if ($notifiable->email_level_up ?? true) {
+            $channels[] = 'mail';
+        }
+        
+        return $channels;
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+                    ->subject('🎉 Seviye Atladınız!')
+                    ->greeting('Tebrikler ' . $notifiable->name . '!')
+                    ->line("**Seviye {$this->newLevel}**'e ulaştınız! ")
+                    ->line("Bu quiz oturumunda **{$this->xpEarned} XP** kazandınız.")
+                    ->line($this->nextLevelXP ? "Sonraki seviye için **" . ($this->nextLevelXP - ($notifiable->xp ?? 0)) . " XP** daha gerekiyor." : "Maksimum seviyeye ulaştınız!")
+                    ->action('Quiz Çözmeye Devam Et', url('/'))
+                    ->salutation('Başarılarınızın devamını dileriz,' . "\n" . '🎯 ' . config('app.name') . ' Takımı');
     }
 
     /**

@@ -32,7 +32,29 @@ class BadgeEarned extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        $channels = ['database'];
+        
+        // E-posta bildirimi ayarı açıksa e-posta da gönder
+        if ($notifiable->email_achievements ?? true) {
+            $channels[] = 'mail';
+        }
+        
+        return $channels;
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+                    ->subject('🏅 Yeni Rozet Kazandınız!')
+                    ->greeting('Tebrikler ' . $notifiable->name . '!')
+                    ->line("**{$this->badge->name}** rozetini kazandınız!")
+                    ->line($this->badge->description)
+                    ->line($this->xpReward > 0 ? "Bu rozet için **{$this->xpReward} XP** kazandınız." : "")
+                    ->action('Rozetlerinizi Görün', url('/profile/achievements'))
+                    ->salutation('Başarılarınızın devamını dileriz,' . "\n" . '🎯 ' . config('app.name') . ' Takımı');
     }
 
     /**

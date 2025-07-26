@@ -360,17 +360,67 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function history()
+    public function history(Request $request)
     {
-        // Şimdilik basit bir yönlendirme
-        return redirect()->route('profile.details')
-            ->with('info', 'Bu özellik yakında kullanıma sunulacak!');
+        $user = Auth::user();
+        
+        // Quiz sessions sorgusu
+        $query = QuizSession::with(['topic', 'difficultyLevel'])
+            ->where('user_id', $user->id);
+        
+        // Filtreleme
+        if ($request->filled('topic')) {
+            $query->where('topic_id', $request->topic);
+        }
+        
+        if ($request->filled('difficulty')) {
+            $query->where('difficulty_level_id', $request->difficulty);
+        }
+        
+        if ($request->filled('date_range')) {
+            switch ($request->date_range) {
+                case 'today':
+                    $query->whereDate('created_at', now());
+                    break;
+                case 'week':
+                    $query->where('created_at', '>=', now()->subWeek());
+                    break;
+                case 'month':
+                    $query->where('created_at', '>=', now()->subMonth());
+                    break;
+                case '3months':
+                    $query->where('created_at', '>=', now()->subMonths(3));
+                    break;
+            }
+        }
+        
+        // Sayfalama ile sıralama
+        $quizSessions = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // İstatistikler
+        $allSessions = QuizSession::where('user_id', $user->id)->get();
+        $totalQuizzes = $allSessions->count();
+        $averageScore = $totalQuizzes > 0 ? $allSessions->avg('score') : 0;
+        $averageAccuracy = $totalQuizzes > 0 ? 
+            $allSessions->avg(function($session) {
+                return ($session->correct_answers / $session->total_questions) * 100;
+            }) : 0;
+        $totalXP = $allSessions->sum('xp_earned');
+        
+        // Filtre seçenekleri
+        $topics = \App\Models\Topic::all();
+        $difficulties = \App\Models\DifficultyLevel::all();
+        
+        return view('profile.profile-history', compact(
+            'quizSessions',
+            'totalQuizzes',
+            'averageScore',
+            'averageAccuracy',
+            'totalXP',
+            'topics',
+            'difficulties'
+        ));
     }
 
-    public function settings()
-    {
-        // Şimdilik basit bir yönlendirme
-        return redirect()->route('profile.details')
-            ->with('info', 'Bu özellik yakında kullanıma sunulacak!');
-    }
+
 }

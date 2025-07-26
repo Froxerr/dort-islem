@@ -13,6 +13,9 @@ class MainController extends Controller
         if (!auth()->check()) {
             return redirect()->route('index');
         }
+        
+        $user = auth()->user();
+        
         $topics = Topic::where('is_active', 1)
             ->select('id', 'name', 'icon_path')
             ->get();
@@ -25,6 +28,16 @@ class MainController extends Controller
                 return $level;
             });
 
-        return view('main', compact('topics', 'difficultyLevels'));
+        // Kullanıcı tercihlerini al
+        $userSettings = [
+            'default_difficulty_id' => $user->default_difficulty_id,
+            'favorite_topic_id' => $user->favorite_topic_id,
+            'auto_next_question' => $user->auto_next_question ?? false,
+            'show_correct_answers' => $user->show_correct_answers ?? true,
+            'sound_effects' => $user->sound_effects ?? true,
+            'animations' => $user->animations ?? true,
+        ];
+
+        return view('main', compact('topics', 'difficultyLevels', 'userSettings'));
     }
 }

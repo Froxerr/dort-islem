@@ -19,6 +19,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const questionGenerator = new QuestionGenerator();
     
+    // Kullanıcı tercihlerini al (eğer tanımlıysa)
+    const settings = window.userSettings || {
+        default_difficulty_id: null,
+        favorite_topic_id: null,
+        auto_next_question: false,
+        show_correct_answers: true,
+        sound_effects: true
+    };
+    
     let selectedTopicId = null;
     let selectedLevelId = null;
     let selectedTopicName = '';
@@ -29,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let countdownInterval = null;
     let timeLeft = 60;
     let isGameActive = false;
+    let autoNextTimeout = null;
     
     // İlk konuşma baloncuğu için zamanlayıcı
     let initialTimeout = setTimeout(() => {
@@ -47,6 +57,16 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             calculator.style.transform = 'translate(-50%, -50%) scale(1)';
             calculator.style.opacity = '1';
+            
+            // Eğer favori konu ayarlanmışsa direkt o konuya geç
+            if (settings.favorite_topic_id) {
+                const favoriteTopicElement = document.querySelector(`[data-topic-id="${settings.favorite_topic_id}"]`);
+                if (favoriteTopicElement) {
+                    setTimeout(() => {
+                        favoriteTopicElement.click();
+                    }, 500);
+                }
+            }
         }, 50);
     });
 
@@ -90,6 +110,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 topicsGrid.classList.add('hidden');
                 difficultyGrid.style.display = 'grid';
                 difficultyGrid.classList.remove('fade-out');
+                
+                // Eğer varsayılan zorluk ayarlanmışsa direkt o zorluğa geç
+                if (settings.default_difficulty_id) {
+                    const defaultDifficultyElement = document.querySelector(`[data-level-id="${settings.default_difficulty_id}"]`);
+                    if (defaultDifficultyElement) {
+                        setTimeout(() => {
+                            defaultDifficultyElement.click();
+                        }, 500);
+                    }
+                }
             }, 500);
 
             speechBubble.textContent = `${selectedTopicName} konusu için zorluk seviyesi seç!`;
@@ -300,7 +330,38 @@ document.addEventListener('DOMContentLoaded', function() {
             clearInterval(countdownInterval);
         }
 
-        // Değişkenleri sıfırla
+        // Eğer konu ve zorluk zaten seçilmişse direkt oyuna başla
+        if (selectedTopicId && selectedLevelId) {
+            // Sadece oyun verilerini sıfırla
+            correctCount = 0;
+            wrongCount = 0;
+            correctCountDisplay.textContent = '0';
+            wrongCountDisplay.textContent = '0';
+            timeLeft = 60;
+            isGameActive = false;
+
+            // Input ve butonları sıfırla
+            document.getElementById('answer').value = '';
+            document.getElementById('answer').disabled = false;
+            document.getElementById('checkAnswer').disabled = false;
+
+            // Hesaplama alanını göster ve oyunu başlat
+            calculationArea.style.display = 'block';
+            document.querySelector('.calculator-top').style.display = 'none';
+            
+            // Baykuş mesajını güncelle
+            speechBubble.textContent = `${selectedTopicName} - ${selectedDifficultyName} ile tekrar başlıyoruz!`;
+            speechBubble.classList.remove('hide');
+            setTimeout(() => {
+                speechBubble.classList.add('hide');
+            }, 2000);
+
+            // Oyunu başlat
+            startGame();
+            return;
+        }
+
+        // Eğer konu/zorluk seçilmemişse normal restart yap
         selectedTopicId = null;
         selectedLevelId = null;
         correctCount = 0;
@@ -527,14 +588,59 @@ document.addEventListener('DOMContentLoaded', function() {
             correctCountDisplay.textContent = correctCount;
             speechBubble.textContent = 'Harika! Devam et!';
             showCorrectEffect();
-            generateQuestion(selectedTopicId, selectedLevelId);
+            
+            // Ses efekti (eğer ayarlarda açıksa)
+            if (settings.sound_effects) {
+                // Burada ses çalabilirsiniz
+            }
+            
+            // Otomatik sonraki soru (eğer ayarlarda açıksa)
+            if (settings.auto_next_question) {
+                setTimeout(() => {
+                    answerInput.value = '';
+                    generateQuestion(selectedTopicId, selectedLevelId);
+                    answerInput.focus();
+                }, 1000);
+            } else {
+                answerInput.value = '';
+                generateQuestion(selectedTopicId, selectedLevelId);
+                answerInput.focus();
+            }
         } else {
             wrongCount++;
             wrongCountDisplay.textContent = wrongCount;
-            speechBubble.textContent = 'Tekrar dene!';
+            
+            // Doğru cevabı göster (eğer ayarlarda açıksa)
+            if (settings.show_correct_answers) {
+                speechBubble.textContent = `Yanlış! Doğru cevap: ${correctAnswer}`;
+                
+                                 // Otomatik sonraki soru (eğer ayarlarda açıksa)
+                 if (settings.auto_next_question) {
+                     setTimeout(() => {
+                         answerInput.value = '';
+                         generateQuestion(selectedTopicId, selectedLevelId);
+                         answerInput.focus();
+                     }, 2500); // Doğru cevabı görmek için biraz daha bekle
+                 } else {
+                     speechBubble.textContent += ' Tekrar dene!';
+                     answerInput.value = '';
+                     answerInput.focus();
+                 }
+            } else {
+                                 speechBubble.textContent = 'Tekrar dene!';
+                 if (settings.auto_next_question) {
+                     setTimeout(() => {
+                         answerInput.value = '';
+                         generateQuestion(selectedTopicId, selectedLevelId);
+                         answerInput.focus();
+                     }, 1500);
+                 } else {
+                     answerInput.value = '';
+                     answerInput.focus();
+                 }
+            }
+            
             showWrongEffect();
-            answerInput.value = '';
-            answerInput.focus();
         }
 
         speechBubble.classList.remove('hide');
