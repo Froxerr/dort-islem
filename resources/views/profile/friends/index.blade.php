@@ -298,9 +298,6 @@
                             </div>
                         </div>
                         <div class="friend-actions">
-                            <button class="btn btn-message" title="Mesaj Gönder">
-                                <i class="fas fa-comment"></i>
-                            </button>
                             <a href="{{ route('friends.view', $friend->id) }}" class="btn btn-profile" title="Profil Görüntüle">
                                 <i class="fas fa-eye"></i>
                             </a>

@@ -17,6 +17,11 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
+// User notifications channel (arkadaşlık daveti vs.)
+Broadcast::channel('user.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
 Broadcast::channel('conversation.{conversationId}', function ($user, $conversationId) {
     // Kullanıcının bu conversation'a katılma yetkisi var mı kontrol et
     $conversation = \App\Models\Conversation::find($conversationId);

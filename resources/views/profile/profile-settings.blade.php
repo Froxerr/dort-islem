@@ -414,6 +414,156 @@
             left: 1rem;
         }
     }
+    
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        z-index: 999999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .modal-content {
+        background: linear-gradient(145deg, var(--card-background), #ffffff);
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 
+            0 20px 60px rgba(0, 0, 0, 0.3),
+            0 8px 20px rgba(0, 0, 0, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        transform: scale(0.8) translateY(30px);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        isolation: isolate;
+    }
+    
+    .modal-overlay.active .modal-content {
+        transform: scale(1) translateY(0);
+    }
+    
+    .modal-header {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .modal-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .modal-icon.danger {
+        background: linear-gradient(135deg, var(--danger-color), #d32f2f);
+    }
+    
+    .modal-icon.warning {
+        background: linear-gradient(135deg, var(--warning-color), #f57c00);
+    }
+    
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--text-primary);
+        margin: 0 0 0.5rem 0;
+    }
+    
+    .modal-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+    
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .modal-btn {
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        justify-content: center;
+        min-width: 120px;
+    }
+    
+    .modal-btn-cancel {
+        background: var(--text-secondary);
+        color: white;
+    }
+    
+    .modal-btn-cancel:hover {
+        background: #555;
+        transform: translateY(-2px);
+    }
+    
+    .modal-btn-danger {
+        background: var(--danger-color);
+        color: white;
+    }
+    
+    .modal-btn-danger:hover {
+        background: #d32f2f;
+        transform: translateY(-2px);
+    }
+    
+    .modal-btn-warning {
+        background: var(--warning-color);
+        color: white;
+    }
+    
+    .modal-btn-warning:hover {
+        background: #f57c00;
+        transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+        .modal-content {
+            padding: 1.5rem;
+            margin: 1rem;
+        }
+        
+        .modal-actions {
+            flex-direction: column;
+        }
+        
+        .modal-btn {
+            width: 100%;
+        }
+    }
 </style>
 @endsection
 
@@ -785,13 +935,13 @@
                     </div>
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-secondary" onclick="clearProgress()">
+                        <button type="button" class="btn btn-secondary" onclick="openResetModal()">
                             <i class="fas fa-undo"></i> Tüm İlerlemeyi Sıfırla
                         </button>
                     </div>
 
                     <div class="form-group">
-                        <button type="button" class="btn btn-danger" onclick="deleteAccount()">
+                        <button type="button" class="btn btn-danger" onclick="openDeleteModal()">
                             <i class="fas fa-user-times"></i> Hesabı Sil
                         </button>
                     </div>
@@ -803,6 +953,60 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Progress Modal -->
+<div class="modal-overlay" id="resetModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-icon warning">
+                <i class="fas fa-undo"></i>
+            </div>
+            <h2 class="modal-title">İlerleme Sıfırlama</h2>
+            <p class="modal-description">
+                Tüm quiz geçmişiniz, XP'niz, seviyeniz, rozetleriniz ve başarımlarınız silinecek. 
+                Bu işlem <strong>geri alınamaz</strong>!
+                <br><br>
+                Devam etmek istediğinizden emin misiniz?
+            </p>
+        </div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeResetModal()">
+                <i class="fas fa-times"></i> Vazgeç
+            </button>
+            <button class="modal-btn modal-btn-warning" onclick="confirmReset()">
+                <i class="fas fa-undo"></i> Evet, Sıfırla
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-icon danger">
+                <i class="fas fa-user-times"></i>
+            </div>
+            <h2 class="modal-title">Hesap Silme</h2>
+            <p class="modal-description">
+                Bu işlem hesabınızı <strong>kalıcı olarak</strong> silecektir. 
+                Tüm verileriniz, arkadaşlıklarınız, mesajlarınız ve ilerlemeniz kaybolacak.
+                <br><br>
+                <strong>Bu işlem kesinlikle geri alınamaz!</strong>
+                <br><br>
+                Hesabınızı gerçekten silmek istiyor musunuz?
+            </p>
+        </div>
+        <div class="modal-actions">
+            <button class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">
+                <i class="fas fa-times"></i> Vazgeç
+            </button>
+            <button class="modal-btn modal-btn-danger" onclick="confirmDelete()">
+                <i class="fas fa-trash"></i> Evet, Hesabı Sil
+            </button>
         </div>
     </div>
 </div>
@@ -860,7 +1064,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function clearProgress() {
+function openResetModal() {
+    document.getElementById('resetModal').classList.add('active');
+}
+
+function closeResetModal() {
+    document.getElementById('resetModal').classList.remove('active');
+}
+
+function confirmReset() {
     if (confirm('Tüm ilerlemenizi sıfırlamak istediğinizden emin misiniz? Bu işlem geri alınamaz!')) {
         // AJAX call to clear progress
         fetch('{{ route("profile.settings.clear-progress") }}', {
@@ -877,10 +1089,19 @@ function clearProgress() {
                 alert('Bir hata oluştu. Lütfen tekrar deneyin.');
             }
         });
+        closeResetModal();
     }
 }
 
-function deleteAccount() {
+function openDeleteModal() {
+    document.getElementById('deleteModal').classList.add('active');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+}
+
+function confirmDelete() {
     if (confirm('Hesabınızı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm verileriniz silinecek!')) {
         if (confirm('Son kez soruyorum: Hesabınızı gerçekten silmek istiyor musunuz?')) {
             // AJAX call to delete account
@@ -900,6 +1121,7 @@ function deleteAccount() {
             });
         }
     }
+    closeDeleteModal();
 }
 
 // 2FA özelliği geçici olarak devre dışı

@@ -4,6 +4,187 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('assets/css/view-profil.css') }}">
+    <style>
+        /* Privacy Notice Styles */
+        .privacy-notice {
+            background: linear-gradient(145deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05));
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            color: #856404;
+        }
+        
+        .privacy-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .privacy-notice p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Empty State Styles */
+        .empty-state {
+            background: linear-gradient(145deg, rgba(108, 117, 125, 0.1), rgba(108, 117, 125, 0.05));
+            border: 1px solid rgba(108, 117, 125, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            color: #6c757d;
+        }
+        
+        .empty-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #6c757d, #495057);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .empty-state p {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Updated Badge Styles */
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .badge-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .badge-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+        
+        .badge-info {
+            flex: 1;
+        }
+        
+        .badge-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .badge-date {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* Updated Test Styles */
+        .test-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-date {
+            font-size: 0.9rem;
+            color: #666;
+            min-width: 120px;
+        }
+        
+        .test-details {
+            flex: 1;
+        }
+        
+        .test-difficulty {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .test-score {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .test-score .correct {
+            color: #28a745;
+        }
+        
+        .test-score .wrong {
+            color: #dc3545;
+        }
+        
+        .test-score .score {
+            color: #007bff;
+            font-weight: 600;
+        }
+        
+        .accuracy-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: conic-gradient(#28a745 var(--accuracy), #e9ecef var(--accuracy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            position: relative;
+        }
+        
+        .accuracy-circle::before {
+            content: '';
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background: white;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .accuracy-circle span {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -68,6 +249,7 @@
 
         <!-- Profil İçeriği -->
         <div class="profile-content">
+            @if($showStats && count($stats) > 0)
             <!-- İstatistikler -->
             <div class="stats-section">
                 <h2><i class="fas fa-chart-bar"></i> İstatistikler</h2>
@@ -104,65 +286,99 @@
                     </div>
                 </div>
             </div>
+            @else
+                @if(!$showStats)
+                <div class="privacy-notice">
+                    <div class="privacy-icon">
+                        <i class="fas fa-eye-slash"></i>
+                    </div>
+                    <p>Bu kullanıcı istatistiklerini paylaşmayı tercih etmiyor.</p>
+                </div>
+                @endif
+            @endif
 
+            @if($showAchievements && $badges->count() > 0)
             <!-- Rozetler -->
             <div class="badges-section">
-                <h3><i class="fas fa-award"></i> Rozetler</h3>
+                <h2><i class="fas fa-trophy"></i> Rozetler</h2>
                 <div class="badges-grid">
-                    @forelse($badges as $badge)
+                    @foreach($badges as $badge)
                         <div class="badge-item">
-                            <img src="{{ asset('assets/img/badges/' . $badge->icon_filename) }}"
-                                 alt="{{ $badge->name }}"
-                                 title="{{ $badge->name }}">
-                            <span class="badge-name">{{ $badge->name }}</span>
+                            <div class="badge-icon">
+                                <img src="{{ asset('assets/img/badges/' . $badge->icon_filename) }}" alt="{{ $badge->name }}">
+                            </div>
+                            <div class="badge-info">
+                                <div class="badge-name">{{ $badge->name }}</div>
+                                @if($badge->earned_at)
+                                    <div class="badge-date">{{ $badge->earned_at->format('d.m.Y') }}</div>
+                                @endif
+                            </div>
                         </div>
-                    @empty
-                        <div class="empty-state">
-                            <h4>Henüz Badge Yok</h4>
-                            <p>Kullanıcı henüz hiç badge kazanmamış.</p>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
             </div>
+            @else
+                @if(!$showAchievements)
+                <div class="privacy-notice">
+                    <div class="privacy-icon">
+                        <i class="fas fa-eye-slash"></i>
+                    </div>
+                    <p>Bu kullanıcı başarımlarını paylaşmayı tercih etmiyor.</p>
+                </div>
+                @elseif($badges->count() == 0)
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <p>Henüz hiç rozet kazanılmamış.</p>
+                </div>
+                @endif
+            @endif
 
-            <!-- Son Aktiviteler -->
-            <div class="recent-activities">
-                <h3><i class="fas fa-history"></i> Son Aktiviteler</h3>
-                <div class="activities-list">
-                    @forelse($recentQuizzes as $quiz)
-                        <div class="quiz-result">
-                            <div class="quiz-icon">
-                                <i class="fas fa-pen"></i>
+            @if($showActivity && $recentQuizzes->count() > 0)
+            <!-- Son Testler -->
+            <div class="recent-tests-section">
+                <h2><i class="fas fa-history"></i> Son Testler</h2>
+                <div class="tests-list">
+                    @foreach($recentQuizzes as $quiz)
+                        <div class="test-item">
+                            <div class="test-date">
+                                {{ \Carbon\Carbon::parse($quiz['date'])->format('d.m.Y H:i') }}
                             </div>
-                            <div class="quiz-details">
-                                <div class="quiz-header">
-                                    <span class="quiz-difficulty">{{ $quiz['difficulty'] }}</span>
-                                    <span class="quiz-date">{{ $quiz['date']->diffForHumans() }}</span>
+                            <div class="test-details">
+                                <div class="test-difficulty">{{ $quiz['difficulty'] }}</div>
+                                <div class="test-score">
+                                    <span class="correct">{{ $quiz['correct_answers'] }} doğru</span>
+                                    <span class="wrong">{{ $quiz['wrong_answers'] }} yanlış</span>
+                                    <span class="score">{{ $quiz['score'] }} puan</span>
                                 </div>
-                                <div class="quiz-stats">
-                                    <span class="stat correct">
-                                        <i class="fas fa-check"></i> {{ $quiz['correct_answers'] }} doğru
-                                    </span>
-                                    <span class="stat wrong">
-                                        <i class="fas fa-times"></i> {{ $quiz['wrong_answers'] }} yanlış
-                                    </span>
-                                    <span class="stat score">
-                                        <i class="fas fa-star"></i> {{ $quiz['score'] }} puan
-                                    </span>
-                                    <span class="stat accuracy">
-                                        <i class="fas fa-bullseye"></i> %{{ $quiz['accuracy'] }} başarı
-                                    </span>
+                            </div>
+                            <div class="test-accuracy">
+                                <div class="accuracy-circle" style="--accuracy: {{ $quiz['accuracy'] }}%">
+                                    <span>%{{ $quiz['accuracy'] }}</span>
                                 </div>
                             </div>
                         </div>
-                    @empty
-                        <div class="empty-state">
-                            <h4>Henüz Test Çözülmemiş</h4>
-                            <p>Kullanıcı henüz hiç test çözmemiş.</p>
-                        </div>
-                    @endforelse
+                    @endforeach
                 </div>
             </div>
+            @else
+                @if(!$showActivity)
+                <div class="privacy-notice">
+                    <div class="privacy-icon">
+                        <i class="fas fa-eye-slash"></i>
+                    </div>
+                    <p>Bu kullanıcı aktivitelerini paylaşmayı tercih etmiyor.</p>
+                </div>
+                @elseif($recentQuizzes->count() == 0)
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <p>Henüz test çözülmemiş.</p>
+                </div>
+                @endif
+            @endif
         </div>
     </div>
 </div>

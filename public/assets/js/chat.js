@@ -8,8 +8,10 @@ class ChatWidget {
         this.messagePollingInterval = null;
         this.pusher = null;
         this.currentChannel = null;
-        this.typingTimeout = null;
+        this.userChannel = null; // Kullanıcı eventi için channel - ARTIK KULLANILMIYOR
         this.isTyping = false;
+        this.lastSoundPlay = null;
+        this.lastTypingRequest = null; // Rate limiting için
         
         this.init();
     }
@@ -151,28 +153,87 @@ class ChatWidget {
             this.style.height = Math.min(this.scrollHeight, 80) + 'px';
         });
         
-        // Enter to send, Shift+Enter for new line
+        // Typing indicator - ultra stable version with comprehensive error handling
+        let typingTimer = null;
+        let lastTypingState = false;
+        let typingDebounceTimer = null; // Debounce için
+        let isProcessingTyping = false; // Processing flag
+        
+        const processTypingState = (shouldBeTyping) => {
+            if (isProcessingTyping) return; // Prevent concurrent processing
+            isProcessingTyping = true;
+            
+            try {
+                // Sadece Pusher varsa typing indicator kullan
+                if (!this.pusher || !this.currentConversation) {
+                    isProcessingTyping = false;
+                    return;
+                }
+                
+                // State değişmiş mi kontrol et
+                if (shouldBeTyping === lastTypingState) {
+                    isProcessingTyping = false;
+                    return; // No change needed
+                }
+                
+                // Update states
+                this.isTyping = shouldBeTyping;
+                lastTypingState = shouldBeTyping;
+                
+                // Send typing status
+                this.sendTypingStatus(shouldBeTyping);
+                
+            } catch (error) {
+                console.log('Typing processing error:', error);
+            } finally {
+                isProcessingTyping = false;
+            }
+        };
+        
+        messageInput.addEventListener('input', () => {
+            const hasText = messageInput.value.trim() !== '';
+            
+            // Clear existing debounce
+            clearTimeout(typingDebounceTimer);
+            
+            // Immediate typing start
+            if (hasText && !this.isTyping) {
+                processTypingState(true);
+            }
+            
+            // Clear existing timer
+            clearTimeout(typingTimer);
+            
+            if (hasText) {
+                // Debounced typing stop (3 seconds after last keystroke)
+                typingTimer = setTimeout(() => {
+                    processTypingState(false);
+                }, 3000);
+            } else {
+                // Immediate typing stop when empty
+                processTypingState(false);
+            }
+        });
+        
+        // Enter to send, Shift+Enter for new line - stable version
         messageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
+                
+                // Clear all typing timers and states
+                clearTimeout(typingTimer);
+                clearTimeout(typingDebounceTimer);
+                processTypingState(false);
+                
                 this.sendMessage(e);
             }
         });
         
-        // Typing indicator
-        messageInput.addEventListener('input', () => {
-            this.sendTypingStatus(true);
-            
-            // 2 saniye sonra typing'i durdur
-            clearTimeout(this.typingTimeout);
-            this.typingTimeout = setTimeout(() => {
-                this.sendTypingStatus(false);
-            }, 2000);
-        });
-        
-        // Focus çıkınca typing'i durdur
+        // Focus lost - stable cleanup
         messageInput.addEventListener('blur', () => {
-            this.sendTypingStatus(false);
+            clearTimeout(typingTimer);
+            clearTimeout(typingDebounceTimer);
+            processTypingState(false);
         });
     }
     
@@ -382,7 +443,7 @@ class ChatWidget {
             }
             
             return `
-                <div class="message ${isOwn ? 'own' : 'other'}">
+                <div class="message ${isOwn ? 'own' : 'other'}" data-message-id="${message.id}">
                     ${messageAvatarContent}
                     <div class="message-bubble">
                         <div class="message-content">
@@ -414,6 +475,10 @@ class ChatWidget {
         const message = input.value.trim();
         
         if (!message || !this.currentConversation) return;
+        
+        // Stable typing cleanup - mesaj gönderilirken
+        this.sendTypingStatus(false);
+        this.isTyping = false;
         
         try {
             const response = await fetch('/messages/send', {
@@ -533,7 +598,7 @@ class ChatWidget {
                 });
                 
                 // Mesajı yerel olarak okundu olarak işaretle
-                message.read_at = new Date().toISOString();
+                message.read_at = data.read_at;
             } catch (error) {
                 // Silent error
             }
@@ -611,30 +676,60 @@ class ChatWidget {
     handleNewMessage(message) {
         if (!this.currentConversation || message.conversation_id != this.currentConversation.id) return;
         
+        // ID-based duplicate prevention - mesaj zaten var mı?
+        const existingMessage = this.currentConversation.messages.find(m => m.id == message.id);
+        if (existingMessage) {
+            console.log('Duplicate message prevented:', message.id);
+            return; // Bu mesaj zaten var
+        }
+        
+        // Kendi gönderdiğimiz mesajı broadcast'ten almışsak ignore et
+        const currentUserId = document.querySelector('meta[name="user-id"]')?.getAttribute('content');
+        if (message.user_id == currentUserId || message.user_id === parseInt(currentUserId)) {
+            console.log('Own message from broadcast ignored:', message.id);
+            return; // Kendi mesajımızı broadcast'ten alma
+        }
+        
         // Mesajı conversation'a ekle
         this.currentConversation.messages.push(message);
         
         // UI'ı güncelle
         this.renderMessages();
         
-        // Ses efekti (opsiyonel)
-        this.playMessageSound();
+        // Ses efekti (opsiyonel) - geçici olarak devre dışı
+        // this.playMessageSound();
         
         // Unread count güncelle
         this.checkUnreadMessages();
     }
     
     /**
-     * Mesaj okundu durumu güncellendiğinde çalışır
+     * Mesaj okundu durumu güncellendiğinde çalışır - optimized version
      */
     handleMessageRead(data) {
-        if (this.currentConversation && data.conversation_id == this.currentConversation.id) {
-            // İlgili mesajı bul ve read_at'ini güncelle
-            const message = this.currentConversation.messages.find(m => m.id == data.message_id);
-            if (message) {
-                message.read_at = data.read_at;
-                this.renderMessages(); // Tick durumunu güncelle
-            }
+        if (!this.currentConversation || data.conversation_id != this.currentConversation.id) return;
+        
+        // İlgili mesajı bul ve read_at'ini güncelle
+        const message = this.currentConversation.messages.find(m => m.id == data.message_id);
+        if (message) {
+            // Sadece read_at'i güncelle
+            message.read_at = data.read_at;
+            
+            // Sadece o mesajın tick durumunu güncelle (performans için)
+            this.updateMessageTick(message.id, 'read');
+        }
+    }
+    
+    /**
+     * Tek bir mesajın tick durumunu güncelle (performance optimization)
+     */
+    updateMessageTick(messageId, tickStatus) {
+        const messageElement = document.querySelector(`[data-message-id="${messageId}"] .message-tick`);
+        if (messageElement) {
+            // Mevcut class'ları temizle
+            messageElement.classList.remove('sent', 'delivered', 'read');
+            // Yeni status'u ekle
+            messageElement.classList.add(tickStatus);
         }
     }
     
@@ -647,7 +742,7 @@ class ChatWidget {
         // Kendi typing'ımızı gösterme
         if (data.user.id == currentUserId) return;
         
-        const typingIndicator = document.getElementById('typingIndicator');
+        let typingIndicator = document.getElementById('typingIndicator');
         
         if (data.is_typing) {
             if (!typingIndicator) {
@@ -674,6 +769,7 @@ class ChatWidget {
                 });
             }
         } else {
+            // is_typing false geldiğinde direkt kaldır
             if (typingIndicator) {
                 typingIndicator.remove();
             }
@@ -684,9 +780,16 @@ class ChatWidget {
      * Mesaj ses efekti
      */
     playMessageSound() {
+        // Ses spam'ini önlemek için rate limiting
+        const now = Date.now();
+        if (this.lastSoundPlay && (now - this.lastSoundPlay) < 1000) {
+            return; // 1 saniye içinde tekrar ses çalma
+        }
+        this.lastSoundPlay = now;
+        
         // Basit bir beep sesi
         try {
-            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8tjAciUFLIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCb');
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCbcSUFJIHO8tjAciUFLIHO8diJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmQcBzqF0fS+cSADKIXS8eSNOwcZaLvl6JdKDAhWq+Pwl0wRCkGc3O3UfSQEB3fH8cCb');
             audio.volume = 0.3;
             audio.play().catch(() => {
                 // Ses çalınmazsa sessizce devam et
@@ -699,16 +802,20 @@ class ChatWidget {
 
     
     /**
-     * Typing durumunu gönder
+     * Typing durumunu gönder - stable version with error handling
      */
     async sendTypingStatus(isTyping) {
-        // Pusher yoksa typing indicator kullanma
-        if (!this.pusher || !this.currentConversation || this.isTyping === isTyping) return;
+        // Rate limiting: Maximum 1 request per 500ms
+        const now = Date.now();
+        if (this.lastTypingRequest && (now - this.lastTypingRequest) < 500) {
+            return;
+        }
+        this.lastTypingRequest = now;
         
-        this.isTyping = isTyping;
+        if (!this.pusher || !this.currentConversation) return;
         
         try {
-            await fetch('/messages/typing', {
+            const response = await fetch('/messages/typing', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -719,8 +826,15 @@ class ChatWidget {
                     is_typing: isTyping
                 })
             });
+            
+            // Don't throw on non-200 responses for typing (non-critical)
+            if (!response.ok) {
+                console.log('Typing status failed:', response.status);
+            }
+            
         } catch (error) {
-            // Silent error
+            // Silent error for typing - non-critical feature
+            console.log('Typing status error:', error);
         }
     }
 }
@@ -731,5 +845,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Sadece giriş yapmış kullanıcılar için chat widget'ını başlat
     if (document.querySelector('meta[name="user-id"]')) {
         chatWidget = new ChatWidget();
+        window.chatWidget = chatWidget; // Global erişim için
     }
 }); 

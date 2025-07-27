@@ -130,59 +130,78 @@ class FriendshipController extends Controller
             return redirect()->route('profile.details');
         }
 
+        // Profil görünürlüğü kontrolü
+        $canViewProfile = $this->canViewProfile($user, $targetUser);
+        
+        if (!$canViewProfile) {
+            return view('profile.friends.profile-private', [
+                'user' => $targetUser,
+                'reason' => $this->getPrivacyReason($targetUser)
+            ]);
+        }
+
         $friendshipStatus = $user->getFriendshipStatus($targetUser->id);
         $mutualFriendsCount = $user->getMutualFriendsCount($targetUser->id);
 
-        $stats = [
-            'totalTests' => $targetUser->quizSessions()->count(),
-            'averageAccuracy' => round($targetUser->getAverageAccuracy()),
-            'highestScore' => $targetUser->quizSessions()->max('score') ?? 0
-        ];
+        // İstatistik görünürlüğü kontrolü
+        $showStats = $targetUser->show_stats && $this->canViewStats($user, $targetUser);
+        $showAchievements = $targetUser->show_achievements && $this->canViewAchievements($user, $targetUser);
+        $showActivity = $targetUser->show_activity && $this->canViewActivity($user, $targetUser);
 
-        // Rozetleri al
-        $badges = $targetUser->badges()
-                           ->orderBy('earned_at', 'desc')
-                           ->get();
+        $stats = [];
+        if ($showStats) {
+            $stats = [
+                'totalTests' => $targetUser->quizSessions()->count(),
+                'averageAccuracy' => round($targetUser->getAverageAccuracy()),
+                'highestScore' => $targetUser->quizSessions()->max('score') ?? 0
+            ];
+        }
 
-        \Log::info('Kullanıcı rozetleri alındı', [
-            'user_id' => $targetUser->id,
-            'badge_count' => $badges->count(),
-            'badges' => $badges->map(function($badge) {
-                return [
-                    'id' => $badge->id,
-                    'name' => $badge->name,
-                    'icon_filename' => $badge->icon_filename,
-                    'earned_at' => $badge->earned_at
-                ];
-            })
-        ]);
+        // Rozetleri al (sadece gösterme izni varsa)
+        $badges = collect();
+        if ($showAchievements) {
+            $badges = $targetUser->badges()
+                               ->orderBy('earned_at', 'desc')
+                               ->get();
 
-        // Son 10 quiz sonucunu al
-        $recentQuizzes = $targetUser->quizSessions()
-                                   ->with('difficultyLevel') // Zorluk seviyesi bilgisini al
-                                   ->orderBy('created_at', 'desc')
-                                   ->limit(10)
-                                   ->get()
-                                   ->map(function($quiz) {
-                                       $incorrectAnswers = $quiz->total_questions - $quiz->correct_answers;
-                                       $accuracy = $quiz->total_questions > 0 
-                                           ? round(($quiz->correct_answers / $quiz->total_questions) * 100) 
-                                           : 0;
+            \Log::info('Kullanıcı rozetleri alındı', [
+                'user_id' => $targetUser->id,
+                'badge_count' => $badges->count(),
+                'badges' => $badges->map(function($badge) {
+                    return [
+                        'id' => $badge->id,
+                        'name' => $badge->name,
+                        'icon_filename' => $badge->icon_filename,
+                        'earned_at' => $badge->earned_at
+                    ];
+                })
+            ]);
+        }
 
-                                       return [
-                                           'date' => $quiz->created_at,
-                                           'difficulty' => $quiz->difficultyLevel->name,
-                                           'correct_answers' => $quiz->correct_answers,
-                                           'wrong_answers' => $incorrectAnswers,
-                                           'score' => $quiz->score,
-                                           'accuracy' => $accuracy
-                                       ];
-                                   });
+        // Son quiz sonuçları (sadece aktivite gösterme izni varsa)
+        $recentQuizzes = collect();
+        if ($showActivity) {
+            $recentQuizzes = $targetUser->quizSessions()
+                                       ->with('difficultyLevel')
+                                       ->orderBy('created_at', 'desc')
+                                       ->limit(10)
+                                       ->get()
+                                       ->map(function($quiz) {
+                                           $incorrectAnswers = $quiz->total_questions - $quiz->correct_answers;
+                                           $accuracy = $quiz->total_questions > 0 
+                                               ? round(($quiz->correct_answers / $quiz->total_questions) * 100) 
+                                               : 0;
 
-        \Log::info('Son quizler alındı', [
-            'quiz_count' => $recentQuizzes->count(),
-            'first_quiz' => $recentQuizzes->first()
-        ]);
+                                           return [
+                                               'date' => $quiz->created_at,
+                                               'difficulty' => $quiz->difficultyLevel->name,
+                                               'correct_answers' => $quiz->correct_answers,
+                                               'wrong_answers' => $incorrectAnswers,
+                                               'score' => $quiz->score,
+                                               'accuracy' => $accuracy
+                                           ];
+                                       });
+        }
 
         return view('profile.friends.view-profile', [
             'user' => $targetUser,
@@ -190,8 +209,95 @@ class FriendshipController extends Controller
             'mutualFriendsCount' => $mutualFriendsCount,
             'stats' => $stats,
             'badges' => $badges,
-            'recentQuizzes' => $recentQuizzes
+            'recentQuizzes' => $recentQuizzes,
+            'showStats' => $showStats,
+            'showAchievements' => $showAchievements,
+            'showActivity' => $showActivity
         ]);
+    }
+    
+    /**
+     * Profil görüntüleme izni kontrolü
+     */
+    private function canViewProfile($viewer, $targetUser)
+    {
+        // Profil görünürlük ayarını kontrol et
+        switch ($targetUser->profile_visibility) {
+            case 'public':
+                return true;
+                
+            case 'friends':
+                return $viewer->isFriendWith($targetUser->id);
+                
+            case 'private':
+                return false;
+                
+            default:
+                return true; // Default: public
+        }
+    }
+    
+    /**
+     * İstatistik görüntüleme izni kontrolü
+     */
+    private function canViewStats($viewer, $targetUser)
+    {
+        if ($targetUser->profile_visibility === 'private') {
+            return false;
+        }
+        
+        if ($targetUser->profile_visibility === 'friends') {
+            return $viewer->isFriendWith($targetUser->id);
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Başarım görüntüleme izni kontrolü
+     */
+    private function canViewAchievements($viewer, $targetUser)
+    {
+        if ($targetUser->profile_visibility === 'private') {
+            return false;
+        }
+        
+        if ($targetUser->profile_visibility === 'friends') {
+            return $viewer->isFriendWith($targetUser->id);
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Aktivite görüntüleme izni kontrolü
+     */
+    private function canViewActivity($viewer, $targetUser)
+    {
+        if ($targetUser->profile_visibility === 'private') {
+            return false;
+        }
+        
+        if ($targetUser->profile_visibility === 'friends') {
+            return $viewer->isFriendWith($targetUser->id);
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Gizlilik sebebini açıkla
+     */
+    private function getPrivacyReason($targetUser)
+    {
+        switch ($targetUser->profile_visibility) {
+            case 'friends':
+                return 'Bu kullanıcı profilini sadece arkadaşlarına gösteriyor.';
+            case 'private':
+                return 'Bu kullanıcı profilini gizli tutmayı tercih ediyor.';
+            default:
+                return 'Bu profil şu anda görüntülenemiyor.';
+        }
     }
 
     /**
@@ -218,9 +324,9 @@ class FriendshipController extends Controller
         $friendship = $user->sendFriendRequest($targetUserId);
 
         if ($friendship) {
-            // Bildirim gönder
+            // Real-time bildirim gönder
             $targetUser = User::find($targetUserId);
-            // $targetUser->notify(new FriendRequestReceived($user));
+            broadcast(new \App\Events\FriendRequestReceived($user, $friendship))->toOthers();
 
             return response()->json([
                 'success' => true,
@@ -257,6 +363,12 @@ class FriendshipController extends Controller
         }
 
         $friendship->accept();
+
+        // İsteği gönderen kullanıcıyı getir
+        $sender = User::find($friendship->user_id);
+        
+        // Real-time event gönder (her iki kullanıcıya da)
+        broadcast(new \App\Events\FriendRequestAccepted($user, $sender, $friendship))->toOthers();
 
         return response()->json([
             'success' => true,

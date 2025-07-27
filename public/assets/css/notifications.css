@@ -1,0 +1,220 @@
+/* Notification System - Arkadaşlık Daveti Pop-up */
+
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 999999; /* Ultra high z-index */
+    max-width: 350px;
+    pointer-events: none;
+    
+    /* Force positioning context */
+    transform: translateZ(0);
+    isolation: isolate;
+}
+
+.notification {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e9ecef;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    margin-bottom: 10px;
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+    animation: slideInRight 0.4s ease-out;
+    pointer-events: auto;
+    border-left: 4px solid #74b9ff;
+    
+    /* Performance optimizations */
+    will-change: transform, opacity;
+    transform: translateZ(0); /* Hardware acceleration */
+    backface-visibility: hidden;
+    
+    /* Stability improvements */
+    z-index: 1;
+    contain: layout style paint;
+    isolation: isolate;
+    
+    /* Prevent premature removal */
+    min-height: 80px;
+    transition: none; /* Disable any unwanted transitions */
+}
+
+.notification.success {
+    border-left-color: #00b894;
+}
+
+.notification.error {
+    border-left-color: #e17055;
+}
+
+.notification.friend-request {
+    border-left-color: #6c5ce7;
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.notification-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    overflow: hidden;
+}
+
+.notification-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.notification-info {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #2d3436;
+    margin: 0;
+}
+
+.notification-text {
+    font-size: 12px;
+    color: #636e72;
+    margin: 2px 0 0 0;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #636e72;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+    background: #f8f9fa;
+    color: #2d3436;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.notification-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+
+.notification-btn.accept {
+    background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+    color: white;
+}
+
+.notification-btn.accept:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+}
+
+.notification-btn.reject {
+    background: linear-gradient(135deg, #e17055 0%, #fab1a0 100%);
+    color: white;
+}
+
+.notification-btn.reject:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(225, 112, 85, 0.3);
+}
+
+/* Animations */
+@keyframes slideInRight {
+    from {
+        transform: translateX(400px) translateZ(0);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) translateZ(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0) translateZ(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px) translateZ(0);
+        opacity: 0;
+    }
+}
+
+.notification.removing {
+    animation: slideOutRight 0.3s ease-out forwards;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .notification-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .notification {
+        margin-bottom: 8px;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translateY(-100px) translateZ(0);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0) translateZ(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateY(0) translateZ(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(-100px) translateZ(0);
+            opacity: 0;
+        }
+    }
+} 

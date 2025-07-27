@@ -33,6 +33,8 @@
     @auth
     <!-- Chat Widget Styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/chat.css') }}">
+    <!-- Notification System Styles -->
+    <link rel="stylesheet" href="{{ asset('assets/css/notifications.css') }}">
     <!-- Pusher JS -->
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
@@ -51,6 +53,8 @@
 @auth
 <!-- Chat Widget Script -->
 <script src="{{ asset('assets/js/chat.js') }}"></script>
+<!-- Notification System Script -->
+<script src="{{ asset('assets/js/notifications.js') }}"></script>
 @endauth
 </body>
 </html>
