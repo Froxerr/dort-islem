@@ -2,28 +2,6 @@
 const isMobile = window.innerWidth <= 768;
 const duration = isMobile ? 0.7 : 1;
 
-// Bulutların animasyonu
-document.querySelectorAll('.cloud').forEach((cloud, index) => {
-    gsap.to(cloud, {
-        x: "+=30",
-        duration: (isMobile ? 8 : 10) + index * 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-    });
-});
-
-// Ağaçların animasyonu
-document.querySelectorAll('.tree').forEach(tree => {
-    gsap.to(tree, {
-        rotation: isMobile ? 0.5 : 1,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        transformOrigin: "bottom",
-        ease: "power1.inOut"
-    });
-});
 
 // Uygulama verileri
 const appData = JSON.parse(document.getElementById('app-data').textContent);
@@ -66,6 +44,66 @@ let gameStartTime = null;
 let timerAnimation = null;
 let timerInterval = null;
 let globalTimerInterval = null;
+
+// Takım Yıldızları Sistemi
+let constellationProgress = 0; // 0-9 arası, her 10 doğru bir takım yıldızı tamamlar
+let activeConstellation = Math.floor(Math.random() * 10); // 0-9 arası rastgele aktif takım yıldızı
+let totalCorrectAnswers = 0; // Toplam doğru cevap sayısı
+let completedConstellations = []; // Tamamlanan takım yıldızlarının indeksleri
+
+// 10 farklı takım yıldızı deseni
+const constellationData = [
+    { // 0 - Büyük Ayı (Ursa Major)
+        name: "Büyük Ayı", 
+        stars: [[20, 30], [40, 25], [70, 20], [100, 30], [130, 45], [160, 40], [190, 50]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6]]
+    },
+    { // 1 - Kasiope (Cassiopeia)
+        name: "Kasiope",
+        stars: [[30, 40], [60, 20], [90, 35], [120, 15], [150, 30]],
+        connections: [[0,1], [1,2], [2,3], [3,4]]
+    },
+    { // 2 - Akrep (Scorpius)
+        name: "Akrep",
+        stars: [[40, 60], [60, 45], [80, 30], [100, 35], [120, 50], [140, 65], [160, 80]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6]]
+    },
+    { // 3 - Orion
+        name: "Orion",
+        stars: [[50, 20], [80, 30], [110, 25], [70, 50], [90, 55], [110, 60], [90, 80]],
+        connections: [[0,1], [1,2], [3,4], [4,5], [4,6], [1,4]]
+    },
+    { // 4 - Küçük Ayı (Ursa Minor)
+        name: "Küçük Ayı",
+        stars: [[60, 25], [80, 30], [100, 40], [120, 35], [140, 45], [160, 50], [180, 45]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6]]
+    },
+    { // 5 - Ejder (Draco)
+        name: "Ejder",
+        stars: [[30, 50], [50, 40], [70, 35], [90, 45], [110, 30], [130, 40], [150, 55], [170, 50]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6], [6,7]]
+    },
+    { // 6 - Boğa (Taurus)
+        name: "Boğa",
+        stars: [[40, 45], [65, 35], [90, 40], [115, 30], [140, 45], [165, 55]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5]]
+    },
+    { // 7 - Aslan (Leo)
+        name: "Aslan",
+        stars: [[45, 35], [70, 30], [95, 35], [120, 40], [145, 45], [170, 50], [145, 65]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5], [4,6]]
+    },
+    { // 8 - Kuzgun (Corvus)
+        name: "Kuzgun",
+        stars: [[55, 40], [80, 35], [105, 45], [130, 50], [105, 65]],
+        connections: [[0,1], [1,2], [2,3], [2,4], [3,4]]
+    },
+    { // 9 - Kral Tacı (Corona Borealis)
+        name: "Kral Tacı",
+        stars: [[50, 45], [70, 35], [90, 30], [110, 35], [130, 45], [150, 50]],
+        connections: [[0,1], [1,2], [2,3], [3,4], [4,5]]
+    }
+];
 let sessionData = {
     selectedTopic: null,
     selectedDifficulty: null,
@@ -94,14 +132,14 @@ function calculateScore() {
 
     // Temel puan hesaplama
     const basePuan = sessionData.scores.correct * 10;
-    
+
     // Doğruluk oranı hesaplama
     const accuracyRate = sessionData.scores.correct / totalQuestions;
-    
+
     // Bonus çarpanı belirleme
     let bonusMultiplier = 0;
     let bonusMessage = '';
-    
+
     if (accuracyRate >= 0.95) {
         bonusMultiplier = 1.5;
         bonusMessage = 'Muhteşem Performans! Sen Bir Dahisin!';
@@ -153,10 +191,10 @@ function animateSpeechBubble(speechBubble, show, message = null) {
         if (message) {
             speechBubble.textContent = message;
         }
-        
+
         // Önce display'i ayarla
         speechBubble.style.display = 'block';
-        
+
         // Bir sonraki frame'de animasyonu başlat
         requestAnimationFrame(() => {
             speechBubble.style.visibility = 'visible';
@@ -198,21 +236,6 @@ function transitionToMathScene() {
         }
     });
 
-    // Performans için animasyonları grupla
-    timeline
-        .to('.cloud', {
-            opacity: 0,
-            scale: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "back.in(1.7)"
-        })
-        .to('.nature-bg', {
-            backgroundColor: '#f0f9ff',
-            duration: 0.5,
-            ease: "power2.inOut"
-        }, "-=0.3");
-
     const buboContainer = document.querySelector('.bubo-container');
     const buboImage = buboContainer.querySelector('img');
 
@@ -225,7 +248,7 @@ function transitionToMathScene() {
             onComplete: () => {
                 buboImage.src = '/assets/img/dalkus-right.png';
                 buboContainer.classList.add('left-side');
-                gsap.set(buboContainer, { 
+                gsap.set(buboContainer, {
                     clearProps: "right",
                     left: "0px"
                 });
@@ -237,18 +260,9 @@ function transitionToMathScene() {
             ease: "power1.out"
         });
 
-    // Ağaç animasyonlarını grupla
-    timeline
-        .to(['.tree.left', '.tree.right'], {
-            x: (index) => index === 0 ? "-=30" : "+=30",
-            duration: 0.5,
-            ease: "power2.inOut",
-            stagger: 0.1
-        }, "-=0.4");
-
     // Hesap makinesi ve butonları grupla
     timeline
-        .fromTo(calculator, 
+        .fromTo(calculator,
             {
                 opacity: 0,
                 scale: 0,
@@ -261,7 +275,7 @@ function transitionToMathScene() {
                 ease: "back.out(1.7)"
             }
         )
-        .fromTo(topicButtons, 
+        .fromTo(topicButtons,
             {
                 opacity: 0,
                 scale: 0,
@@ -348,15 +362,10 @@ function handleTopicSelection(topicId, topicName) {
     if (isAnimating) return;
     isAnimating = true;
 
-    console.log('Konu seçildi:', {
-        'Konu ID': topicId,
-        'Konu Adı': topicName
-    });
-
     selectedTopic = topicId;
     sessionData.selectedTopic = topicId;
     sessionData.topicName = topicName;
-    
+
     // Mevcut hesap makinesini kaldır
     const currentCalculator = document.querySelector('.calculator-container');
     if (!currentCalculator) {
@@ -371,11 +380,11 @@ function handleTopicSelection(topicId, topicName) {
         ease: "back.in(1.7)",
         onComplete: () => {
             currentCalculator.remove();
-            
+
             // Zorluk seviyelerini göster
             createDifficultyElements();
             const newCalculator = document.querySelector('.calculator-container');
-            
+
             gsap.fromTo(newCalculator,
                 {
                     opacity: 0,
@@ -400,7 +409,7 @@ function handleTopicSelection(topicId, topicName) {
 // Zorluk seviyesi hover efektlerini ayarla
 function setupDifficultyHoverEffects() {
     const speechBubble = document.querySelector('.speech-bubble');
-    
+
     document.querySelectorAll('.difficulty-button').forEach(button => {
         const levelName = button.dataset.levelName;
         const message = difficultyMessages[levelName];
@@ -422,10 +431,7 @@ function setupDifficultyHoverEffects() {
     });
 }
 
-// Soru üretici sınıfını oluştur
-console.log('QuestionGenerator örneği oluşturuluyor...');
 const questionGenerator = new QuestionGenerator();
-console.log('QuestionGenerator örneği oluşturuldu!');
 
 // Zorluk seçimini işle
 function handleDifficultySelection(difficultyId, difficultyName, xpMultiplier) {
@@ -451,14 +457,8 @@ function handleDifficultySelection(difficultyId, difficultyName, xpMultiplier) {
     sessionData.difficultyName = difficultyName;
     sessionData.xpMultiplier = xpMultiplier;
 
-    console.log('Soru üretiliyor...', {
-        'Seçilen Konu': sessionData.selectedTopic,
-        'Zorluk Seviyesi': difficultyName
-    });
-
     // Soru üret
     const question = questionGenerator.generateQuestion(sessionData.selectedTopic, difficultyName);
-    console.log('Üretilen Soru:', question);
 
     // Mevcut hesap makinesini kaldır
     gsap.to(oldCalculator, {
@@ -528,7 +528,7 @@ function createQuestionElements(question) {
                 <div class="calculator-screen">
                     <div class="screen-decoration">
                         <div class="solar-panel"></div>
-                        <div class="brand">Keşif Hesap</div>
+                        <div class="brand" style="display: none;">Keşif Hesap</div>
                         <div class="score-display">
                             <div class="correct-score">✓ ${scores.correct}</div>
                             <div class="wrong-score">✗ ${scores.wrong}</div>
@@ -553,7 +553,7 @@ function createQuestionElements(question) {
                 <div class="calculator-body">
                     <div class="number-pad">
                         <div class="number-input">
-                            <input type="text" id="answer-input" placeholder="Cevabı buraya yaz" 
+                            <input type="text" id="answer-input" placeholder="Cevabı buraya yaz"
                                    data-correct-answer="${question.answer}">
                         </div>
                         <button class="check-answer">Kontrol Et</button>
@@ -565,6 +565,20 @@ function createQuestionElements(question) {
 
     document.querySelector('.nature-bg').insertAdjacentHTML('beforeend', questionHTML);
     setupAnswerCheck();
+
+    // Soru ekranı oluşturulduktan sonra input'a fokus ver
+    setTimeout(() => {
+        const answerInput = document.querySelector('#answer-input');
+        if (answerInput) {
+            answerInput.focus();
+        }
+    }, 100);
+
+    // Progress göstergesini görünür yap
+    const progressElement = document.querySelector('.constellation-progress');
+    if (progressElement) {
+        progressElement.classList.add('visible');
+    }
 
     // İlk soru ise zamanlayıcıyı başlat, değilse güncelle
     if (!gameStartTime) {
@@ -606,19 +620,14 @@ function createQuestionElements(question) {
 // Yeni soru oluştur
 function generateNewQuestion() {
     if (!gameActive || isAnimating) return;
-    
+
     isAnimating = true;
-    console.log('Yeni soru üretiliyor...', {
-        'Konu': sessionData.selectedTopic,
-        'Zorluk': sessionData.difficultyName
-    });
 
     const currentCalculator = document.querySelector('.calculator-container');
-    
+
     // Yeni soruyu hazırla
     const question = questionGenerator.generateQuestion(selectedTopic, currentQuestion.difficulty);
-    console.log('Yeni üretilen soru:', question);
-    
+
     gsap.to(currentCalculator, {
         opacity: 0,
         scale: 0.8,
@@ -628,7 +637,7 @@ function generateNewQuestion() {
             currentCalculator.remove();
             createQuestionElements(question);
             const newCalculator = document.querySelector('.calculator-container');
-            
+
             gsap.fromTo(newCalculator,
                 {
                     opacity: 0,
@@ -642,6 +651,13 @@ function generateNewQuestion() {
                     ease: "back.out(1.7)",
                     onComplete: () => {
                         isAnimating = false;
+                        // Yeni soru oluşturulduktan sonra input'a fokus ver
+                        setTimeout(() => {
+                            const newAnswerInput = document.querySelector('#answer-input');
+                            if (newAnswerInput) {
+                                newAnswerInput.focus();
+                            }
+                        }, 100);
                     }
                 }
             );
@@ -826,7 +842,7 @@ function handleTimeUp() {
         onComplete: () => {
             currentCalculator.remove();
             document.querySelector('.nature-bg').insertAdjacentHTML('beforeend', resultHTML);
-            
+
             // Sonuç ekranını göster
             const resultBubble = document.querySelector('.result-bubble');
             gsap.fromTo(resultBubble,
@@ -849,14 +865,15 @@ function handleTimeUp() {
 
 // Sayfa yüklendiğinde çalışacak kod
 document.addEventListener('DOMContentLoaded', () => {
+    createStars();
+    createConstellations(); // Takım yıldızlarını oluştur
+    
     // İlk appData yüklemesi
     const appDataScript = document.getElementById('app-data');
     if (appDataScript) {
         try {
             window.appData = JSON.parse(appDataScript.textContent);
-            console.log('İlk appData yüklemesi:', window.appData);
         } catch (e) {
-            console.error('İlk appData yüklemesi hatası:', e);
         }
     }
 
@@ -871,7 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function showRegisterPrompt() {
     // Eğer animasyon devam ediyorsa veya zaten bir prompt varsa, işlemi engelle
     if (isAnimating || document.querySelector('.register-prompt')) return;
-    
+
     isAnimating = true;
 
     const registerHTML = `
@@ -888,7 +905,7 @@ function showRegisterPrompt() {
     const resultBubble = document.querySelector('.result-bubble');
     if (resultBubble) {
         resultBubble.insertAdjacentHTML('beforeend', registerHTML);
-        
+
         // Prompt'u animasyonla göster
         const prompt = resultBubble.querySelector('.register-prompt');
         gsap.fromTo(prompt,
@@ -945,16 +962,16 @@ function setupAnswerCheck() {
     // Sayısal input kontrolü ve formatlama
     answerInput.addEventListener('input', (e) => {
         if (!gameActive) return;
-        
+
         let value = e.target.value;
-        
+
         if (sessionData.difficultyName === 'Zor' || sessionData.difficultyName === 'Dahi') {
             // Virgülü noktaya çevir (kullanıcı virgül girerse)
             value = value.replace(/,/g, '.');
-            
+
             // Sadece rakamlar ve bir adet nokta izin ver
             value = value.replace(/[^\d.]/g, '');
-            
+
             // Birden fazla nokta varsa ilkini tut
             const dots = value.match(/\./g);
             if (dots && dots.length > 1) {
@@ -987,7 +1004,7 @@ function setupAnswerCheck() {
 
         let userAnswer;
         const inputValue = answerInput.value;
-        
+
         if (sessionData.difficultyName === 'Zor' || sessionData.difficultyName === 'Dahi') {
             // Virgülü noktaya çevir ve parseFloat kullan
             userAnswer = parseFloat(inputValue.replace(/,/g, '.'));
@@ -995,7 +1012,7 @@ function setupAnswerCheck() {
             // Binlik ayraçları kaldır ve parseInt kullan
             userAnswer = parseInt(inputValue.replace(/\./g, ''));
         }
-        
+
         const correctAnswer = parseFloat(answerInput.dataset.correctAnswer);
 
         // Input'u hemen temizle
@@ -1005,14 +1022,20 @@ function setupAnswerCheck() {
         if (!isNaN(userAnswer) && Math.abs(userAnswer - correctAnswer) < 0.01) {
             scores.correct++;
             sessionData.scores.correct++;
+            progressConstellation(); // Takım yıldızını ilerlet
             animateSpeechBubble(speechBubble, true, "Harika! Doğru cevap!");
             updateScoreDisplay();
             generateNewQuestion();
         } else {
             scores.wrong++;
             sessionData.scores.wrong++;
+            regressConstellation(); // Takım yıldızından geri git
             animateSpeechBubble(speechBubble, true, "Tekrar dene!");
             updateScoreDisplay();
+            // Yanlış cevap verildikten sonra input'a tekrar fokus ver
+            setTimeout(() => {
+                answerInput.focus();
+            }, 100);
         }
     });
 
@@ -1028,7 +1051,7 @@ function setupAnswerCheck() {
 function updateScoreDisplay() {
     const correctScore = document.querySelector('.correct-score');
     const wrongScore = document.querySelector('.wrong-score');
-    
+
     correctScore.textContent = `✓ ${scores.correct}`;
     wrongScore.textContent = `✗ ${scores.wrong}`;
 }
@@ -1036,7 +1059,7 @@ function updateScoreDisplay() {
 // Konu butonları için hover efektlerini ayarla
 function setupTopicHoverEffects() {
     const speechBubble = document.querySelector('.speech-bubble');
-    
+
     document.querySelectorAll('.topic-button').forEach(button => {
         const topicId = button.dataset.topic;
         const topicName = button.textContent.replace(' <img', '').trim(); // Extract topic name from button text
@@ -1102,10 +1125,10 @@ function setupTopicButtons() {
 function handleStartButtonClick() {
     // Eğer animasyon devam ediyorsa, tıklamayı engelle
     if (isAnimating) return;
-    
+
     // Animasyon başladığını işaretle
     isAnimating = true;
-    
+
     const buttonWrapper = document.querySelector('.button-wrapper');
     if (!buttonWrapper) return;
 
@@ -1127,27 +1150,19 @@ window.addEventListener('load', () => {
     const isMobile = window.innerWidth <= 768;
     const duration = isMobile ? 0.7 : 1;
 
+    // Takım yıldızlarının da hazır olduğundan emin ol
+    if (!document.querySelector('.constellations-container')) {
+        createConstellations();
+    }
+
     // DOM elementlerini önbelleğe al
     const speechBubble = document.querySelector('.speech-bubble');
     const buboContainer = document.querySelector('.bubo-container');
-    const trees = document.querySelectorAll('.tree');
 
     // Başlangıçta konuşma balonunu gizle
     speechBubble.style.opacity = 0;
     speechBubble.style.visibility = 'hidden';
     speechBubble.style.display = 'none';
-
-    // Ağaçların başlangıç animasyonu
-    trees.forEach(tree => {
-        gsap.to(tree, {
-            rotation: 1,
-            duration: 3,
-            repeat: -1,
-            yoyo: true,
-            ease: "power1.inOut",
-            transformOrigin: "bottom center"
-        });
-    });
 
     // Başlangıç animasyonları
     const startTimeline = gsap.timeline({
@@ -1155,7 +1170,7 @@ window.addEventListener('load', () => {
             // Baykuş animasyonu tamamlandıktan sonra konuşma balonunu göster
             setTimeout(() => {
                 animateSpeechBubble(speechBubble, true, "Merhaba küçük kaşif! Maceraya hazır mısın?");
-                
+
                 // 6 saniye sonra konuşma balonunu otomatik kaldır
                 autoHideTimeout = setTimeout(() => {
                     if (!isHovering) {
@@ -1167,20 +1182,6 @@ window.addEventListener('load', () => {
     });
 
     startTimeline
-        .from('.cloud', {
-            opacity: 0,
-            x: "-=30",
-            duration: duration,
-            stagger: 0.2,
-            ease: "power2.out"
-        })
-        .from('.tree', {
-            y: 50,
-            opacity: 0,
-            duration: duration,
-            stagger: 0.3,
-            ease: "power3.out"
-        }, "-=0.5")
         .from(buboContainer, {
             x: 100,
             opacity: 0,
@@ -1197,7 +1198,7 @@ window.addEventListener('load', () => {
                 });
                 // Baykuş gelir gelmez konuşma balonunu göster
                 animateSpeechBubble(speechBubble, true, "Merhaba küçük kaşif! Maceraya hazır mısın?");
-                
+
                 // 6 saniye sonra konuşma balonunu otomatik kaldır
                 autoHideTimeout = setTimeout(() => {
                     if (!isHovering) {
@@ -1252,9 +1253,10 @@ const debounce = (func, wait) => {
 };
 
 window.addEventListener('resize', debounce(() => {
+    createStars();
     const isMobile = window.innerWidth <= 768;
     const buboContainer = document.querySelector('.bubo-container');
-    
+
     if (buboContainer) {
         gsap.to(buboContainer, {
             rotation: isMobile ? 2 : 3,
@@ -1298,6 +1300,9 @@ function resetGameState() {
     };
     gameActive = false;
     gameStartTime = null;
+    
+    // Takım yıldızlarını sıfırla
+    resetConstellations();
 
     // Tüm event listener'ları temizle
     const oldButtons = document.querySelectorAll('.calculator-container button, .result-bubble button');
@@ -1404,13 +1409,13 @@ function restartGame() {
     if (appDataScript) {
         try {
             window.appData = JSON.parse(appDataScript.textContent);
-            
+
             // Yeni topic elementlerini oluştur
             setTimeout(() => {
                 createTopicElements();
             }, 300);
         } catch (error) {
-            console.error('AppData yüklenirken hata:', error);
+            console.error('AppData yüklenirken hata:');
         }
     }
 }
@@ -1524,4 +1529,317 @@ function createTopicElements() {
         duration: 0.5,
         ease: "power2.out"
     });
+}
+
+function createStars() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let staticShadows = [];
+    let twinklingShadows = [];
+
+    // Statik yıldızlar
+    for (let i = 0; i < 150; i++) {
+        const x = Math.random() * windowWidth;
+        const y = Math.random() * windowHeight;
+        const size = Math.random() * 2 + 0.5;
+        const opacity = Math.random() * 0.8 + 0.2;
+
+        staticShadows.push(`${x}px ${y}px 0 ${size}px rgba(255,255,255,${opacity})`);
+    }
+
+    // Parıldayan yıldızlar
+    for (let i = 0; i < 50; i++) {
+        const x = Math.random() * windowWidth;
+        const y = Math.random() * windowHeight;
+        const size = Math.random() * 3 + 1;
+        const opacity = Math.random() * 0.6 + 0.4;
+
+        twinklingShadows.push(`${x}px ${y}px 0 ${size}px rgba(255,255,255,${opacity})`);
+    }
+
+    // CSS kuralları oluştur
+    const style = document.createElement('style');
+    style.textContent = `
+        .stars::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            box-shadow: ${staticShadows.join(', ')};
+        }
+
+        .twinkling::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            box-shadow: ${twinklingShadows.join(', ')};
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Takım Yıldızları Sistemi Fonksiyonları
+function createConstellations() {
+    // Eğer zaten takım yıldızları varsa, yeniden oluşturma
+    let container = document.querySelector('.constellations-container');
+    if (container) {
+        container.remove();
+    }
+
+    // Ana container oluştur
+    container = document.createElement('div');
+    container.className = 'constellations-container';
+
+    // Her takım yıldızı için SVG oluştur
+    constellationData.forEach((constellation, index) => {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('class', 'constellation');
+        svg.setAttribute('width', '400'); // 280'den 400'e büyütüldü
+        svg.setAttribute('height', '180'); // 120'den 180'e büyütüldü
+        svg.setAttribute('data-constellation', index);
+
+        // Takım yıldızının pozisyonunu belirle (ekranın farklı yerlerine dağıt)
+        const positions = [
+            { top: '6%', left: '43%' },  // Sol üst - sağa kaydırıldı
+            { top: '15%', right: '5%' },  // Sağ üst
+            { top: '25%', left: '10%' },  // Sol orta üst
+            { top: '30%', right: '15%' }, // Sağ orta üst
+            { top: '45%', left: '3%' },   // Sol orta
+            { top: '50%', right: '8%' },  // Sağ orta
+            { top: '65%', left: '12%' },  // Sol orta alt
+            { top: '70%', right: '12%' }, // Sağ orta alt
+            { top: '80%', left: '8%' },   // Sol alt
+            { top: '85%', right: '5%' }   // Sağ alt
+        ];
+
+        const pos = positions[index];
+        Object.keys(pos).forEach(key => {
+            svg.style[key] = pos[key];
+        });
+
+        // Önce çizgileri çiz (yıldızların altında olması için)
+        constellation.connections.forEach((connection, connIndex) => {
+            const [startIdx, endIdx] = connection;
+            const startStar = constellation.stars[startIdx];
+            const endStar = constellation.stars[endIdx];
+
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('class', 'constellation-line');
+            line.setAttribute('x1', startStar[0]);
+            line.setAttribute('y1', startStar[1]);
+            line.setAttribute('x2', endStar[0]);
+            line.setAttribute('y2', endStar[1]);
+            line.setAttribute('data-connection', connIndex);
+
+            svg.appendChild(line);
+        });
+
+        // Yıldızları çiz
+        constellation.stars.forEach((star, starIndex) => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('class', 'constellation-star');
+            circle.setAttribute('cx', star[0]);
+            circle.setAttribute('cy', star[1]);
+            circle.setAttribute('r', '2');
+            circle.setAttribute('data-star', starIndex);
+
+            svg.appendChild(circle);
+        });
+
+        container.appendChild(svg);
+    });
+
+    // Progress göstergesi oluştur
+    const progressDiv = document.createElement('div');
+    progressDiv.className = 'constellation-progress';
+    progressDiv.innerHTML = `
+        <div>Takım Yıldızı: <span id="constellation-name">${constellationData[0].name}</span></div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="constellation-fill"></div>
+        </div>
+        <div><span id="constellation-count">${constellationProgress}</span>/10</div>
+    `;
+    container.appendChild(progressDiv);
+
+    // Ana sayfa elementine ekle
+    const natureBg = document.querySelector('.nature-bg');
+    if (natureBg) {
+        natureBg.appendChild(container);
+    }
+
+    // İlk durumu ayarla
+    updateConstellationDisplay();
+}
+
+// Takım yıldızları görünümünü güncelle
+function updateConstellationDisplay() {
+    const constellations = document.querySelectorAll('.constellation');
+    const nameElement = document.getElementById('constellation-name');
+    const fillElement = document.getElementById('constellation-fill');
+    const countElement = document.getElementById('constellation-count');
+
+    // Progress göstergelerini güncelle
+    if (nameElement) nameElement.textContent = constellationData[activeConstellation].name;
+    if (fillElement) fillElement.style.width = `${(constellationProgress / 10) * 100}%`;
+    if (countElement) countElement.textContent = constellationProgress;
+
+    // Her takım yıldızının durumunu güncelle
+    constellations.forEach((svg, index) => {
+        const stars = svg.querySelectorAll('.constellation-star');
+        const lines = svg.querySelectorAll('.constellation-line');
+
+        if (completedConstellations.includes(index)) {
+            // Tamamlanmış takım yıldızları
+            svg.className = 'constellation completed';
+            stars.forEach(star => star.classList.add('active'));
+            lines.forEach(line => line.classList.add('active'));
+        } else if (index === activeConstellation) {
+            // Mevcut takım yıldızı
+            svg.className = 'constellation building';
+            
+            // İlerlemeye göre yıldızları ve çizgileri aktifleştir
+            const activeStarsCount = constellationProgress;
+            const activeLinesCount = Math.max(0, constellationProgress - 1);
+
+            stars.forEach((star, starIndex) => {
+                if (starIndex < activeStarsCount) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+
+            lines.forEach((line, lineIndex) => {
+                if (lineIndex < activeLinesCount) {
+                    line.classList.add('active');
+                } else {
+                    line.classList.remove('active');
+                }
+            });
+        } else {
+            // Henüz başlanmamış takım yıldızları
+            svg.className = 'constellation';
+            stars.forEach(star => star.classList.remove('active'));
+            lines.forEach(line => line.classList.remove('active'));
+        }
+    });
+}
+
+// Doğru cevap verildiğinde takım yıldızı ilerletme
+function progressConstellation() {
+    totalCorrectAnswers++;
+    constellationProgress++;
+
+    // 10 doğru tamamlandı mı?
+    if (constellationProgress >= 10) {
+        // Tamamlanan takım yıldızının indexi
+        const completedConstellation = activeConstellation;
+        
+        // Tamamlanan takım yıldızını listeye ekle
+        if (!completedConstellations.includes(completedConstellation)) {
+            completedConstellations.push(completedConstellation);
+        }
+        
+        // Eğer tüm takım yıldızları tamamlandıysa
+        if (completedConstellations.length >= 10) {
+            // Tüm takım yıldızları tamamlandı! Yeniden başla
+            completedConstellations = [];
+            activeConstellation = Math.floor(Math.random() * 10);
+            constellationProgress = 0;
+            
+            // Özel tebrik mesajı
+            const speechBubble = document.querySelector('.speech-bubble');
+            if (speechBubble) {
+                showSpeechBubble(`🎉 İNANILMAZ! Tüm takım yıldızlarını tamamladın! Yeni maceralara hazır mısın? 🎉`, 4000);
+            }
+        } else {
+            // Henüz tamamlanmamış takım yıldızları arasından rastgele seç
+            const availableConstellations = [];
+            for (let i = 0; i < 10; i++) {
+                if (!completedConstellations.includes(i) && i !== completedConstellation) {
+                    availableConstellations.push(i);
+                }
+            }
+            
+            // Rastgele yeni takım yıldızı seç
+            activeConstellation = availableConstellations[Math.floor(Math.random() * availableConstellations.length)];
+            constellationProgress = 0;
+        }
+        
+        // Tamamlanma efektini göster
+        showConstellationCompleteEffect(completedConstellation);
+    }
+
+    updateConstellationDisplay();
+}
+
+// Yanlış cevap verildiğinde takım yıldızından çıkart
+function regressConstellation() {
+    if (constellationProgress > 0) {
+        // Mevcut takım yıldızında progress varsa azalt
+        constellationProgress--;
+    } else if (completedConstellations.length > 0) {
+        // Mevcut takım yıldızında progress yoksa ve tamamlanmış takım yıldızı varsa
+        // En son tamamlanan takım yıldızını tekrar aktif yap
+        const lastCompletedIndex = completedConstellations.length - 1;
+        const lastCompleted = completedConstellations[lastCompletedIndex];
+        
+        // Son tamamlanan takım yıldızını listeden çıkar
+        completedConstellations.splice(lastCompletedIndex, 1);
+        
+        // O takım yıldızını tekrar aktif yap ve 9/10 progress ver
+        activeConstellation = lastCompleted;
+        constellationProgress = 9;
+    }
+    // Eğer hiç tamamlanmış takım yıldızı yoksa ve progress da 0 ise hiçbir şey yapma
+
+    updateConstellationDisplay();
+}
+
+// Takım yıldızı tamamlanma efekti
+function showConstellationCompleteEffect(constellationIndex) {
+    const completedSvg = document.querySelector(`[data-constellation="${constellationIndex}"]`);
+    if (!completedSvg) return;
+
+    // Parlama efekti için geçici animasyon
+    completedSvg.style.filter = 'drop-shadow(0 0 15px rgba(255, 255, 255, 1)) brightness(1.5)';
+    
+    setTimeout(() => {
+        completedSvg.style.filter = 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.8))';
+    }, 1000);
+
+    // Baykuş tebrik mesajı
+    const speechBubble = document.querySelector('.speech-bubble');
+    if (speechBubble) {
+        showSpeechBubble(`🌟 Harika! ${constellationData[constellationIndex].name} takım yıldızını tamamladın! 🌟`, 3000);
+    }
+}
+
+// Takım yıldızları sistemini sıfırla
+function resetConstellations() {
+    constellationProgress = 0;
+    activeConstellation = Math.floor(Math.random() * 10); // Rastgele takım yıldızı seç (0-9)
+    totalCorrectAnswers = 0;
+    completedConstellations = []; // Tamamlanan takım yıldızlarını sıfırla
+    
+    // Takım yıldızlarını yeniden oluştur
+    createConstellations();
+    
+    // Progress göstergesini gizle
+    const progressElement = document.querySelector('.constellation-progress');
+    if (progressElement) {
+        progressElement.classList.remove('visible');
+    }
 }

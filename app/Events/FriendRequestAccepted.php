@@ -8,26 +8,43 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class FriendRequestAccepted implements ShouldBroadcast
+class FriendRequestAccepted implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets;
 
-    public $acceptedBy;
-    public $sender;
-    public $friendship;
+    public $friendshipData;
+    public $senderUserId;
+    public $acceptedByUserId;
 
     /**
      * Create a new event instance.
      */
     public function __construct(User $acceptedBy, User $sender, Friendship $friendship)
     {
-        $this->acceptedBy = $acceptedBy;
-        $this->sender = $sender;
-        $this->friendship = $friendship;
+        $this->senderUserId = $sender->id;
+        $this->acceptedByUserId = $acceptedBy->id;
+        
+        // Pre-extract all necessary data to avoid N+1 queries
+        $this->friendshipData = [
+            'friendship_id' => $friendship->id,
+            'accepted_by' => [
+                'id' => $acceptedBy->id,
+                'name' => $acceptedBy->name,
+                'username' => $acceptedBy->username,
+                'profile_image' => $acceptedBy->profile_image,
+            ],
+            'sender' => [
+                'id' => $sender->id,
+                'name' => $sender->name,
+                'username' => $sender->username,
+                'profile_image' => $sender->profile_image,
+            ],
+            'accepted_at' => $friendship->accepted_at,
+            'type' => 'friend_accepted'
+        ];
     }
 
     /**
@@ -38,8 +55,8 @@ class FriendRequestAccepted implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->sender->id),      // İsteği gönderen kişiye
-            new PrivateChannel('user.' . $this->acceptedBy->id),  // Kabul eden kişiye
+            new PrivateChannel('user.' . $this->senderUserId),      // İsteği gönderen kişiye
+            new PrivateChannel('user.' . $this->acceptedByUserId),  // Kabul eden kişiye
         ];
     }
 
@@ -58,22 +75,6 @@ class FriendRequestAccepted implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        return [
-            'friendship_id' => $this->friendship->id,
-            'accepted_by' => [
-                'id' => $this->acceptedBy->id,
-                'name' => $this->acceptedBy->name,
-                'username' => $this->acceptedBy->username,
-                'profile_image' => $this->acceptedBy->profile_image,
-            ],
-            'sender' => [
-                'id' => $this->sender->id,
-                'name' => $this->sender->name,
-                'username' => $this->sender->username,
-                'profile_image' => $this->sender->profile_image,
-            ],
-            'accepted_at' => $this->friendship->accepted_at,
-            'type' => 'friend_accepted'
-        ];
+        return $this->friendshipData;
     }
 } 

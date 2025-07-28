@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const centerCloud = document.getElementById('centerCloud');
     const calculator = document.getElementById('calculator');
-    const decorativeClouds = document.querySelectorAll('.decoration-cloud-1, .decoration-cloud-2, .decoration-cloud-3, .decoration-cloud-4');
+    const decorativeClouds = document.querySelectorAll('.profile-cloud, .profile-cloud-secondary, .decoration-cloud-1, .decoration-cloud-2, .decoration-cloud-3, .decoration-cloud-4');
     const speechBubble = document.querySelector('.speech-bubble');
     const sectionTitle = document.getElementById('sectionTitle');
     const topicsGrid = document.getElementById('topicsGrid');
@@ -16,9 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const exitDialog = document.getElementById('exitDialog');
     const confirmExit = document.getElementById('confirmExit');
     const cancelExit = document.getElementById('cancelExit');
-    
+
     const questionGenerator = new QuestionGenerator();
-    
+
     // Kullanıcı tercihlerini al (eğer tanımlıysa)
     const settings = window.userSettings || {
         default_difficulty_id: null,
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
         show_correct_answers: true,
         sound_effects: true
     };
-    
+
     let selectedTopicId = null;
     let selectedLevelId = null;
     let selectedTopicName = '';
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let timeLeft = 60;
     let isGameActive = false;
     let autoNextTimeout = null;
-    
+
     // İlk konuşma baloncuğu için zamanlayıcı
     let initialTimeout = setTimeout(() => {
         speechBubble.classList.add('hide');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             calculator.style.transform = 'translate(-50%, -50%) scale(1)';
             calculator.style.opacity = '1';
-            
+
             // Eğer favori konu ayarlanmışsa direkt o konuya geç
             if (settings.favorite_topic_id) {
                 const favoriteTopicElement = document.querySelector(`[data-topic-id="${settings.favorite_topic_id}"]`);
@@ -95,14 +95,14 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.topic-item').forEach(t => t.classList.remove('selected'));
             // Yeni konuyu seç
             this.classList.add('selected');
-            
+
             selectedTopicId = this.dataset.topicId;
             selectedTopicName = this.dataset.topicName;
-            
+
             // Başlığı değiştir
             sectionTitle.classList.add('fade-out');
             topicsGrid.classList.add('fade-out');
-            
+
             setTimeout(() => {
                 sectionTitle.textContent = 'Zorluk Seviyesi Seçiniz';
                 sectionTitle.classList.remove('fade-out');
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 topicsGrid.classList.add('hidden');
                 difficultyGrid.style.display = 'grid';
                 difficultyGrid.classList.remove('fade-out');
-                
+
                 // Eğer varsayılan zorluk ayarlanmışsa direkt o zorluğa geç
                 if (settings.default_difficulty_id) {
                     const defaultDifficultyElement = document.querySelector(`[data-level-id="${settings.default_difficulty_id}"]`);
@@ -134,17 +134,17 @@ document.addEventListener('DOMContentLoaded', function() {
         countdownDisplay.style.color = '#2563eb';
         timerProgress.style.backgroundColor = '#3b82f6';
         updateTimerBar();
-        
+
         countdownInterval = setInterval(() => {
             timeLeft--;
             countdownDisplay.textContent = timeLeft;
             updateTimerBar();
-            
+
             if (timeLeft <= 10) {
                 countdownDisplay.style.color = '#dc2626';
                 timerProgress.style.backgroundColor = '#dc2626';
             }
-            
+
             if (timeLeft <= 0) {
                 endGame();
             }
@@ -203,10 +203,9 @@ document.addEventListener('DOMContentLoaded', function() {
             selectedDifficultyName = this.dataset.levelName;
             // xp_multiplier'ı float olarak al ve kontrol et
             selectedDifficultyMultiplier = parseFloat(this.dataset.xpMultiplier) || 1;
-            console.log('Seçilen zorluk çarpanı:', selectedDifficultyMultiplier); // Debug için
-            
+
             difficultyGrid.classList.add('fade-out');
-            
+
             setTimeout(() => {
                 difficultyGrid.style.display = 'none';
                 document.querySelector('.calculator-top').style.display = 'none';
@@ -222,10 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateFinalScore() {
         const totalQuestions = correctCount + wrongCount;
         const accuracyRate = (correctCount / totalQuestions) * 100;
-        
+
         // Temel puan hesaplama
         let baseScore = correctCount * 10;
-        
+
         // Bonus çarpanı belirleme
         let bonusMultiplier = 1;
         if (accuracyRate > 95) {
@@ -311,7 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mevcut hesap makinesini kaldır ve sonuç ekranını göster
         calculationArea.style.display = 'none';
         document.querySelector('.calculator-bottom').insertAdjacentHTML('beforeend', resultHTML);
-        
+
         // Sonuç ekranını göster
         const resultBubble = document.querySelector('.result-bubble');
         resultBubble.style.display = 'block';
@@ -348,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Hesaplama alanını göster ve oyunu başlat
             calculationArea.style.display = 'block';
             document.querySelector('.calculator-top').style.display = 'none';
-            
+
             // Baykuş mesajını güncelle
             speechBubble.textContent = `${selectedTopicName} - ${selectedDifficultyName} ile tekrar başlıyoruz!`;
             speechBubble.classList.remove('hide');
@@ -398,14 +397,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function saveQuizSession(scoreData) {
         try {
-            console.log('Quiz session kaydediliyor:', {
-                topic_id: selectedTopicId,
-                difficulty_level_id: selectedLevelId,
-                score: scoreData.baseScore,
-                xp_earned: scoreData.finalScore,
-                total_questions: correctCount + wrongCount,
-                correct_answers: correctCount
-            });
 
             const response = await fetch('/quiz-sessions', {
                 method: 'POST',
@@ -427,41 +418,34 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const responseData = await response.json();
-            console.log('Server yanıtı:', responseData);
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    console.log('Oturum hatası, login sayfasına yönlendiriliyor');
                     window.location.href = '/login';
                     return;
                 }
-                throw new Error(responseData.message || 'Quiz session kaydedilemedi');
+                throw new Error('Quiz session kaydedilemedi');
             }
 
-            // Bildirimleri kontrol et ve göster
-            console.log('Bildirimler kontrol ediliyor:', responseData.notifications);
-            
+
+
             if (responseData.notifications && responseData.notifications.length > 0) {
-                console.log('Bildirimler bulundu:', responseData.notifications.length);
-                
+
                 // Bildirimleri sıraya koy
                 const notifications = [...responseData.notifications];
-                
+
                 // İlk bildirimi hemen göster
                 showNextNotification();
 
                 function showNextNotification() {
                     if (notifications.length === 0) return;
-                    
+
                     const notification = notifications.shift();
-                    console.log('İşlenen bildirim:', notification);
-                    
+
                     if (notification.type === 'App\\Notifications\\LevelUpEarned') {
-                        console.log('Level up bildirimi gösteriliyor:', notification);
                         showLevelUpNotification(notification);
-                    } 
+                    }
                     else if (notification.type === 'App\\Notifications\\BadgeEarned') {
-                        console.log('Rozet bildirimi gösteriliyor:', notification);
                         showBadgeNotification(notification);
                     }
 
@@ -479,12 +463,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             } else {
-                console.log('Bildirim bulunamadı');
             }
-
-            console.log('Quiz session başarıyla kaydedildi:', responseData);
         } catch (error) {
-            console.error('Quiz session kaydetme hatası:', error);
+            console.error('Quiz session kaydetme hatası:');
             throw error;
         }
     }
@@ -501,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const question = questionGenerator.generateQuestion(topicId, difficulty);
-        
+
         document.getElementById('number1').textContent = question.num1;
         document.getElementById('operator').textContent = question.operator;
         document.getElementById('number2').textContent = question.num2;
@@ -588,12 +569,12 @@ document.addEventListener('DOMContentLoaded', function() {
             correctCountDisplay.textContent = correctCount;
             speechBubble.textContent = 'Harika! Devam et!';
             showCorrectEffect();
-            
+
             // Ses efekti (eğer ayarlarda açıksa)
             if (settings.sound_effects) {
                 // Burada ses çalabilirsiniz
             }
-            
+
             // Otomatik sonraki soru (eğer ayarlarda açıksa)
             if (settings.auto_next_question) {
                 setTimeout(() => {
@@ -609,11 +590,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             wrongCount++;
             wrongCountDisplay.textContent = wrongCount;
-            
+
             // Doğru cevabı göster (eğer ayarlarda açıksa)
             if (settings.show_correct_answers) {
                 speechBubble.textContent = `Yanlış! Doğru cevap: ${correctAnswer}`;
-                
+
                                  // Otomatik sonraki soru (eğer ayarlarda açıksa)
                  if (settings.auto_next_question) {
                      setTimeout(() => {
@@ -639,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      answerInput.focus();
                  }
             }
-            
+
             showWrongEffect();
         }
 
@@ -684,11 +665,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculator'ı gizle ve transform'u sıfırla
         calculator.style.transform = 'translate(-50%, -50%) scale(0)';
         calculator.style.opacity = '0';
-        
+
         // İlk setTimeout: Calculator'ın kaybolmasını bekle
         setTimeout(() => {
             calculator.style.display = 'none';
-            
+
             // İkinci setTimeout: Merkez bulutu göster
             setTimeout(() => {
                 // Merkez bulutu ve dekoratif bulutları göster

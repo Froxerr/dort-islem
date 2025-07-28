@@ -338,24 +338,43 @@
             @if($showActivity && $recentQuizzes->count() > 0)
             <!-- Son Testler -->
             <div class="recent-tests-section">
-                <h2><i class="fas fa-history"></i> Son Testler</h2>
+                <h2><i class="fas fa-clipboard-check"></i> Son Testler</h2>
                 <div class="tests-list">
                     @foreach($recentQuizzes as $quiz)
-                        <div class="test-item">
-                            <div class="test-date">
-                                {{ \Carbon\Carbon::parse($quiz['date'])->format('d.m.Y H:i') }}
-                            </div>
-                            <div class="test-details">
-                                <div class="test-difficulty">{{ $quiz['difficulty'] }}</div>
-                                <div class="test-score">
-                                    <span class="correct">{{ $quiz['correct_answers'] }} doğru</span>
-                                    <span class="wrong">{{ $quiz['wrong_answers'] }} yanlış</span>
-                                    <span class="score">{{ $quiz['score'] }} puan</span>
+                        <div class="test-card">
+                            <div class="test-header">
+                                <div class="test-date">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    {{ \Carbon\Carbon::parse($quiz['date'])->format('d.m.Y H:i') }}
+                                </div>
+                                <div class="test-difficulty-badge {{ strtolower($quiz['difficulty']) }}">
+                                    <i class="fas fa-star"></i>
+                                    {{ $quiz['difficulty'] }}
                                 </div>
                             </div>
-                            <div class="test-accuracy">
-                                <div class="accuracy-circle" style="--accuracy: {{ $quiz['accuracy'] }}%">
-                                    <span>%{{ $quiz['accuracy'] }}</span>
+                            <div class="test-content">
+                                <div class="test-stats">
+                                    <div class="stat-item correct">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="stat-value">{{ $quiz['correct_answers'] }}</span>
+                                        <span class="stat-label">Doğru</span>
+                                    </div>
+                                    <div class="stat-item wrong">
+                                        <i class="fas fa-times-circle"></i>
+                                        <span class="stat-value">{{ $quiz['wrong_answers'] }}</span>
+                                        <span class="stat-label">Yanlış</span>
+                                    </div>
+                                    <div class="stat-item score">
+                                        <i class="fas fa-trophy"></i>
+                                        <span class="stat-value">{{ $quiz['score'] }}</span>
+                                        <span class="stat-label">Puan</span>
+                                    </div>
+                                </div>
+                                <div class="test-accuracy">
+                                    <div class="accuracy-circle" style="--accuracy: {{ $quiz['accuracy'] }}%">
+                                        <div class="accuracy-fill"></div>
+                                        <span class="accuracy-text">%{{ $quiz['accuracy'] }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -373,9 +392,10 @@
                 @elseif($recentQuizzes->count() == 0)
                 <div class="empty-state">
                     <div class="empty-icon">
-                        <i class="fas fa-history"></i>
+                        <i class="fas fa-clipboard-list"></i>
                     </div>
-                    <p>Henüz test çözülmemiş.</p>
+                    <h3>Henüz test çözülmemiş</h3>
+                    <p>Bu kullanıcı henüz hiç test çözmemiş.</p>
                 </div>
                 @endif
             @endif

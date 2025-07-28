@@ -10,21 +10,21 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class MessageSent implements ShouldBroadcastNow
+class MessageReceived implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets;
 
     public $messageData;
-    public $conversationId;
+    public $userId;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(Message $message)
+    public function __construct(Message $message, $userId)
     {
-        // Pre-extract all data to avoid N+1 queries during broadcasting
-        $this->conversationId = $message->conversation_id;
+        $this->userId = $userId;
         
+        // Pre-extract all data to avoid N+1 queries during broadcasting
         // Load user relationship if not already loaded
         if (!$message->relationLoaded('user')) {
             $message->load('user');
@@ -55,7 +55,7 @@ class MessageSent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('conversation.' . $this->conversationId),
+            new PrivateChannel('user.' . $this->userId),
         ];
     }
 
@@ -64,7 +64,7 @@ class MessageSent implements ShouldBroadcastNow
      */
     public function broadcastAs(): string
     {
-        return 'message.sent';
+        return 'message.received';
     }
 
     /**

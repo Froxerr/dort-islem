@@ -65,9 +65,9 @@
         @endforeach
     </div>
 @else
-    <div class="empty-state animate-fade-in">
-        <div class="empty-cloud">
-            <i class="fas fa-search"></i>
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-user-slash"></i>
         </div>
         <h3>Sonuç bulunamadı</h3>
         <p>"{{ $query }}" ile eşleşen kullanıcı bulunamadı.</p>
@@ -279,7 +279,7 @@
     }
 }
 
-.empty-cloud {
+.empty-icon {
     width: 80px;
     height: 80px;
     background: var(--card-bg);
@@ -291,7 +291,7 @@
     box-shadow: var(--shadow);
 }
 
-.empty-cloud i {
+.empty-icon i {
     font-size: 2rem;
     color: var(--text-secondary);
 }

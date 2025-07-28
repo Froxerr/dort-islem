@@ -30,14 +30,13 @@ class MessageController extends Controller
     }
 
     /**
-     * Arkadaş listesini getir (mesaj göndermek için)
+     * Arkadaş listesini getir (mesaj göndermek için) - Unread count ve sıralama ile
      */
     public function getFriends()
     {
         try {
-            // Basit test için direkt DB query kullan
             $currentUserId = Auth::id();
-            
+
             $friendIds = \Illuminate\Support\Facades\DB::table('friendships')
                 ->where('status', 'accepted')
                 ->where(function($query) use ($currentUserId) {
@@ -46,22 +45,63 @@ class MessageController extends Controller
                 })
                 ->get()
                 ->flatMap(function($friendship) use ($currentUserId) {
-                    return $friendship->user_id == $currentUserId 
-                        ? [$friendship->friend_id] 
+                    return $friendship->user_id == $currentUserId
+                        ? [$friendship->friend_id]
                         : [$friendship->user_id];
                 })
                 ->unique()
                 ->values();
-            
+
             $friends = User::whereIn('id', $friendIds)
                 ->select('id', 'name', 'username', 'profile_image')
-                ->get();
-            
+                ->get()
+                ->map(function($friend) use ($currentUserId) {
+                    // Bu arkadaşla olan konuşmayı bul
+                    $conversation = Conversation::whereHas('participants', function($query) use ($currentUserId) {
+                        $query->where('user_id', $currentUserId);
+                    })
+                    ->whereHas('participants', function($query) use ($friend) {
+                        $query->where('user_id', $friend->id);
+                    })
+                    ->whereDoesntHave('participants', function($query) use ($currentUserId, $friend) {
+                        $query->whereNotIn('user_id', [$currentUserId, $friend->id]);
+                    })
+                    ->first();
+
+                    $unreadCount = 0;
+                    $lastMessageTime = null;
+
+                    if ($conversation) {
+                        // Bu arkadaştan gelen okunmamış mesaj sayısı
+                        $unreadCount = Message::where('conversation_id', $conversation->id)
+                            ->where('user_id', $friend->id)
+                            ->whereNull('read_at')
+                            ->count();
+
+                        // Son mesaj zamanı
+                        $lastMessage = Message::where('conversation_id', $conversation->id)
+                            ->latest('created_at')
+                            ->first();
+                        
+                        $lastMessageTime = $lastMessage ? $lastMessage->created_at : null;
+                    }
+
+                    $friend->unread_count = $unreadCount;
+                    $friend->last_message_at = $lastMessageTime;
+                    
+                    return $friend;
+                });
+
+            // Son mesaj zamanına göre sırala (yeni mesaj atanlar üstte)
+            $friends = $friends->sortByDesc(function($friend) {
+                return $friend->last_message_at ? $friend->last_message_at->timestamp : 0;
+            })->values();
+
             return response()->json($friends);
         } catch (\Exception $e) {
             \Log::error('Error in getFriends: ' . $e->getMessage());
             \Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+
             // Fallback - boş arkadaş listesi döndür
             return response()->json([]);
         }
@@ -91,10 +131,10 @@ class MessageController extends Controller
         if (!$conversation) {
             $conversation = DB::transaction(function () use ($currentUserId, $friendId) {
                 $conversation = Conversation::create();
-                
+
                 // Katılımcıları ekle
                 $conversation->participants()->attach([$currentUserId, $friendId]);
-                
+
                 return $conversation;
             });
         }
@@ -143,8 +183,8 @@ class MessageController extends Controller
             'body' => 'required|string|max:1000'
         ]);
 
-        $conversation = Conversation::findOrFail($request->conversation_id);
-        
+        $conversation = Conversation::with('participants')->findOrFail($request->conversation_id);
+
         // Kullanıcının bu sohbete katılım yetkisi var mı kontrol et
         if (!$conversation->participants->contains('id', Auth::id())) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -159,12 +199,35 @@ class MessageController extends Controller
         // Conversation'ın updated_at'ini güncelle
         $conversation->touch();
 
+        // User relationship'ini pre-load et
         $message->load('user');
 
-        // Pusher ile mesajı broadcast et (geçici olarak devre dışı)
-        broadcast(new MessageSent($message))->toOthers();
-        
-        return response()->json($message);
+        // Optimize: Diğer participant'ları conversation'dan al (ek query yok)
+        $otherParticipants = $conversation->participants
+            ->where('id', '!=', Auth::id());
+
+        // Broadcast event'lerini optimize et
+        try {
+            // Pusher ile mesajı broadcast et - single event for conversation
+            broadcast(new MessageSent($message))->toOthers();
+
+            // Send single user-level event for friend list updates (more efficient)
+            $participantIds = $otherParticipants->pluck('id')->toArray();
+            if (!empty($participantIds)) {
+                // Single broadcast event with multiple recipients is more efficient
+                foreach ($otherParticipants as $participant) {
+                    broadcast(new \App\Events\MessageReceived($message, $participant->id));
+                }
+            }
+        } catch (\Exception $e) {
+            // Broadcasting hatası varsa log'la ama response'u blokla
+            \Log::error('Broadcasting error: ' . $e->getMessage());
+        }
+
+        return response()->json([
+            'message' => $message,
+            'success' => true
+        ]);
     }
 
     /**
@@ -177,16 +240,53 @@ class MessageController extends Controller
         ]);
 
         $message = Message::findOrFail($request->message_id);
-        
+
         // Kullanıcı bu mesajın sahibi değilse okundu işareti koyabilir
         if ($message->user_id != Auth::id()) {
             $message->update(['read_at' => now()]);
-            
+
             // Real-time read status broadcast
             broadcast(new \App\Events\MessageRead($message))->toOthers();
         }
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Batch mark messages as read - OPTIMIZED VERSION
+     */
+    public function markAsReadBatch(Request $request)
+    {
+        $request->validate([
+            'message_ids' => 'required|array',
+            'message_ids.*' => 'required|exists:messages,id'
+        ]);
+
+        $currentUserId = Auth::id();
+        $messageIds = $request->message_ids;
+
+        // Batch update messages that user can mark as read (not their own)
+        $updatedCount = Message::whereIn('id', $messageIds)
+            ->where('user_id', '!=', $currentUserId)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        // Get updated messages for broadcasting
+        if ($updatedCount > 0) {
+            $updatedMessages = Message::whereIn('id', $messageIds)
+                ->where('read_at', '!=', null)
+                ->get();
+
+            // Broadcast read status for each message
+            foreach ($updatedMessages as $message) {
+                broadcast(new \App\Events\MessageRead($message))->toOthers();
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'updated_count' => $updatedCount
+        ]);
     }
 
     /**
@@ -203,18 +303,27 @@ class MessageController extends Controller
     }
 
     /**
-     * Tüm okunmamış mesaj sayısını getir
+     * Tüm okunmamış mesaj sayısını getir - Optimize edilmiş versiyon
      */
     public function getTotalUnreadCount()
     {
-        $conversationIds = Auth::user()->conversations()->pluck('conversations.id');
-        
-        $count = Message::whereIn('conversation_id', $conversationIds)
-            ->where('user_id', '!=', Auth::id())
-            ->whereNull('read_at')
-            ->count();
+        try {
+            $conversationIds = Auth::user()->conversations()->pluck('conversations.id');
 
-        return response()->json(['count' => $count]);
+            if ($conversationIds->isEmpty()) {
+                return response()->json(['count' => 0]);
+            }
+
+            $count = Message::whereIn('conversation_id', $conversationIds)
+                ->where('user_id', '!=', Auth::id())
+                ->whereNull('read_at')
+                ->count();
+
+            return response()->json(['count' => $count]);
+        } catch (\Exception $e) {
+            \Log::error('Error getting unread count: ' . $e->getMessage());
+            return response()->json(['count' => 0]);
+        }
     }
 
     /**
@@ -228,7 +337,7 @@ class MessageController extends Controller
         ]);
 
         $conversation = Conversation::findOrFail($request->conversation_id);
-        
+
         // Kullanıcının bu sohbete katılım yetkisi var mı kontrol et
         if (!$conversation->participants->contains('id', Auth::id())) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -239,4 +348,4 @@ class MessageController extends Controller
 
         return response()->json(['success' => true]);
     }
-} 
+}

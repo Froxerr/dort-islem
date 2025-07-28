@@ -79,7 +79,6 @@
                              class="badge-icon">
                         
                         <h3 class="badge-name">{{ $badge->name }}</h3>
-                        <p class="badge-description">{{ $badge->description }}</p>
 
                         <div class="progress-container">
                             <div class="progress-bar">
@@ -94,7 +93,6 @@
                         </div>
 
                         <div class="badge-reward" data-reward="{{ $badge->achievement->xp_reward }}">
-                            <i class="fas fa-star"></i>
                             <span>{{ $badge->achievement->xp_reward }} XP</span>
                         </div>
                     </div>
@@ -133,7 +131,6 @@
                                  data-section="achievements">
                                 
                                 <h3 class="badge-name">{{ $achievement->name }}</h3>
-                                <p class="badge-description">{{ $achievement->description }}</p>
 
                     <div class="progress-container">
                         <div class="progress-bar">
@@ -148,7 +145,6 @@
                     </div>
 
                                 <div class="badge-reward" data-reward="{{ $achievement->xp_reward }}">
-                                    <i class="fas fa-star"></i>
                         <span>{{ $achievement->xp_reward }} XP</span>
                     </div>
                             </div>

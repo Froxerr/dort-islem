@@ -7,22 +7,26 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class MessageRead implements ShouldBroadcast
+class MessageRead implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets;
 
-    public $message;
+    public $messageId;
+    public $conversationId;
+    public $readAt;
 
     /**
      * Create a new event instance.
      */
     public function __construct(Message $message)
     {
-        $this->message = $message;
+        // Only store essential data needed for broadcasting
+        $this->messageId = $message->id;
+        $this->conversationId = $message->conversation_id;
+        $this->readAt = $message->read_at;
     }
 
     /**
@@ -33,7 +37,7 @@ class MessageRead implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('conversation.' . $this->message->conversation_id),
+            new PrivateChannel('conversation.' . $this->conversationId),
         ];
     }
 
@@ -53,9 +57,9 @@ class MessageRead implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            'message_id' => $this->message->id,
-            'read_at' => $this->message->read_at,
-            'conversation_id' => $this->message->conversation_id,
+            'message_id' => $this->messageId,
+            'read_at' => $this->readAt,
+            'conversation_id' => $this->conversationId,
         ];
     }
 } 

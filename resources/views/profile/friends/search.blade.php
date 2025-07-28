@@ -72,7 +72,7 @@
         <div class="friends-cloud">
             <i class="fas fa-search"></i>
         </div>
-        <h1 class="friends-title"><i class="fas fa-search"></i> Arkadaş Ara</h1>
+        <h1 class="friends-title">Arkadaş Ara</h1>
         <p class="friends-subtitle">Yeni arkadaşlar keşfedin!</p>
     </div>
 

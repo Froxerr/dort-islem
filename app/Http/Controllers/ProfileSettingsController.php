@@ -24,7 +24,7 @@ class ProfileSettingsController extends Controller
         $user = Auth::user();
         $topics = Topic::all();
         $difficulties = DifficultyLevel::all();
-        
+
         return view('profile.profile-settings', compact('user', 'topics', 'difficulties'));
     }
 
@@ -148,7 +148,7 @@ class ProfileSettingsController extends Controller
     public function getTwoFactorQrCode()
     {
         $user = Auth::user();
-        
+
         if (!$user->two_factor_secret) {
             $google2fa = app('pragmarx.google2fa');
             $user->forceFill([
@@ -175,7 +175,7 @@ class ProfileSettingsController extends Controller
         ]);
 
         $user = Auth::user();
-        
+
         if ($user->verifyTwoFactorCode($request->code)) {
             $user->two_factor_enabled = true;
             $user->save();
@@ -263,7 +263,7 @@ class ProfileSettingsController extends Controller
     public function clearProgress()
     {
         $user = Auth::user();
-        
+
         try {
             DB::beginTransaction();
 
@@ -292,7 +292,7 @@ class ProfileSettingsController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             Log::error('Clear progress error', [
                 'error' => $e->getMessage(),
                 'user_id' => $user->id,
@@ -312,7 +312,7 @@ class ProfileSettingsController extends Controller
     public function deleteAccount()
     {
         $user = Auth::user();
-        
+
         try {
             DB::beginTransaction();
 
@@ -325,7 +325,7 @@ class ProfileSettingsController extends Controller
             QuizSession::where('user_id', $user->id)->delete();
             DB::table('user_badges')->where('user_id', $user->id)->delete();
             DB::table('user_achievements')->where('user_id', $user->id)->delete();
-            
+
             // Log before deletion
             Log::info('User account deleted', [
                 'user_id' => $user->id,
@@ -346,7 +346,7 @@ class ProfileSettingsController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             Log::error('Delete account error', [
                 'error' => $e->getMessage(),
                 'user_id' => $user->id,
@@ -366,7 +366,7 @@ class ProfileSettingsController extends Controller
     public function getSettings()
     {
         $user = Auth::user();
-        
+
         return response()->json([
             'profile' => [
                 'name' => $user->name,
@@ -408,7 +408,7 @@ class ProfileSettingsController extends Controller
     public function exportData()
     {
         $user = Auth::user();
-        
+
         try {
             $userData = [
                 'profile' => [
@@ -448,7 +448,7 @@ class ProfileSettingsController extends Controller
             ];
 
             $fileName = 'user_data_' . $user->id . '_' . now()->format('Y-m-d_H-i-s') . '.json';
-            
+
             return response()->json($userData)
                 ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
 
@@ -464,4 +464,4 @@ class ProfileSettingsController extends Controller
             ], 500);
         }
     }
-} 
+}

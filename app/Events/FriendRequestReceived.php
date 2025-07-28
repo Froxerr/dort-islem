@@ -8,24 +8,35 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class FriendRequestReceived implements ShouldBroadcast
+class FriendRequestReceived implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets;
 
-    public $sender;
-    public $friendship;
+    public $friendshipData;
+    public $friendId;
 
     /**
      * Create a new event instance.
      */
     public function __construct(User $sender, Friendship $friendship)
     {
-        $this->sender = $sender;
-        $this->friendship = $friendship;
+        $this->friendId = $friendship->friend_id;
+        
+        // Pre-extract all necessary data to avoid N+1 queries
+        $this->friendshipData = [
+            'id' => $friendship->id,
+            'sender' => [
+                'id' => $sender->id,
+                'name' => $sender->name,
+                'username' => $sender->username,
+                'profile_image' => $sender->profile_image,
+            ],
+            'created_at' => $friendship->created_at,
+            'type' => 'friend_request'
+        ];
     }
 
     /**
@@ -36,7 +47,7 @@ class FriendRequestReceived implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->friendship->friend_id),
+            new PrivateChannel('user.' . $this->friendId),
         ];
     }
 
@@ -55,16 +66,6 @@ class FriendRequestReceived implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        return [
-            'id' => $this->friendship->id,
-            'sender' => [
-                'id' => $this->sender->id,
-                'name' => $this->sender->name,
-                'username' => $this->sender->username,
-                'profile_image' => $this->sender->profile_image,
-            ],
-            'created_at' => $this->friendship->created_at,
-            'type' => 'friend_request'
-        ];
+        return $this->friendshipData;
     }
 } 

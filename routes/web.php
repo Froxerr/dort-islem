@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/messages/conversation/{conversationId}', [MessageController::class, 'getMessages'])->name('messages.get');
     Route::post('/messages/send', [MessageController::class, 'sendMessage'])->name('messages.send');
     Route::post('/messages/mark-read', [MessageController::class, 'markAsRead'])->name('messages.mark-read');
+    Route::post('/messages/mark-read-batch', [MessageController::class, 'markAsReadBatch'])->name('messages.mark-read-batch');
     Route::get('/messages/unread/{conversationId}', [MessageController::class, 'getUnreadCount'])->name('messages.unread');
     Route::get('/messages/unread-total', [MessageController::class, 'getTotalUnreadCount'])->name('messages.unread-total');
     Route::post('/messages/typing', [MessageController::class, 'typing'])->name('messages.typing');

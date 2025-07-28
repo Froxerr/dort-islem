@@ -60,6 +60,7 @@
     border: 2px solid #fff;
     box-shadow: 0 2px 8px rgba(255, 56, 56, 0.5);
     animation: pulse 2s infinite;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 @keyframes pulse {
@@ -290,7 +291,9 @@
 /* Message Bubble */
 .message {
     display: flex;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    animation: messageAppear 0.3s ease;
+    transition: all 0.3s ease; /* Smooth transitions to prevent flicker */
     align-items: flex-end;
     gap: 8px;
 }
@@ -320,13 +323,14 @@
 }
 
 .message-bubble {
-    max-width: 75%;
-    padding: 12px 16px;
-    border-radius: 20px;
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px;
     word-wrap: break-word;
     position: relative;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     animation: messageAppear 0.3s ease;
+    transition: all 0.3s ease; /* Smooth transitions */
 }
 
 @keyframes messageAppear {
@@ -354,15 +358,18 @@
 }
 
 .message-content {
-    margin-bottom: 4px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease; /* Smooth transitions */
     line-height: 1.4;
 }
 
 .message-footer {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: flex-end;
-    gap: 4px;
+    font-size: 11px;
+    color: #999;
+    transition: all 0.3s ease; /* Smooth transitions */
     margin-top: 4px;
 }
 
@@ -388,6 +395,7 @@
     display: inline-flex;
     align-items: center;
     margin-left: 4px;
+    transition: all 0.3s ease; /* Smooth transitions for color/transform changes */
 }
 
 .message-tick.sent {
@@ -400,6 +408,8 @@
 
 .message-tick.read {
     color: #00d4aa;
+    /* Slight glow effect for read messages */
+    text-shadow: 0 0 2px rgba(0, 212, 170, 0.3);
 }
 
 .message-tick::before {
@@ -539,26 +549,50 @@
     color: #666;
 }
 
-/* Empty State */
+/* Loading indicator styles */
+.loading-messages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    margin: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Empty state styles */
 .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 200px;
-    color: #666;
+    color: #999;
     text-align: center;
     padding: 20px;
 }
 
-.empty-state-icon {
-    font-size: 48px;
-    margin-bottom: 15px;
-    animation: bounce 2s infinite;
-}
-
 .empty-state p {
-    color: #666;
+    margin: 0;
+    font-size: 16px;
     line-height: 1.5;
 }
 

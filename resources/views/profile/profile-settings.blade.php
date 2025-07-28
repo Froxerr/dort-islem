@@ -568,7 +568,7 @@
 @endsection
 
 @section('content')
-<a href="{{ route('profile.hub') }}" class="back-button">
+<a href="{{ route('main') }}" class="back-button">
     <i class="fas fa-arrow-left"></i>
 </a>
 

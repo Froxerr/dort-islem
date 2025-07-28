@@ -29,8 +29,8 @@ function showBadgeNotification(notification) {
 }
 
 function showAchievement(data) {
-    // Confetti efekti
-    const duration = 3000;
+    // Confetti efekti - daha kısa süre
+    const duration = 1500; // 3000'den 1500'e düşürdük
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1001 };
 
@@ -55,7 +55,7 @@ function showAchievement(data) {
             particleCount,
             origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
         }));
-    }, 250);
+    }, 200); // 250'den 200'e düşürdük
 
     // Overlay ve modal oluştur
     const overlay = document.createElement('div');
@@ -95,10 +95,10 @@ function showAchievement(data) {
     document.body.appendChild(overlay);
     document.body.appendChild(modal);
 
-    // Progress bar animasyonu
+    // Progress bar animasyonu - gecikmeyi kaldırdık
     setTimeout(() => {
         modal.querySelector('.progress-fill').style.width = data.progress + '%';
-    }, 500);
+    }, 100); // 500'den 100'e düşürdük
 }
 
 function closeAchievement(button) {

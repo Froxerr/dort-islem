@@ -12,7 +12,7 @@
     <style>
     .floating-search-button {
     position: fixed;
-    bottom: 2rem;
+    bottom: 6rem;
     right: 2rem;
     width: 60px;
     height: 60px;
@@ -220,7 +220,7 @@
 
 <div class="friends-container">
     <!-- Geri Butonu -->
-    <a href="{{ route('profile.hub') }}" class="back-button">
+    <a href="{{ route('main') }}" class="back-button">
         <i class="fas fa-arrow-left"></i>
     </a>
 
@@ -234,19 +234,19 @@
         <div class="friends-cloud">
             <i class="fas fa-users"></i>
         </div>
-        <h1 class="friends-title"><i class="fas fa-users"></i> Arkadaşlarım</h1>
-        <p class="friends-subtitle">Arkadaşlarınızla birlikte matematik öğrenin!</p>
+        <h1 class="friends-title">Arkadaşlarım</h1>
+        <p class="friends-subtitle">Arkadaşlarınızla beraber 4 işlemi hızlandırın!</p>
     </div>
 
     <!-- İstatistikler -->
     <div class="friends-stats">
         <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-icon"><i class="fas fa-user-friends"></i></div>
             <div class="stat-number">{{ $stats['friends_count'] }}</div>
             <div class="stat-label">Arkadaş</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-inbox"></i></div>
+            <div class="stat-icon"><i class="fas fa-bell"></i></div>
             <div class="stat-number">{{ $stats['pending_requests_count'] }}</div>
             <div class="stat-label">Gelen İstek</div>
         </div>
@@ -260,7 +260,6 @@
     <!-- Tab Butonları -->
     <div class="tab-buttons">
         <button class="tab-btn active" data-tab="friends">
-            <i class="fas fa-users"></i>
             Arkadaşlarım
         </button>
         <button class="tab-btn" data-tab="requests">
@@ -294,7 +293,6 @@
                                 <span class="xp"><i class="fas fa-trophy"></i> {{ $friend->xp }} XP</span>
                             </div>
                             <div class="friend-meta">
-                                <span class="joined">{{ $friend->pivot->accepted_at->diffForHumans() }} arkadaş</span>
                             </div>
                         </div>
                         <div class="friend-actions">
@@ -310,7 +308,7 @@
             </div>
         @else
             <div class="empty-state">
-                <div class="empty-cloud">
+                <div class="empty-icon">
                     <i class="fas fa-user-friends"></i>
                 </div>
                 <h3>Henüz arkadaşınız yok</h3>
@@ -360,8 +358,8 @@
             </div>
         @else
             <div class="empty-state">
-                <div class="empty-cloud">
-                    <i class="fas fa-inbox"></i>
+                <div class="empty-icon">
+                    <i class="fas fa-bell-slash"></i>
                 </div>
                 <h3>Gelen istek yok</h3>
                 <p>Henüz size arkadaşlık isteği gönderen olmadı.</p>

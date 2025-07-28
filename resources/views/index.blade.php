@@ -8,20 +8,13 @@
 
 @section('content')
 <div class="nature-bg">
-    <!-- Bulutlar -->
-    <img src="/assets/img/bulut/bulut1.png" alt="Bulut 1" class="cloud cloud1">
-    <img src="/assets/img/bulut/bulut2.png" alt="Bulut 2" class="cloud cloud2">
-    <img src="/assets/img/bulut/bulut3.png" alt="Bulut 3" class="cloud cloud3">
-    <img src="/assets/img/bulut/bulut4.png" alt="Bulut 4" class="cloud cloud4">
-
-    <!-- Ağaçlar -->
-    <img src="/assets/img/agac/sol-agac.png" alt="Sol Ağaç" class="tree left">
-    <img src="/assets/img/agac/sag-agac.png" alt="Sağ Ağaç" class="tree right">
+    <div class="stars"></div>
+    <div class="twinkling"></div>
 
     <div class="content-wrapper">
         <div class="button-wrapper">
-            <div class="button-glow"></div>
             <button class="start-button">Keşfe Başla!</button>
+            <a href="{{ route('login') }}" ><button class="login-button">Giriş Yap</button></a>
         </div>
     </div>
 

@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Tab sistemi
     initializeTabs();
-    
+
     // CSRF token'ı al
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
@@ -15,15 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeTabs() {
     const tabButtons = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
-    
+
     tabButtons.forEach(button => {
         button.addEventListener('click', function() {
             const targetTab = this.dataset.tab;
-            
+
             // Aktif tab'ı kaldır
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
-            
+
             // Yeni tab'ı aktif et
             this.classList.add('active');
             document.getElementById(targetTab + '-content').classList.add('active');
@@ -36,7 +36,7 @@ function sendFriendRequest(userId) {
     if (!confirm('Bu kullanıcıya arkadaşlık isteği göndermek istediğinizden emin misiniz?')) {
         return;
     }
-    
+
     fetch('/profile/friends/send-request', {
         method: 'POST',
         headers: {
@@ -58,7 +58,7 @@ function sendFriendRequest(userId) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error:');
         showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
     });
 }
@@ -84,7 +84,7 @@ async function removeFriend(friendId) {
         // Response JSON değilse hata fırlat
         if (!response.ok) {
             const text = await response.text();
-            console.error('Server response:', text);
+            console.error('Server response:');
             throw new Error(text ? JSON.parse(text).message : 'Sunucu hatası: ' + response.status);
         }
 
@@ -96,7 +96,7 @@ async function removeFriend(friendId) {
             throw new Error(data.message || 'Bir hata oluştu');
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:');
         alert(error.message || 'Bir hata oluştu. Lütfen tekrar deneyin.');
     }
 }
@@ -106,7 +106,7 @@ function blockUser(userId) {
     if (!confirm('Bu kullanıcıyı engellemek istediğinizden emin misiniz?')) {
         return;
     }
-    
+
     fetch('/profile/friends/block-user', {
         method: 'POST',
         headers: {
@@ -130,7 +130,7 @@ function blockUser(userId) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error:');
         showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
     });
 }
@@ -158,7 +158,7 @@ function acceptPendingRequest(userId) {
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error:');
         showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
     });
 }
@@ -167,13 +167,13 @@ function acceptPendingRequest(userId) {
 function updateButtonState(userId, status) {
     const userCard = document.querySelector(`[data-user-id="${userId}"]`);
     if (!userCard) return;
-    
+
     const actionButton = userCard.querySelector('.btn-add, .btn-pending, .btn-accept, .btn-friends');
     if (!actionButton) return;
-    
+
     // Eski class'ları temizle
     actionButton.classList.remove('btn-add', 'btn-pending', 'btn-accept', 'btn-friends');
-    
+
     switch (status) {
         case 'pending_sent':
             actionButton.classList.add('btn-pending');
@@ -203,7 +203,7 @@ function showNotification(message, type = 'info') {
             'warning': '#ff9800',
             'info': '#2196F3'
         };
-        
+
         Toastify({
             text: message,
             duration: 3000,
@@ -236,9 +236,9 @@ function setupLiveSearch() {
     const searchInput = document.querySelector('.search-input');
     const searchResults = document.querySelector('.search-results');
     const suggestedFriends = document.querySelector('.suggested-friends');
-    
+
     if (!searchInput) return;
-    
+
     const debouncedSearch = debounce(function(query) {
         if (query.length >= 2) {
             performSearch(query);
@@ -248,10 +248,10 @@ function setupLiveSearch() {
             suggestedFriends.style.display = 'block';
         }
     }, 300);
-    
+
     searchInput.addEventListener('input', function() {
         const query = this.value.trim();
-        
+
         if (query.length >= 2) {
             if (suggestedFriends) {
                 suggestedFriends.style.display = 'none';
@@ -273,13 +273,13 @@ function performSearch(query) {
     const loadingIndicator = document.createElement('div');
     loadingIndicator.className = 'loading-indicator';
     loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Aranıyor...';
-    
+
     // Mevcut sonuçları temizle ve yükleniyor göster
     if (searchResults) {
         searchResults.innerHTML = '';
         searchResults.appendChild(loadingIndicator);
     }
-    
+
     fetch(`/profile/friends/search?q=${encodeURIComponent(query)}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -290,7 +290,7 @@ function performSearch(query) {
         if (searchResults) {
             // Yükleniyor göstergesini kaldır ve sonuçları göster
             searchResults.innerHTML = html;
-            
+
             // Sonuçları yumuşak bir şekilde göster
             const resultItems = searchResults.querySelectorAll('.user-card');
             resultItems.forEach((item, index) => {
@@ -305,7 +305,7 @@ function performSearch(query) {
         }
     })
     .catch(error => {
-        console.error('Search error:', error);
+        console.error('Search error:');
         if (searchResults) {
             searchResults.innerHTML = `
                 <div class="error-message">
@@ -320,7 +320,7 @@ function performSearch(query) {
 // Sayfa yüklendiğinde canlı aramayı başlat
 document.addEventListener('DOMContentLoaded', function() {
     setupLiveSearch();
-}); 
+});
 
 // Modal işlemleri
 let currentRequestId = null;
@@ -411,7 +411,7 @@ confirmRemoveButton.addEventListener('click', function() {
 async function acceptRequest(requestId) {
     const button = document.getElementById('confirmAcceptRequest');
     button.disabled = true;
-    
+
     try {
         const token = document.querySelector('meta[name="csrf-token"]')?.content;
         if (!token) throw new Error('CSRF token bulunamadı!');
@@ -471,7 +471,7 @@ async function rejectRequest(requestId) {
             throw new Error(data.message || 'Bir hata oluştu');
         }
     } catch (error) {
-        alert(error.message);
+        console.log("reject request error");
     } finally {
         button.disabled = false;
     }
@@ -488,4 +488,4 @@ function checkEmptyState() {
             </div>
         `;
     }
-} 
+}

@@ -18,29 +18,51 @@ class FriendshipController extends Controller
     public function index()
     {
         $user = Auth::user();
-        
+
         // Arkadaşları getir (pivot data ile)
         $friends = collect();
-        
+
         // Ben gönderdiğim kabul edilmiş istekler
         $sentFriends = $user->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
                            ->wherePivot('status', 'accepted')
                            ->withPivot('accepted_at', 'created_at')
                            ->get();
-        
-        // Bana gönderilen kabul edilmiş istekler  
+
+        // Bana gönderilen kabul edilmiş istekler
         $receivedFriends = $user->belongsToMany(User::class, 'friendships', 'friend_id', 'user_id')
                                ->wherePivot('status', 'accepted')
                                ->withPivot('accepted_at', 'created_at')
                                ->get();
-        
+
         $friends = $sentFriends->merge($receivedFriends)->unique('id');
-        
-        // Carbon parse accepted_at
-        $friends = $friends->map(function($friend) {
+
+        // Carbon parse accepted_at ve mesaj sayılarını hesapla
+        $friends = $friends->map(function($friend) use ($user) {
             if ($friend->pivot && $friend->pivot->accepted_at) {
                 $friend->pivot->accepted_at = \Carbon\Carbon::parse($friend->pivot->accepted_at);
             }
+            
+            // Bu arkadaşla olan konuşmayı bul
+            $conversation = \App\Models\Conversation::whereHas('participants', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->whereHas('participants', function($query) use ($friend) {
+                $query->where('user_id', $friend->id);
+            })
+            ->whereDoesntHave('participants', function($query) use ($user, $friend) {
+                $query->whereNotIn('user_id', [$user->id, $friend->id]);
+            })
+            ->first();
+            
+            // Bu arkadaşa gönderdiğim mesaj sayısını hesapla
+            $messageCount = 0;
+            if ($conversation) {
+                $messageCount = \App\Models\Message::where('conversation_id', $conversation->id)
+                    ->where('user_id', $user->id)
+                    ->count();
+            }
+            
+            $friend->message_count = $messageCount;
             return $friend;
         });
 
@@ -86,7 +108,7 @@ class FriendshipController extends Controller
                                 ->withMutualFriendsCount($user->id)
                                 ->withFriendshipStatus($user->id)
                                 ->orderByRaw('
-                                    CASE 
+                                    CASE
                                         WHEN name LIKE ? THEN 1
                                         WHEN username LIKE ? THEN 2
                                         WHEN name LIKE ? THEN 3
@@ -125,14 +147,14 @@ class FriendshipController extends Controller
     {
         $user = Auth::user();
         $targetUser = User::findOrFail($id);
-        
+
         if ($user->id === $targetUser->id) {
             return redirect()->route('profile.details');
         }
 
         // Profil görünürlüğü kontrolü
         $canViewProfile = $this->canViewProfile($user, $targetUser);
-        
+
         if (!$canViewProfile) {
             return view('profile.friends.profile-private', [
                 'user' => $targetUser,
@@ -188,8 +210,8 @@ class FriendshipController extends Controller
                                        ->get()
                                        ->map(function($quiz) {
                                            $incorrectAnswers = $quiz->total_questions - $quiz->correct_answers;
-                                           $accuracy = $quiz->total_questions > 0 
-                                               ? round(($quiz->correct_answers / $quiz->total_questions) * 100) 
+                                           $accuracy = $quiz->total_questions > 0
+                                               ? round(($quiz->correct_answers / $quiz->total_questions) * 100)
                                                : 0;
 
                                            return [
@@ -215,7 +237,7 @@ class FriendshipController extends Controller
             'showActivity' => $showActivity
         ]);
     }
-    
+
     /**
      * Profil görüntüleme izni kontrolü
      */
@@ -225,18 +247,18 @@ class FriendshipController extends Controller
         switch ($targetUser->profile_visibility) {
             case 'public':
                 return true;
-                
+
             case 'friends':
                 return $viewer->isFriendWith($targetUser->id);
-                
+
             case 'private':
                 return false;
-                
+
             default:
                 return true; // Default: public
         }
     }
-    
+
     /**
      * İstatistik görüntüleme izni kontrolü
      */
@@ -245,14 +267,14 @@ class FriendshipController extends Controller
         if ($targetUser->profile_visibility === 'private') {
             return false;
         }
-        
+
         if ($targetUser->profile_visibility === 'friends') {
             return $viewer->isFriendWith($targetUser->id);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Başarım görüntüleme izni kontrolü
      */
@@ -261,14 +283,14 @@ class FriendshipController extends Controller
         if ($targetUser->profile_visibility === 'private') {
             return false;
         }
-        
+
         if ($targetUser->profile_visibility === 'friends') {
             return $viewer->isFriendWith($targetUser->id);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Aktivite görüntüleme izni kontrolü
      */
@@ -277,14 +299,14 @@ class FriendshipController extends Controller
         if ($targetUser->profile_visibility === 'private') {
             return false;
         }
-        
+
         if ($targetUser->profile_visibility === 'friends') {
             return $viewer->isFriendWith($targetUser->id);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Gizlilik sebebini açıkla
      */
@@ -366,7 +388,7 @@ class FriendshipController extends Controller
 
         // İsteği gönderen kullanıcıyı getir
         $sender = User::find($friendship->user_id);
-        
+
         // Real-time event gönder (her iki kullanıcıya da)
         broadcast(new \App\Events\FriendRequestAccepted($user, $sender, $friendship))->toOthers();
 

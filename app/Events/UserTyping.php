@@ -7,15 +7,16 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Queue\SerializesModels;
 
-class UserTyping implements ShouldBroadcast
+class UserTyping implements ShouldBroadcastNow
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets;
 
-    public $user;
+    public $userId;
+    public $userName;
+    public $userUsername;
     public $conversationId;
     public $isTyping;
 
@@ -24,7 +25,10 @@ class UserTyping implements ShouldBroadcast
      */
     public function __construct(User $user, $conversationId, $isTyping = true)
     {
-        $this->user = $user;
+        // Only store minimal data needed for broadcasting
+        $this->userId = $user->id;
+        $this->userName = $user->name;
+        $this->userUsername = $user->username;
         $this->conversationId = $conversationId;
         $this->isTyping = $isTyping;
     }
@@ -56,9 +60,9 @@ class UserTyping implements ShouldBroadcast
     {
         return [
             'user' => [
-                'id' => $this->user->id,
-                'name' => $this->user->name,
-                'username' => $this->user->username,
+                'id' => $this->userId,
+                'name' => $this->userName,
+                'username' => $this->userUsername,
             ],
             'conversation_id' => $this->conversationId,
             'is_typing' => $this->isTyping,

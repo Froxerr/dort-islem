@@ -234,18 +234,6 @@
             <h2>Quiz Geçmişi</h2>
             <p>Geçmiş quiz performansını ve sonuçlarını görüntüle</p>
         </a>
-        
-        <a href="{{ route('profile.settings') }}" class="hub-card">
-            <i class="fas fa-cog"></i>
-            <h2>Ayarlar</h2>
-            <p>Profil ayarlarını düzenle ve tercihlerini güncelle</p>
-        </a>
-        
-        <a href="{{ route('friends.index') }}" class="hub-card">
-            <i class="fas fa-users"></i>
-            <h2>Arkadaşlarım</h2>
-            <p>Arkadaşlarınızla birlikte matematik öğrenin ve yarışın</p>
-        </a>
     </div>
 </div>
 @endsection 

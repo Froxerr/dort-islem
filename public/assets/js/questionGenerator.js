@@ -1,8 +1,7 @@
 // QuestionGenerator sınıfını global scope'a ekle
 window.QuestionGenerator = class QuestionGenerator {
     constructor() {
-        console.log('QuestionGenerator sınıfı başlatıldı!');
-        
+
         this.difficultyRanges = {
             'Kolay': {
                 num1: { min: 10, max: 99 },    // İki basamaklı
@@ -43,11 +42,10 @@ window.QuestionGenerator = class QuestionGenerator {
 
     // Bölme işlemi için uygun sayılar üret
     generateDivisionNumbers(difficulty) {
-        console.log(`\n[Bölme İşlemi Başladı] Zorluk: ${difficulty}`);
-        
+
         const range = this.difficultyRanges[difficulty];
         if (!range) {
-            console.error('Geçersiz zorluk seviyesi:', difficulty);
+            console.error('Geçersiz zorluk seviyesi.');
             // Varsayılan olarak Zor seviyeyi kullan
             return this.generateDivisionNumbers('Zor');
         }
@@ -78,7 +76,6 @@ window.QuestionGenerator = class QuestionGenerator {
             }
 
             result = num1 / num2;
-            console.log(`Üretilen sayılar: ${num1} ÷ ${num2} = ${result}`);
         } else {
             // Zor ve Deha seviyesi için daha kontrollü ondalıklı sayılar
             let attempts = 0;
@@ -104,7 +101,6 @@ window.QuestionGenerator = class QuestionGenerator {
 
             // Son kontrol ve yuvarlama
             result = Number(result.toFixed(2));
-            console.log(`Üretilen sayılar: ${num1} ÷ ${num2} = ${result} (${attempts} denemede)`);
         }
 
         return [num1, num2];
@@ -112,14 +108,13 @@ window.QuestionGenerator = class QuestionGenerator {
 
     // Soru üret
     generateQuestion(topicId, difficulty) {
-        console.log('generateQuestion çağrıldı:', { topicId, difficulty });
-        
+
         const operator = this.operators[topicId];
         const range = this.difficultyRanges[difficulty];
-        
+
         // Geçersiz zorluk seviyesi kontrolü
         if (!range) {
-            console.error('Geçersiz zorluk seviyesi:', difficulty);
+            console.error('Geçersiz zorluk seviyesi:');
             return this.generateQuestion(topicId, 'Zor'); // Varsayılan olarak Zor seviye
         }
 
@@ -129,18 +124,12 @@ window.QuestionGenerator = class QuestionGenerator {
         if (parseInt(topicId) === 4) {
             [num1, num2] = this.generateDivisionNumbers(difficulty);
             answer = num1 / num2;
-            
+
             // Zor ve Deha seviyesi için virgülden sonra 2 basamakla sınırla
             if (difficulty === 'Zor' || difficulty === 'Deha') {  // 'Dahi' yerine 'Deha' olarak değiştirildi
                 answer = Number(answer.toFixed(2));
             }
-            
-            console.log('Bölme işlemi tamamlandı:', {
-                num1,
-                num2,
-                answer,
-                difficulty
-            });
+
         } else {
             // Diğer işlemler için sayı üretimi
             if (difficulty === 'Kolay') {
@@ -180,7 +169,6 @@ window.QuestionGenerator = class QuestionGenerator {
             difficulty
         };
 
-        console.log('Üretilen soru:', result);
         return result;
     }
 
@@ -188,4 +176,4 @@ window.QuestionGenerator = class QuestionGenerator {
     formatNumber(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-} 
+}

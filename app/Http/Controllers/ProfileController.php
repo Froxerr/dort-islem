@@ -143,7 +143,7 @@ class ProfileController extends Controller
     public function achievements()
     {
         Log::info('=== ACHIEVEMENTS METODU BAŞLADI ===');
-        
+
         $user = auth()->user();
         Log::info('Kullanıcı bilgileri:', [
             'user_id' => $user->id,
@@ -151,7 +151,7 @@ class ProfileController extends Controller
             'level' => $user->level,
             'xp' => $user->xp
         ]);
-        
+
         $topics = Topic::all();
         Log::info('Konular yüklendi:', [
             'topic_count' => $topics->count(),
@@ -162,14 +162,14 @@ class ProfileController extends Controller
                 ];
             })->toArray()
         ]);
-        
+
         Log::info('=== ROZETLER YÜKLENIYOR ===');
         // Rozetleri getir - Eager loading ile performans iyileştirmesi
         $badges = Badge::with(['achievement', 'triggers', 'users' => function($query) use ($user) {
             $query->where('user_id', $user->id);
         }])
         ->get();
-        
+
         Log::info('Rozetler yüklendi:', [
             'badge_count' => $badges->count(),
             'badges' => $badges->map(function($badge) {
@@ -182,12 +182,12 @@ class ProfileController extends Controller
                 ];
             })->toArray()
         ]);
-        
+
         Log::info('=== ROZETLER İŞLENİYOR ===');
         $badges = $badges->map(function ($badge) use ($user) {
             // Kullanıcının bu rozeti kazanıp kazanmadığını kontrol et
             $badge->is_earned = $badge->users->isNotEmpty();
-            
+
             $trigger = $badge->triggers->first();
             Log::info("Rozet işleniyor: {$badge->name}", [
                 'badge_id' => $badge->id,
@@ -196,7 +196,7 @@ class ProfileController extends Controller
                 'is_earned' => $badge->is_earned,
                 'has_triggers' => $badge->triggers->isNotEmpty()
             ]);
-            
+
             // Rozet için ilerlemeyi hesapla
             if ($trigger) {
                 Log::info("Rozet tetikleyicisi bulundu:", [
@@ -206,7 +206,7 @@ class ProfileController extends Controller
                     'required_count' => $trigger->required_count,
                     'topic_id' => $trigger->topic_id
                 ]);
-                
+
                 switch ($trigger->trigger_type) {
                     case 'required_score':
                         $bestScore = QuizSession::where('user_id', $user->id)
@@ -222,7 +222,7 @@ class ProfileController extends Controller
                             'topic_id' => $trigger->topic_id
                         ]);
                         break;
-                        
+
                     case 'required_count':
                         $completedCount = QuizSession::where('user_id', $user->id)
                             ->when($trigger->topic_id, function($query) use ($trigger) {
@@ -240,21 +240,21 @@ class ProfileController extends Controller
                             'topic_id' => $trigger->topic_id
                         ]);
                         break;
-                        
+
                     case 'streak':
                         $query = QuizSession::where('user_id', $user->id)
                             ->when($trigger->topic_id, function($query) use ($trigger) {
                                 return $query->where('topic_id', $trigger->topic_id);
                             });
-                            
+
                         if ($trigger->required_score) {
                             $query->where('score', '>=', $trigger->required_score);
                         }
-                        
+
                         $currentStreak = $query->orderBy('created_at', 'desc')
                             ->limit($trigger->required_count)
                             ->count();
-                            
+
                         $badge->progress = round(min(100, ($currentStreak / $trigger->required_count) * 100));
                         Log::info("Seri bazlı ilerleme hesaplandı:", [
                             'current_streak' => $currentStreak,
@@ -264,7 +264,7 @@ class ProfileController extends Controller
                             'topic_id' => $trigger->topic_id
                         ]);
                         break;
-                        
+
                     default:
                         $badge->progress = 0;
                         Log::warning("Bilinmeyen tetikleyici tipi:", [
@@ -278,16 +278,16 @@ class ProfileController extends Controller
                     'progress' => $badge->progress
                 ]);
             }
-            
+
             return $badge;
         });
-        
+
         Log::info('=== BAŞARIMLAR YÜKLENIYOR ===');
         // Başarımları getir - Eager loading ile performans iyileştirmesi
         $achievements = Achievement::with(['badges', 'badges.users' => function($query) use ($user) {
             $query->where('user_id', $user->id);
         }])->get();
-        
+
         Log::info('Başarımlar yüklendi:', [
             'achievement_count' => $achievements->count(),
             'achievements' => $achievements->map(function($achievement) {
@@ -298,15 +298,15 @@ class ProfileController extends Controller
                 ];
             })->toArray()
         ]);
-        
+
         Log::info('=== BAŞARIMLAR İŞLENİYOR ===');
         $achievements = $achievements->map(function ($achievement) use ($user) {
             // Başarımın durumunu kontrol et
             $progressInfo = $achievement->checkProgress($user);
-            
+
             $achievement->is_completed = $progressInfo['is_completed'];
             $achievement->progress = $progressInfo['progress'];
-            
+
             Log::info("Başarım işlendi: {$achievement->name}", [
                 'achievement_id' => $achievement->id,
                 'requirement_type' => $achievement->requirement_type,
@@ -316,28 +316,28 @@ class ProfileController extends Controller
                 'progress' => $achievement->progress,
                 'status' => $achievement->is_completed ? 'completed' : 'in-progress'
             ]);
-            
+
             return $achievement;
         });
-        
+
         Log::info('=== İSTATİSTİKLER HESAPLANIYOR ===');
         // İstatistikleri tek sorguda hesapla
         $stats = DB::table('badges')
             ->selectRaw('COUNT(*) as total_badges')
             ->selectRaw('(SELECT COUNT(*) FROM user_badges WHERE user_id = ?) as earned_badges', [$user->id])
             ->first();
-            
-        $completionRate = $stats->total_badges > 0 
+
+        $completionRate = $stats->total_badges > 0
             ? round(($stats->earned_badges / $stats->total_badges) * 100)
             : 0;
-            
+
         Log::info('İstatistikler hesaplandı:', [
             'total_badges' => $stats->total_badges,
             'earned_badges' => $stats->earned_badges,
             'completion_rate' => $completionRate,
             'total_xp' => $user->xp
         ]);
-        
+
         Log::info('=== VIEW RENDER EDİLİYOR ===');
         Log::info('View parametreleri:', [
             'badge_count' => $badges->count(),
@@ -348,7 +348,7 @@ class ProfileController extends Controller
             'total_xp' => $user->xp,
             'completion_rate' => $completionRate
         ]);
-        
+
         return view('profile.profile-achievements', [
             'badges' => $badges,
             'achievements' => $achievements,
@@ -363,20 +363,20 @@ class ProfileController extends Controller
     public function history(Request $request)
     {
         $user = Auth::user();
-        
+
         // Quiz sessions sorgusu
         $query = QuizSession::with(['topic', 'difficultyLevel'])
             ->where('user_id', $user->id);
-        
+
         // Filtreleme
         if ($request->filled('topic')) {
             $query->where('topic_id', $request->topic);
         }
-        
+
         if ($request->filled('difficulty')) {
             $query->where('difficulty_level_id', $request->difficulty);
         }
-        
+
         if ($request->filled('date_range')) {
             switch ($request->date_range) {
                 case 'today':
@@ -393,24 +393,24 @@ class ProfileController extends Controller
                     break;
             }
         }
-        
+
         // Sayfalama ile sıralama
         $quizSessions = $query->orderBy('created_at', 'desc')->paginate(10);
-        
+
         // İstatistikler
         $allSessions = QuizSession::where('user_id', $user->id)->get();
         $totalQuizzes = $allSessions->count();
         $averageScore = $totalQuizzes > 0 ? $allSessions->avg('score') : 0;
-        $averageAccuracy = $totalQuizzes > 0 ? 
+        $averageAccuracy = $totalQuizzes > 0 ?
             $allSessions->avg(function($session) {
                 return ($session->correct_answers / $session->total_questions) * 100;
             }) : 0;
         $totalXP = $allSessions->sum('xp_earned');
-        
+
         // Filtre seçenekleri
         $topics = \App\Models\Topic::all();
         $difficulties = \App\Models\DifficultyLevel::all();
-        
+
         return view('profile.profile-history', compact(
             'quizSessions',
             'totalQuizzes',
