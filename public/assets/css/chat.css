@@ -42,7 +42,6 @@
     80% { transform: translateY(-5px) scale(1.05); }
 }
 
-/* Unread Message Badge */
 .chat-toggle .unread-badge {
     position: absolute;
     top: -8px;
@@ -61,6 +60,11 @@
     box-shadow: 0 2px 8px rgba(255, 56, 56, 0.5);
     animation: pulse 2s infinite;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Bu satırları ekleyin */
+    line-height: 1;
+    vertical-align: middle;
+    text-align: center;
 }
 
 @keyframes pulse {
@@ -245,17 +249,72 @@
 }
 
 .back-to-friends {
-    background: none;
+    /* Ana tasarım */
+    background: linear-gradient(145deg, #ff6b6b, #ee5a24);
     border: none;
-    color: #666;
-    font-size: 16px;
+    border-radius: 25px;
+    color: white;
     cursor: pointer;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 8px 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow:
+        0 8px 20px rgba(255, 107, 107, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    /* Flexbox düzeni */
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Parlak efekt */
+.back-to-friends::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: rotate 3s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* Hover efektleri */
+.back-to-friends:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow:
+        0 15px 35px rgba(255, 107, 107, 0.4),
+        0 5px 15px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background: linear-gradient(145deg, #ff5252, #d84315);
+}
+
+.back-to-friends:hover::before {
+    opacity: 1;
+}
+
+.back-to-friends:hover::after {
+    transform: translateX(-8px) scale(1.2);
+    text-shadow: 0 0 10px rgba(255,255,255,0.8);
+}
+
+/* Tıklama efekti */
+.back-to-friends:active {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+        0 8px 20px rgba(255, 107, 107, 0.3),
+        inset 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .current-friend-avatar {
@@ -286,8 +345,11 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    height: 100%;
 }
-
+.messages-container.is-loading-more {
+    overflow-y: hidden;
+}
 /* Message Bubble */
 .message {
     display: flex;
@@ -469,11 +531,11 @@
 }
 
 @keyframes typingPulse {
-    0%, 60%, 100% { 
+    0%, 60%, 100% {
         opacity: 0.3;
         transform: scale(1);
     }
-    30% { 
+    30% {
         opacity: 1;
         transform: scale(1.2);
     }
@@ -625,18 +687,18 @@
         max-height: 420px;
         bottom: 75px;
     }
-    
+
     .chat-widget {
         bottom: 15px;
         right: 15px;
     }
-    
+
     .chat-toggle {
         width: 60px;
         height: 60px;
         font-size: 24px;
     }
-    
+
     .chat-toggle .unread-badge {
         width: 20px;
         height: 20px;
@@ -644,15 +706,15 @@
         top: -6px;
         right: -6px;
     }
-    
+
     .friend-avatar {
         width: 40px;
         height: 40px;
         font-size: 14px;
     }
-    
+
     .message-bubble {
         max-width: 85%;
         padding: 10px 14px;
     }
-} 
+}

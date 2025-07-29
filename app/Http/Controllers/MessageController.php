@@ -10,6 +10,7 @@ use App\Events\UserTyping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MessageController extends Controller
 {
@@ -82,13 +83,13 @@ class MessageController extends Controller
                         $lastMessage = Message::where('conversation_id', $conversation->id)
                             ->latest('created_at')
                             ->first();
-                        
+
                         $lastMessageTime = $lastMessage ? $lastMessage->created_at : null;
                     }
 
                     $friend->unread_count = $unreadCount;
                     $friend->last_message_at = $lastMessageTime;
-                    
+
                     return $friend;
                 });
 
@@ -142,6 +143,9 @@ class MessageController extends Controller
         // Sohbeti katılımcıları ve mesajları ile birlikte döndür
         $conversation->load([
             'participants', // TÜM participants'ları yükle (filter etme)
+            'messages' => function ($query) {
+                $query->orderBy('id', 'desc')->limit(30);
+            },
             'messages.user'
         ]);
 
@@ -153,24 +157,46 @@ class MessageController extends Controller
             'participants' => $conversation->participants()->pluck('user_id')->toArray(),
             'all_participants' => $conversation->participants()->get()->toArray()
         ]);
-
         return response()->json($conversation);
     }
 
     /**
      * Belirli bir sohbetin mesajlarını getir
      */
-    public function getMessages($conversationId)
+    public function getMessages(Request $request, $conversationId)
     {
-        $conversation = Conversation::with(['messages.user', 'participants'])
-            ->findOrFail($conversationId);
+        // 1. Frontend'den gelen veriyi loglayalım
+        $beforeMessageId = $request->query('before_message_id');
+        Log::info('--- getMessages Tetiklendi ---');
+        Log::info('Gelen before_message_id: ' . ($beforeMessageId ?: 'YOK'));
 
-        // Kullanıcının bu sohbete katılım yetkisi var mı kontrol et
-        if (!$conversation->participants->contains('id', Auth::id())) {
+        $conversation = \App\Models\Conversation::findOrFail($conversationId);
+
+        if (!$conversation->participants->contains('id', \Illuminate\Support\Facades\Auth::id())) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        return response()->json($conversation->messages);
+        $messagesQuery = $conversation->messages()
+            ->with('user')
+            ->orderBy('id', 'desc');
+
+        if ($beforeMessageId) {
+            $messagesQuery->where('id', '<', $beforeMessageId);
+        }
+
+        $messagesQuery->limit(30);
+
+        // 2. Laravel'in çalıştıracağı SQL sorgusunu ve parametrelerini loglayalım
+        Log::info('Çalıştırılacak SQL: ' . $messagesQuery->toSql());
+        Log::info('Sorgu Parametreleri: ', $messagesQuery->getBindings());
+
+        $messages = $messagesQuery->get();
+
+        // 3. Veritabanından dönen sonuçları loglayalım
+        Log::info('Dönen Mesaj IDleri: ' . $messages->pluck('id')->toJson());
+        Log::info('--- getMessages Tamamlandı ---');
+
+        return response()->json($messages);
     }
 
     /**
@@ -209,7 +235,7 @@ class MessageController extends Controller
         // Broadcast event'lerini optimize et
         try {
             // Pusher ile mesajı broadcast et - single event for conversation
-            broadcast(new MessageSent($message))->toOthers();
+            broadcast(new MessageSent($message));
 
             // Send single user-level event for friend list updates (more efficient)
             $participantIds = $otherParticipants->pluck('id')->toArray();
@@ -343,8 +369,11 @@ class MessageController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        // Typing event'ini broadcast et (geçici olarak devre dışı)
-        broadcast(new UserTyping(Auth::user(), $request->conversation_id, $request->is_typing))->toOthers();
+        try {
+            broadcast(new \App\Events\UserTyping(Auth::user(), $request->conversation_id, $request->is_typing))->toOthers();
+        } catch (\Exception $e) {
+            \Log::error('Typing broadcast error: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true]);
     }

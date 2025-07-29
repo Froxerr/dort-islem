@@ -155,8 +155,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Debug: Check if container exists
     const container = document.getElementById('tsparticles');
-    console.log("tsParticles container element:", container);
-    console.log("Container dimensions:", container.offsetWidth, "x", container.offsetHeight);
 
     // Initialize tsParticles with v2 API
     tsParticles.load("tsparticles", {
@@ -230,14 +228,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         detectRetina: true
     }).then(container => {
-        console.log("✅ tsParticles successfully initialized!");
-        console.log("Container:", container);
-        console.log("Canvas:", container.canvas?.element);
-        console.log("Particles count:", container.particles?.count || 0);
-
         // Manuel partikül sayısını kontrol et
         setTimeout(() => {
-            console.log("Particles after 2 seconds:", container.particles?.count || 0);
         }, 2000);
     }).catch(error => {
         console.error("❌ tsParticles initialization error:", error);

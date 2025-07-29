@@ -45,18 +45,18 @@ Route::middleware(['auth'])->group(function () {
     // 2FA routes
     Route::get('/profile/settings/2fa/qr-code', [ProfileSettingsController::class, 'getTwoFactorQrCode'])->name('profile.settings.2fa.qr');
     Route::post('/profile/settings/2fa/verify', [ProfileSettingsController::class, 'verifyTwoFactor'])->name('profile.settings.2fa.verify');
-    
+
     // Arkadaşlık Sistemi
     Route::get('/profile/friends', [FriendshipController::class, 'index'])->name('friends.index');
     Route::get('/profile/friends/search', [FriendshipController::class, 'search'])->name('friends.search');
     Route::get('/profile/friends/view/{id}', [FriendshipController::class, 'viewProfile'])->name('friends.view');
-    
+
     // Arkadaşlık İstekleri
     Route::post('/profile/friends/send-request', [FriendshipController::class, 'sendRequest'])->name('friends.send-request');
     Route::post('/profile/friends/accept-request', [FriendshipController::class, 'acceptRequest'])->name('friends.accept-request');
     Route::post('/profile/friends/reject-request', [FriendshipController::class, 'rejectRequest'])->name('friends.reject-request');
     Route::post('/profile/friends/remove-friend', [FriendshipController::class, 'removeFriend'])->name('friends.remove-friend');
-    
+
     // Mesajlaşma Sistemi
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/friends', [MessageController::class, 'getFriends'])->name('messages.friends');
