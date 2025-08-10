@@ -31,6 +31,28 @@ const handleTyping = (conversationId) => {
     }
 };
 
+async function loadFriends() {
+    const friendsListEl = document.querySelector('.friends-list');
+    friendsListEl.innerHTML = ''; // temizle
+
+    let friends = [];
+    try {
+        friends = await api.getFriends(); // mevcut çağrın neyse onu kullan
+    } catch (e) {
+        // hata durumunda da boş ekran gösterelim
+        friends = [];
+    }
+
+    if (!friends || friends.length === 0) {
+        friendsListEl.appendChild(ui.renderEmptyFriendsState());
+        const chatWindow = document.querySelector('.chat-window');
+        if (chatWindow) chatWindow.classList.remove('active');
+        return;
+    }
+
+    ui.renderFriendsList(friends);
+}
+
 const disconnectObserver = () => {
     if (observer) {
         observer.disconnect();
@@ -90,9 +112,7 @@ const handleFriendSelection = async (friendData, friendElement) => {
 
     if (friendElement) {
         const friendUnreadBadge = friendElement.querySelector('.friend-unread');
-        if (friendUnreadBadge) {
-            friendUnreadBadge.remove();
-        }
+        if (friendUnreadBadge) friendUnreadBadge.remove();
     }
 
     const conversation = await api.getOrCreateConversation(friendData.id);
@@ -107,7 +127,6 @@ const handleFriendSelection = async (friendData, friendElement) => {
         (message) => { ui.appendMessage(message, true); }
     );
 
-    // Okunmamış mesajları sunucuda işaretle
     const currentUserId = document.querySelector('meta[name="user-id"]').getAttribute('content');
     const unreadMessageIds = conversation.messages
         .filter(msg => !msg.read_at && msg.user_id != currentUserId)
@@ -116,7 +135,6 @@ const handleFriendSelection = async (friendData, friendElement) => {
     if (unreadMessageIds.length > 0) {
         await api.markMessagesAsRead(unreadMessageIds);
     }
-
 
     if (window.chatApp && typeof window.chatApp.updateTotalUnread === 'function') {
         window.chatApp.updateTotalUnread();
@@ -134,35 +152,36 @@ const handleSendMessage = async (conversationId, body) => {
 };
 
 export const init = async () => {
-    ui.setupUIEventListeners(
-        (friendData, element) => handleFriendSelection(friendData, element),
-        handleSendMessage
-    );
+    ui.setupUIEventListeners(handleFriendSelection, handleSendMessage);
 
-    // **NİHAİ ÇÖZÜM 2/2: Olay dinleyicisini yeniden düzenle.**
-    // Önceki dinleyiciyi (varsa) kaldırarak hafıza sızıntısını ve çift saymayı önle.
-    if (newMessageHandler) {
-        window.removeEventListener('chat:new-message', newMessageHandler);
+    ui.elements.messageInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            const body = ui.elements.messageInput.value.trim();
+            if (body && currentConversationId) {
+                handleSendMessage(currentConversationId, body);
+                ui.elements.messageInput.value = '';
+            }
+        }
+    });
+
+    const currentUserId = document.querySelector('meta[name="user-id"]')?.getAttribute('content');
+    if (currentUserId) {
+        events.initUserChannelListener(currentUserId, (message) => {
+            // Gelen her yeni mesaj için bu fonksiyon çalışacak:
+
+            // 1. Genel sayacı her zaman güncelle (bunu app.js de yapıyor ama burada olması garantidir).
+            if (window.chatApp) window.chatApp.updateTotalUnread();
+
+            // 2. Eğer sohbet açık değilse, arkadaş listesindeki sayacı artır.
+            if (message.conversation_id != currentConversationId) {
+                ui.incrementFriendUnreadBadge(message.user_id);
+            }
+        });
     }
 
-    // Yeni dinleyici fonksiyonunu tanımla.
-    newMessageHandler = (event) => {
-        const message = event.detail.message;
-        if (!message) return;
-
-        // Bu kontrol, `currentConversationId`'nin her zaman en güncel değerini kullanır.
-        // Bu, "sadece bir kez artıyor" sorununu çözer.
-        if (message.conversation_id != currentConversationId) {
-            ui.incrementFriendUnreadBadge(message.user_id);
-        }
-    };
-
-    // Yeni ve temiz dinleyiciyi ekle.
-    window.addEventListener('chat:new-message', newMessageHandler);
-
     try {
-        const friends = await api.getFriends();
-        ui.renderFriendsList(friends);
+        await loadFriends();
         document.getElementById('chatContainer').classList.add('active');
         document.getElementById('chatToggle').classList.add('active');
     } catch (error) {

@@ -1,26 +1,6 @@
 // QuestionGenerator sınıfını global scope'a ekle
 window.QuestionGenerator = class QuestionGenerator {
     constructor() {
-
-        this.difficultyRanges = {
-            'Kolay': {
-                num1: { min: 10, max: 99 },    // İki basamaklı
-                num2: { min: 1, max: 99 }      // Bir veya iki basamaklı
-            },
-            'Orta': {
-                num1: { min: 100, max: 999 },  // Üç basamaklı
-                num2: { min: 10, max: 999 }    // İki veya üç basamaklı
-            },
-            'Zor': {
-                num1: { min: 1000, max: 9999 },  // Dört basamaklı
-                num2: { min: 100, max: 999 }    // Üç basamaklı
-            },
-            'Deha': {  // 'Dahi' yerine 'Deha' olarak değiştirildi
-                num1: { min: 1000, max: 9999 },  // Dört basamaklı
-                num2: { min: 100, max: 999 }    // Üç basamaklı
-            }
-        };
-
         this.operators = {
             1: '+',  // Toplama
             2: '-',  // Çıkarma
@@ -29,151 +9,79 @@ window.QuestionGenerator = class QuestionGenerator {
         };
     }
 
-    // Belirli bir aralıkta rastgele sayı üret
-    generateRandomNumber(min, max) {
+    /**
+     * Belirli bir aralıkta rastgele bir tam sayı üretir.
+     */
+    _getRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // Sayının virgülden sonra kaç basamak olduğunu kontrol et
-    checkDecimalPlaces(number) {
-        const decimalStr = number.toString().split('.')[1];
-        return decimalStr ? decimalStr.length : 0;
-    }
-
-    // Bölme işlemi için uygun sayılar üret
-    generateDivisionNumbers(difficulty) {
-
-        const range = this.difficultyRanges[difficulty];
-        if (!range) {
-            console.error('Geçersiz zorluk seviyesi.');
-            // Varsayılan olarak Zor seviyeyi kullan
-            return this.generateDivisionNumbers('Zor');
-        }
-
-        let num1, num2, result;
-
-        if (difficulty === 'Kolay' || difficulty === 'Orta') {
-            // Kolay ve Orta seviye için basit sayılar
-            if (difficulty === 'Kolay') {
-                // Kolay seviye için bölenler: 2-10 arası
-                num2 = this.generateRandomNumber(2, 10);
-                // Bölünen için 2-5 arası çarpan kullan
-                const multiplier = this.generateRandomNumber(2, 5);
-                num1 = num2 * multiplier;
-            } else {
-                // Orta seviye için bölenler: 2-20 arası
-                num2 = this.generateRandomNumber(2, 20);
-                // Bölünen için 2-10 arası çarpan kullan
-                const multiplier = this.generateRandomNumber(2, 10);
-                num1 = num2 * multiplier;
-            }
-
-            // Sayıları aralık içinde tut
-            if (num1 > range.num1.max) {
-                // Aralık dışındaysa, böleni küçült
-                num2 = Math.floor(range.num1.max / 5);
-                num1 = num2 * this.generateRandomNumber(2, 5);
-            }
-
-            result = num1 / num2;
-        } else {
-            // Zor ve Deha seviyesi için daha kontrollü ondalıklı sayılar
-            let attempts = 0;
-            const maxAttempts = 10;
-
-            do {
-                if (difficulty === 'Zor') {
-                    // Zor seviye için 2-3 basamaklı bölenler
-                    num2 = this.generateRandomNumber(10, 99);
-                    num1 = this.generateRandomNumber(100, 999);
-                } else {
-                    // Deha seviyesi için 3-4 basamaklı bölenler
-                    num2 = this.generateRandomNumber(100, 999);
-                    num1 = this.generateRandomNumber(1000, 9999);
-                }
-
-                result = num1 / num2;
-                attempts++;
-
-                // Virgülden sonra en fazla 2 basamak olsun
-                if (this.checkDecimalPlaces(result) <= 2) break;
-            } while (attempts < maxAttempts);
-
-            // Son kontrol ve yuvarlama
-            result = Number(result.toFixed(2));
-        }
-
-        return [num1, num2];
-    }
-
-    // Soru üret
+    /**
+     * Ana soru üretme fonksiyonu.
+     */
     generateQuestion(topicId, difficulty) {
-
         const operator = this.operators[topicId];
-        const range = this.difficultyRanges[difficulty];
-
-        // Geçersiz zorluk seviyesi kontrolü
-        if (!range) {
-            console.error('Geçersiz zorluk seviyesi:');
-            return this.generateQuestion(topicId, 'Zor'); // Varsayılan olarak Zor seviye
-        }
-
         let num1, num2, answer;
 
-        // Bölme işlemi için özel durum
-        if (parseInt(topicId) === 4) {
-            [num1, num2] = this.generateDivisionNumbers(difficulty);
-            answer = num1 / num2;
+        switch (String(topicId)) {
 
-            // Zor ve Deha seviyesi için virgülden sonra 2 basamakla sınırla
-            if (difficulty === 'Zor' || difficulty === 'Deha') {  // 'Dahi' yerine 'Deha' olarak değiştirildi
-                answer = Number(answer.toFixed(2));
-            }
+            case '1': // TOPLAMA
+                switch (difficulty) {
+                    case 'Kolay': num1 = this._getRandomNumber(1, 20); num2 = this._getRandomNumber(1, 20); break;
+                    case 'Orta': num1 = this._getRandomNumber(20, 100); num2 = this._getRandomNumber(20, 100); break;
+                    case 'Zor': num1 = this._getRandomNumber(100, 500); num2 = this._getRandomNumber(100, 500); break;
+                    case 'Deha': num1 = this._getRandomNumber(500, 2000); num2 = this._getRandomNumber(500, 2000); break;
+                }
+                answer = num1 + num2;
+                break;
 
-        } else {
-            // Diğer işlemler için sayı üretimi
-            if (difficulty === 'Kolay') {
-                num1 = this.generateRandomNumber(10, 99);    // İki basamaklı
-                num2 = this.generateRandomNumber(1, 99);     // Bir veya iki basamaklı
-            } else if (difficulty === 'Orta') {
-                num1 = this.generateRandomNumber(100, 999);  // Üç basamaklı
-                num2 = this.generateRandomNumber(10, 999);   // İki veya üç basamaklı
-            } else { // Zor ve Deha için aynı aralık
-                num1 = this.generateRandomNumber(1000, 9999); // Dört basamaklı
-                num2 = this.generateRandomNumber(100, 999);   // Üç basamaklı
-            }
+            case '2': // ÇIKARMA
+                switch (difficulty) {
+                    case 'Kolay': num2 = this._getRandomNumber(1, 20); num1 = this._getRandomNumber(num2 + 1, 40); break;
+                    case 'Orta': num2 = this._getRandomNumber(20, 100); num1 = this._getRandomNumber(num2 + 1, 200); break;
+                    case 'Zor': num2 = this._getRandomNumber(100, 500); num1 = this._getRandomNumber(num2 + 1, 1000); break;
+                    case 'Deha': num2 = this._getRandomNumber(500, 1000); num1 = this._getRandomNumber(num2 + 1, 2000); break;
+                }
+                answer = num1 - num2;
+                break;
 
-            // İşleme göre cevabı hesapla
-            switch(operator) {
-                case '+':
-                    answer = num1 + num2;
-                    break;
-                case '-':
-                    // Çıkarma işleminde ilk sayının daha büyük olmasını sağla
-                    if (num2 > num1) {
-                        [num1, num2] = [num2, num1];
-                    }
-                    answer = num1 - num2;
-                    break;
-                case '×':
-                    answer = num1 * num2;
-                    break;
-            }
+            case '3': // ÇARPMA
+                switch (difficulty) {
+                    case 'Kolay': num1 = this._getRandomNumber(2, 9); num2 = this._getRandomNumber(2, 9); break;
+                    case 'Orta': num1 = this._getRandomNumber(10, 30); num2 = this._getRandomNumber(2, 9); break;
+                    case 'Zor': num1 = this._getRandomNumber(11, 99); num2 = this._getRandomNumber(11, 99); break;
+                    case 'Deha': num1 = this._getRandomNumber(100, 999); num2 = this._getRandomNumber(10, 99); break;
+                }
+                answer = num1 * num2;
+                break;
+
+            case '4': // BÖLME (HER SEVİYEDE GARANTİLİ TAM SAYI SORU VE CEVAP)
+                switch (difficulty) {
+                    case 'Kolay':
+                        num2 = this._getRandomNumber(2, 9);
+                        answer = this._getRandomNumber(2, 9);
+                        num1 = num2 * answer;
+                        break;
+                    case 'Orta':
+                        num2 = this._getRandomNumber(3, 12);
+                        answer = this._getRandomNumber(10, 30);
+                        num1 = num2 * answer;
+                        break;
+                    case 'Zor':
+                        num2 = this._getRandomNumber(5, 25);
+                        answer = this._getRandomNumber(10, 50);
+                        num1 = num2 * answer;
+                        break;
+                    case 'Deha':
+                        num2 = this._getRandomNumber(10, 50);
+                        answer = this._getRandomNumber(25, 100);
+                        num1 = num2 * answer;
+                        break;
+                }
+                // 'answer' zaten yukarıda belirlendiği için tekrar hesaplamaya gerek yok.
+                break;
         }
 
-        const result = {
-            num1,
-            num2,
-            operator,
-            answer,
-            difficulty
-        };
-
-        return result;
+        return { num1, num2, operator, answer };
     }
-
-    // Sayıyı formatlı göster (binlik ayraç ekle)
-    formatNumber(number) {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-}
+};

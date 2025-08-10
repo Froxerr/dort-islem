@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function calculateFinalScore() {
         const totalQuestions = correctCount + wrongCount;
-        const accuracyRate = (correctCount / totalQuestions) * 100;
+        const accuracyRate = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
 
         // Temel puan hesaplama
         let baseScore = correctCount * 10;
@@ -233,19 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
             bonusMultiplier = 1.2;
         } else if (accuracyRate > 65) {
             bonusMultiplier = 1.1;
-        } else if (accuracyRate <= 50) {
-            bonusMultiplier = 1;
         }
 
         // Nihai puanı hesapla
-        const finalScore = Math.round(baseScore * bonusMultiplier * selectedDifficultyMultiplier);
+        const finalScore = Math.floor(baseScore * bonusMultiplier * selectedDifficultyMultiplier);
 
         return {
-            accuracyRate,
-            bonusMultiplier,
+            accuracyRate: accuracyRate,
+            bonusMultiplier: bonusMultiplier,
             xpMultiplier: selectedDifficultyMultiplier,
-            finalScore,
-            baseScore
+            finalScore: finalScore,
+            baseScore: baseScore
         };
     }
 
@@ -417,7 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
             });
 
-            const responseData = await response.json();
+            const status = response.status;
 
             if (!response.ok) {
                 if (response.status === 401) {
@@ -428,7 +426,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
 
-
+            const responseData = await response.json();
             if (responseData.notifications && responseData.notifications.length > 0) {
 
                 // Bildirimleri sıraya koy
@@ -538,44 +536,38 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkAnswer() {
         if (!isGameActive) return;
 
-        const num1 = parseInt(document.getElementById('number1').textContent);
-        const num2 = parseInt(document.getElementById('number2').textContent);
+        const num1Text = document.getElementById('number1').textContent;
+        const num2Text = document.getElementById('number2').textContent;
         const operator = document.getElementById('operator').textContent;
-        const userAnswer = parseInt(document.getElementById('answer').value);
         const answerInput = document.getElementById('answer');
+        const checkButton = document.getElementById('checkAnswer'); // Butonu seçiyoruz
+
+        const userAnswer = parseFloat(answerInput.value.replace(',', '.'));
 
         if (isNaN(userAnswer)) {
             return;
         }
 
+        const num1 = parseFloat(num1Text.replace(',', '.'));
+        const num2 = parseFloat(num2Text.replace(',', '.'));
+
         let correctAnswer;
         switch(operator) {
-            case '+':
-                correctAnswer = num1 + num2;
-                break;
-            case '-':
-                correctAnswer = num1 - num2;
-                break;
-            case '×':
-                correctAnswer = num1 * num2;
-                break;
-            case '÷':
-                correctAnswer = num1 / num2;
-                break;
+            case '+': correctAnswer = num1 + num2; break;
+            case '-': correctAnswer = num1 - num2; break;
+            case '×': correctAnswer = num1 * num2; break;
+            case '÷': correctAnswer = num1 / num2; break;
         }
 
-        if (userAnswer === correctAnswer) {
+        const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.001;
+
+        if (isCorrect) {
+            // DOĞRU CEVAP BLOĞU
             correctCount++;
             correctCountDisplay.textContent = correctCount;
             speechBubble.textContent = 'Harika! Devam et!';
             showCorrectEffect();
 
-            // Ses efekti (eğer ayarlarda açıksa)
-            if (settings.sound_effects) {
-                // Burada ses çalabilirsiniz
-            }
-
-            // Otomatik sonraki soru (eğer ayarlarda açıksa)
             if (settings.auto_next_question) {
                 setTimeout(() => {
                     answerInput.value = '';
@@ -587,47 +579,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 generateQuestion(selectedTopicId, selectedLevelId);
                 answerInput.focus();
             }
+
         } else {
+            // YANLIŞ CEVAP BLOĞU
             wrongCount++;
             wrongCountDisplay.textContent = wrongCount;
+            showWrongEffect();
 
-            // Doğru cevabı göster (eğer ayarlarda açıksa)
+            const formattedCorrectAnswer = Number(correctAnswer.toFixed(2));
+
             if (settings.show_correct_answers) {
-                speechBubble.textContent = `Yanlış! Doğru cevap: ${correctAnswer}`;
-
-                                 // Otomatik sonraki soru (eğer ayarlarda açıksa)
-                 if (settings.auto_next_question) {
-                     setTimeout(() => {
-                         answerInput.value = '';
-                         generateQuestion(selectedTopicId, selectedLevelId);
-                         answerInput.focus();
-                     }, 2500); // Doğru cevabı görmek için biraz daha bekle
-                 } else {
-                     speechBubble.textContent += ' Tekrar dene!';
-                     answerInput.value = '';
-                     answerInput.focus();
-                 }
+                speechBubble.textContent = `Yanlış! Doğru cevap: ${formattedCorrectAnswer}`;
             } else {
-                                 speechBubble.textContent = 'Tekrar dene!';
-                 if (settings.auto_next_question) {
-                     setTimeout(() => {
-                         answerInput.value = '';
-                         generateQuestion(selectedTopicId, selectedLevelId);
-                         answerInput.focus();
-                     }, 1500);
-                 } else {
-                     answerInput.value = '';
-                     answerInput.focus();
-                 }
+                speechBubble.textContent = 'Yanlış cevap, devam et!';
             }
 
-            showWrongEffect();
+            // --- İSTENEN DÜZELTME ---
+            // Hem input hem de buton kilitleniyor.
+            answerInput.disabled = true;
+            checkButton.disabled = true;
+
+            setTimeout(() => {
+                answerInput.value = '';
+                generateQuestion(selectedTopicId, selectedLevelId);
+
+                // Kilitler açılıyor.
+                answerInput.disabled = false;
+                checkButton.disabled = false;
+                answerInput.focus();
+            }, 2000);
         }
 
         speechBubble.classList.remove('hide');
         setTimeout(() => {
             speechBubble.classList.add('hide');
-        }, 2000);
+        }, 1800);
     }
 
     // Enter tuşu ile cevap gönderme

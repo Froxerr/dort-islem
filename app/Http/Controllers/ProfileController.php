@@ -401,10 +401,11 @@ class ProfileController extends Controller
         $allSessions = QuizSession::where('user_id', $user->id)->get();
         $totalQuizzes = $allSessions->count();
         $averageScore = $totalQuizzes > 0 ? $allSessions->avg('score') : 0;
-        $averageAccuracy = $totalQuizzes > 0 ?
-            $allSessions->avg(function($session) {
-                return ($session->correct_answers / $session->total_questions) * 100;
-            }) : 0;
+        $averageAccuracy = $totalQuizzes > 0 ? $allSessions->avg(function($session) {
+            return $session->total_questions > 0
+                ? ($session->correct_answers / $session->total_questions) * 100
+                : 0;
+        }) : 0;
         $totalXP = $allSessions->sum('xp_earned');
 
         // Filtre seçenekleri

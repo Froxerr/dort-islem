@@ -49,7 +49,7 @@
         height: 50px;
         border-radius: 25px;
         cursor: pointer;
-        box-shadow: 
+        box-shadow:
             0 4px 15px rgba(76, 175, 80, 0.3),
             0 2px 4px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
@@ -62,7 +62,7 @@
 
     .back-button:hover {
         transform: translateY(-2px) scale(1.1);
-        box-shadow: 
+        box-shadow:
             0 6px 20px rgba(76, 175, 80, 0.4),
             0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -101,7 +101,7 @@
         border-radius: 20px;
         padding: 1.5rem;
         text-align: center;
-        box-shadow: 
+        box-shadow:
             8px 8px 16px rgba(0,0,0,0.1),
             -4px -4px 16px rgba(255,255,255,0.8);
         transition: all 0.3s ease;
@@ -109,7 +109,7 @@
 
     .stat-card:hover {
         transform: translateY(-5px);
-        box-shadow: 
+        box-shadow:
             12px 12px 24px rgba(0,0,0,0.15),
             -6px -6px 24px rgba(255,255,255,0.9);
     }
@@ -135,7 +135,7 @@
         border-radius: 20px;
         padding: 1.5rem;
         margin-bottom: 2rem;
-        box-shadow: 
+        box-shadow:
             8px 8px 16px rgba(0,0,0,0.1),
             -4px -4px 16px rgba(255,255,255,0.8);
     }
@@ -204,7 +204,7 @@
         border: 2px solid rgba(255, 255, 255, 0.5);
         border-radius: 20px;
         padding: 1.5rem;
-        box-shadow: 
+        box-shadow:
             8px 8px 16px rgba(0,0,0,0.1),
             -4px -4px 16px rgba(255,255,255,0.8);
         transition: all 0.3s ease;
@@ -214,7 +214,7 @@
 
     .quiz-card:hover {
         transform: translateY(-3px);
-        box-shadow: 
+        box-shadow:
             12px 12px 24px rgba(0,0,0,0.15),
             -6px -6px 24px rgba(255,255,255,0.9);
     }
@@ -482,10 +482,10 @@
                         </div>
                     </div>
                     <div class="quiz-score">
-                        <div class="score-value {{ 
-                            $session->score >= 90 ? 'score-excellent' : 
-                            ($session->score >= 70 ? 'score-good' : 
-                            ($session->score >= 50 ? 'score-average' : 'score-poor')) 
+                        <div class="score-value {{
+                            $session->score >= 90 ? 'score-excellent' :
+                            ($session->score >= 70 ? 'score-good' :
+                            ($session->score >= 50 ? 'score-average' : 'score-poor'))
                         }}">
                             {{ $session->score }}
                         </div>
@@ -499,7 +499,13 @@
                         <div class="quiz-stat-label">Doğru Cevap</div>
                     </div>
                     <div class="quiz-stat">
-                        <div class="quiz-stat-value">{{ number_format(($session->correct_answers / $session->total_questions) * 100, 1) }}%</div>
+                        <div class="quiz-stat-value">
+                            @if($session->total_questions > 0)
+                                {{ number_format(($session->correct_answers / $session->total_questions) * 100, 1) }}%
+                            @else
+                                0%
+                            @endif
+                        </div>
                         <div class="quiz-stat-label">Başarı Oranı</div>
                     </div>
                     <div class="quiz-stat">
@@ -528,7 +534,7 @@
                 </div>
             </div>
         @empty
-            <div class="empty-state">
+            <div class="empty-state" style="margin-top: 50px;">
                 <i class="fas fa-clipboard-list"></i>
                 <h3>Henüz Quiz Geçmişi Yok</h3>
                 <p>İlk quizini tamamladığında burada görünecek!</p>
@@ -544,7 +550,7 @@
                         align-items: center;
                         gap: 0.5rem;
                         transition: all 0.3s ease;
-                    " onmouseover="this.style.background='var(--primary-dark)'; this.style.transform='translateY(-2px)'" 
+                    " onmouseover="this.style.background='var(--primary-dark)'; this.style.transform='translateY(-2px)'"
                        onmouseout="this.style.background='var(--primary-color)'; this.style.transform='translateY(0)'">
                         <i class="fas fa-play"></i>
                         İlk Quizini Başlat
@@ -584,4 +590,4 @@
         </div>
     @endif
 </div>
-@endsection 
+@endsection

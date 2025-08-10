@@ -3,6 +3,7 @@
 @section('css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 <link rel="stylesheet" href="{{ asset('assets/css/profile.css') }}">
 @endsection
 
@@ -61,26 +62,51 @@
     <!-- Sağ Bölüm -->
     <div class="right-section profile-section">
         <h3>Rozetlerim</h3>
-        <div class="badge-grid">
-            @foreach($userBadges as $badge)
-            <div class="badge-item badge-glow {{ $badge->is_new ? 'new' : '' }}"
-                 data-earned="{{ $badge->earned_at }}"
-                 title="{{ $badge->description }}">
-                <img src="{{ asset('assets/img/badges/' . ($badge->image ?? 'default.png')) }}"
-                     alt="{{ $badge->name }}">
-                <div class="badge-name">{{ $badge->name }}</div>
+
+        {{-- Rozet sayısı 2'den fazlaysa Slider göster --}}
+        @if(count($userBadges) > 2)
+            <div class="swiper badge-slider-container">
+                <div class="swiper-wrapper">
+                    @foreach($userBadges as $badge)
+                        <div class="swiper-slide">
+                            <div class="badge-item badge-glow {{ $badge->is_new ? 'new' : '' }}"
+                                 data-earned="{{ $badge->earned_at }}"
+                                 title="{{ $badge->description }}">
+                                <img src="{{ asset('assets/img/badges/' . ($badge->image ?? 'default.png')) }}"
+                                     alt="{{ $badge->name }}">
+                                <div class="badge-name">{{ $badge->name }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
             </div>
-            @endforeach
-        </div>
+        @else
+            {{-- Rozet sayısı 2 veya daha az ise normal Grid göster --}}
+            <div class="badge-grid">
+                @forelse($userBadges as $badge)
+                    <div class="badge-item badge-glow {{ $badge->is_new ? 'new' : '' }}"
+                         data-earned="{{ $badge->earned_at }}"
+                         title="{{ $badge->description }}">
+                        <img src="{{ asset('assets/img/badges/' . ($badge->image ?? 'default.png')) }}"
+                             alt="{{ $badge->name }}">
+                        <div class="badge-name">{{ $badge->name }}</div>
+                    </div>
+                @empty
+                    <p class="no-badges-text">Henüz kazanılmış bir rozet yok.</p>
+                @endforelse
+            </div>
+        @endif
 
         <div class="activities-section">
+            {{-- Aktiviteler bölümü olduğu gibi kalacak --}}
             <h3 class="activities-title">Son Aktiviteler</h3>
             <div class="activities">
                 @foreach($recentActivities as $activity)
-                <div class="activity-item">
-                    <p>{{ $activity->description }}</p>
-                    <small>{{ $activity->created_at->diffForHumans() }}</small>
-                </div>
+                    <div class="activity-item">
+                        <p>{{ $activity->description }}</p>
+                        <small>{{ $activity->created_at->diffForHumans() }}</small>
+                    </div>
                 @endforeach
             </div>
         </div>
@@ -90,6 +116,7 @@
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Pırıltı efekti oluşturma
@@ -161,6 +188,33 @@ document.addEventListener('DOMContentLoaded', function() {
     @if(session('levelup'))
     playLevelUpAnimation();
     @endif
+    if (document.querySelector('.badge-slider-container')) {
+        const badgeSlider = new Swiper('.badge-slider-container', {
+            // Slider ayarları
+            loop: false, // Az sayıda rozet olabileceği için döngü kapalı
+            slidesPerView: 1,
+            spaceBetween: 10,
+
+            // Ekran boyutuna göre slayt sayısını ayarlama
+            breakpoints: {
+                // 640px ve üzeri ekranlarda
+                640: {
+                    slidesPerView: 2,
+                    spaceBetween: 20
+                },
+                // 1024px ve üzeri ekranlarda
+                1024: {
+                    slidesPerView: 3,
+                    spaceBetween: 30
+                }
+            },
+
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    }
 });
 </script>
 @endsection

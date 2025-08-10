@@ -83,7 +83,9 @@ class ProcessQuizBadgeResult
                     $maxStreak = 0;
 
                     foreach ($sessions as $session) {
-                        $isSuccess = ($session->correct_answers / $session->total_questions) >= 0.8;
+                        $isSuccess = ($session->total_questions > 0)
+                            ? (($session->correct_answers / $session->total_questions) >= 0.8)
+                            : false;
                         $isCorrectTopic = !$trigger->topic_id || $session->topic_id == $trigger->topic_id;
 
                         if ($isSuccess && $isCorrectTopic) {
@@ -121,13 +123,13 @@ class ProcessQuizBadgeResult
                         DB::transaction(function() use ($user, $trigger, $progress) {
                             // Rozeti kullanıcıya ver
                             $user->badges()->attach($trigger->badge_id);
-                            
+
                             // XP ödülünü al
                             $xpReward = $trigger->badge->achievement->xp_reward ?? 0;
-                            
+
                             // Bildirim gönder
                             $user->notify(new BadgeEarned($trigger->badge, $xpReward, $progress));
-                            
+
                             Log::info('Yeni rozet kazanıldı', [
                                 'user_id' => $user->id,
                                 'badge_id' => $trigger->badge_id,

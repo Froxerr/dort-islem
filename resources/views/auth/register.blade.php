@@ -116,7 +116,7 @@
                 padding: 2rem;
                 max-width: 90%;
             }
-            
+
             .form-title {
                 font-size: 1.8rem;
             }
@@ -145,7 +145,7 @@
 
             <div class="form-group">
                 <label for="name" class="form-label">Kaşif Adın</label>
-                <input id="name" type="text" class="form-input @error('name') is-invalid @enderror" 
+                <input id="name" type="text" class="form-input @error('name') is-invalid @enderror"
                        name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
                 @error('name')
                     <span class="error-message">{{ $message }}</span>
@@ -154,7 +154,7 @@
 
             <div class="form-group">
                 <label for="email" class="form-label">E-posta Adresin</label>
-                <input id="email" type="email" class="form-input @error('email') is-invalid @enderror" 
+                <input id="email" type="email" class="form-input @error('email') is-invalid @enderror"
                        name="email" value="{{ old('email') }}" required autocomplete="email">
                 @error('email')
                     <span class="error-message">{{ $message }}</span>
@@ -164,7 +164,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="password" class="form-label">Gizli Şifren</label>
-                    <input id="password" type="password" class="form-input @error('password') is-invalid @enderror" 
+                    <input id="password" type="password" class="form-input @error('password') is-invalid @enderror"
                            name="password" required autocomplete="new-password">
                     @error('password')
                         <span class="error-message">{{ $message }}</span>
@@ -173,7 +173,7 @@
 
                 <div class="form-group">
                     <label for="password-confirm" class="form-label">Şifreni Tekrar Yaz</label>
-                    <input id="password-confirm" type="password" class="form-input" 
+                    <input id="password-confirm" type="password" class="form-input"
                            name="password_confirmation" required autocomplete="new-password">
                 </div>
             </div>
@@ -206,77 +206,5 @@
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="{{ asset('assets/js/anasayfa.js') }}"></script>
-<script>
-// Register sayfası için özel JavaScript
-document.addEventListener('DOMContentLoaded', () => {
-    // Takım yıldızları olmadan yıldızları oluştur
-    createStars();
-    
-    // Baykuş animasyonları
-    const isMobile = window.innerWidth <= 768;
-    const duration = isMobile ? 0.7 : 1;
-    
-    const speechBubble = document.querySelector('.speech-bubble');
-    const buboContainer = document.querySelector('.bubo-container');
-    
-    // Başlangıçta konuşma balonunu gizle
-    speechBubble.style.opacity = 0;
-    speechBubble.style.visibility = 'hidden';
-    speechBubble.style.display = 'none';
-    
-    // Başlangıç animasyonları
-    const startTimeline = gsap.timeline({
-        onComplete: () => {
-            setTimeout(() => {
-                animateSpeechBubble(speechBubble, true, "Hoş geldin yeni kaşif! Birlikte muhteşem matematiksel maceralara çıkacağız!");
-                
-                setTimeout(() => {
-                    animateSpeechBubble(speechBubble, false);
-                }, 6000);
-            }, 500);
-        }
-    });
-
-    startTimeline
-        .from(buboContainer, {
-            x: 100,
-            opacity: 0,
-            duration: duration * 1.5,
-            ease: "back.out(1.7)",
-            onComplete: () => {
-                gsap.to(buboContainer, {
-                    rotation: isMobile ? 2 : 3,
-                    duration: 2,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "power1.inOut",
-                    transformOrigin: "top center"
-                });
-            }
-        })
-        .from('.auth-form', {
-            scale: 0,
-            opacity: 0,
-            duration: duration * 1.2,
-            ease: "elastic.out(1, 0.5)",
-            delay: 0.3
-        });
-
-    // Form validasyonu için ek özellikler
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('password-confirm');
-    
-    function validatePasswords() {
-        if (passwordInput.value !== confirmPasswordInput.value) {
-            confirmPasswordInput.setCustomValidity('Şifreler eşleşmiyor!');
-        } else {
-            confirmPasswordInput.setCustomValidity('');
-        }
-    }
-    
-    passwordInput.addEventListener('change', validatePasswords);
-    confirmPasswordInput.addEventListener('keyup', validatePasswords);
-});
-</script>
-@endsection 
+<script src="{{asset('assets/js/login-register.js')}}"></script>
+@endsection

@@ -100,26 +100,7 @@ export const renderFriendsList = (friends) => {
     });
 };
 
-/**
- * BASİTLEŞTİRİLDİ: "Yazıyor" göstergesini günceller (tek kullanıcı için).
- */
-export const updateTypingIndicator = (event) => {
-    let typingIndicator = document.querySelector('.typing-indicator');
-    if (event.is_typing) {
-        if (!typingIndicator) {
-            const displayName = event.user.name || 'Birisi';
-            typingIndicator = document.createElement('div');
-            typingIndicator.className = 'typing-indicator';
-            typingIndicator.innerHTML = `<div class="typing-text">${displayName} yazıyor...</div>`;
-            elements.messagesContainer.appendChild(typingIndicator);
-            elements.messagesContainer.scrollTop = elements.messagesContainer.scrollHeight;
-        }
-    } else {
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
-    }
-};
+
 
 /**
  * HATA DÜZELTME: Tüm olay dinleyicileri bu tek fonksiyonda toplanmalı.
@@ -166,12 +147,11 @@ export const setupUIEventListeners = (onFriendClick, onMessageSend) => {
     elements.friendsList.addEventListener('click', (event) => {
         const friendItem = event.target.closest('.friend-item');
         if (friendItem) {
-            // Bu, main.js'in arayüzdeki sayacı silebilmesi için gereklidir.
             onFriendClick({
                 id: friendItem.dataset.friendId,
                 name: friendItem.dataset.friendName === 'null' ? null : friendItem.dataset.friendName,
                 username: friendItem.dataset.friendUsername,
-            }, friendItem); // 2. parametre olarak tıklanan elementi ekledik.
+            }, friendItem);
         }
     });
 };
@@ -199,3 +179,12 @@ export const incrementFriendUnreadBadge = (senderId) => {
         unreadBadge.textContent = currentCount + 1;
     }
 };
+export function renderEmptyFriendsState() {
+    const wrap = document.createElement('div');
+    wrap.className = 'empty-state';
+    wrap.innerHTML = `
+    <p><strong>Şu anda arkadaşınız görünmüyor.</strong></p>
+    <p>Sohbete başlamak için bir arkadaş ekleyin.</p>
+  `;
+    return wrap;
+}

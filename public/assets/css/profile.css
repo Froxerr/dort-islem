@@ -13,6 +13,32 @@ html {
     overflow-y: auto; /* Dikey scroll sadece gerektiğinde */
 }
 
+/* Rozet Slider Stilleri */
+.badge-slider-container {
+    width: 100%;
+    padding: 10px 0;
+    position: relative;
+}
+
+.badge-slider-container .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Slider'daki badge-item'ın düzgün görünmesini sağlar */
+    width: auto;
+}
+
+.badge-slider-container .badge-item {
+    flex-shrink: 0; /* Küçülmesini engelle */
+}
+
+
+.no-badges-text {
+    width: 100%;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
 .profile-container {
     position: fixed;
     top: 50%;
@@ -155,7 +181,7 @@ html {
     background: linear-gradient(145deg, #ffffff, #f5f5f5);
     border-radius: 15px;
     padding: 1.5rem;
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.05), 
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.05),
                 -5px -5px 15px rgba(255,255,255,0.8);
     transition: all 0.3s ease;
     text-align: center;
@@ -163,7 +189,7 @@ html {
 
 .stat-item:hover {
     transform: translateY(-2px);
-    box-shadow: 8px 8px 20px rgba(0,0,0,0.08), 
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.08),
                 -8px -8px 20px rgba(255,255,255,0.9);
 }
 
@@ -366,7 +392,7 @@ html {
     height: 50px;
     border-radius: 25px;
     cursor: pointer;
-    box-shadow: 
+    box-shadow:
         0 4px 15px rgba(76, 175, 80, 0.3),
         0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
@@ -379,7 +405,7 @@ html {
 
 .back-button:hover {
     transform: translateY(-2px) scale(1.1);
-    box-shadow: 
+    box-shadow:
         0 6px 20px rgba(76, 175, 80, 0.4),
         0 4px 8px rgba(0, 0, 0, 0.1);
 }

@@ -28,9 +28,12 @@ class QuizSessionController extends Controller
 
     private function calculateXP(int $score, int $difficultyLevelId): int
     {
+        if ($this->lastTotalQuestions == 0) {
+            return 0;
+        }
         // Doğruluk oranını hesapla
-        $accuracyRate = ($score / 10) / ($this->lastTotalQuestions) * 100;
-        
+        $accuracyRate = (($score / 10) / $this->lastTotalQuestions) * 100;
+
         // Bonus çarpanını belirle
         $bonusMultiplier = 1;
         if ($accuracyRate > 95) {
@@ -39,8 +42,6 @@ class QuizSessionController extends Controller
             $bonusMultiplier = 1.2;
         } else if ($accuracyRate > 65) {
             $bonusMultiplier = 1.1;
-        } else if ($accuracyRate <= 50) {
-            $bonusMultiplier = 1;
         }
 
         // Zorluk seviyesi çarpanını al
@@ -49,7 +50,7 @@ class QuizSessionController extends Controller
             ->value('xp_multiplier') ?? 1;
 
         // XP hesaplama: skor * bonus çarpanı * zorluk çarpanı
-        return (int) ($score * $bonusMultiplier * $difficultyMultiplier);
+        return (int) floor($score * $bonusMultiplier * $difficultyMultiplier);
     }
 
     private $lastTotalQuestions = 0;
@@ -156,7 +157,7 @@ class QuizSessionController extends Controller
                 ]);
 
                 $achievementResult = $this->achievementService->processAchievements($user, $quizSession);
-                
+
                 if (!$achievementResult) {
                     throw new \Exception('Achievement işlemi başarısız oldu');
                 }
@@ -240,11 +241,11 @@ class QuizSessionController extends Controller
                 'user_id' => Auth::id(),
                 'session_data' => session()->all()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Quiz session kaydedilemedi: ' . $e->getMessage()
             ], 500);
         }
     }
-} 
+}

@@ -73,16 +73,31 @@
                          data-badge-id="{{ $badge->id }}"
                          data-topic="{{ $topicId }}"
                          data-section="badges">
-                        
-                        <img src="{{ asset('assets/img/badges/' . $badge->icon_filename) }}" 
-                             alt="{{ $badge->name }}" 
+
+                        <img src="{{ asset('assets/img/badges/' . $badge->icon_filename) }}"
+                             alt="{{ $badge->name }}"
                              class="badge-icon">
-                        
-                        <h3 class="badge-name">{{ $badge->name }}</h3>
+
+                        <div class="badge-name-svg-wrapper">
+                            <svg viewBox="0 0 200 25" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient
+                                        id="badgeGradient{{ $badge->id }}"
+                                        gradientTransform="rotate(45)">
+                                        <stop offset="0%" stop-color="#4CAF50" />
+                                        <stop offset="100%" stop-color="#81C784" />
+                                    </linearGradient>
+                                </defs>
+
+                                <text x="50%" y="18" text-anchor="middle" fill="url(#badgeGradient{{ $badge->id }})">
+                                    {{ $badge->name }}
+                                </text>
+                            </svg>
+                        </div>
 
                         <div class="progress-container">
                             <div class="progress-bar">
-                                <div class="progress-fill" 
+                                <div class="progress-fill"
                                      data-progress="{{ $badge->progress }}"
                                      style="width: {{ $badge->progress }}%">
                                 </div>
@@ -129,12 +144,12 @@
                                  data-badge-id="{{ $achievement->id }}"
                                  data-status="{{ $achievement->is_completed ? 'completed' : 'in-progress' }}"
                                  data-section="achievements">
-                                
+
                                 <h3 class="badge-name">{{ $achievement->name }}</h3>
 
                     <div class="progress-container">
                         <div class="progress-bar">
-                            <div class="progress-fill" 
+                            <div class="progress-fill"
                                  data-progress="{{ $achievement->progress }}"
                                  style="width: {{ $achievement->progress }}%">
                             </div>
@@ -189,7 +204,6 @@ document.addEventListener('DOMContentLoaded', function() {
         slidesPerView: 1,
         spaceBetween: 30,
         centeredSlides: true,
-        loop: true,
         loopedSlides: 4,
         speed: 400,
         watchSlidesProgress: true,
@@ -205,11 +219,6 @@ document.addEventListener('DOMContentLoaded', function() {
             depth: 100,
             modifier: 2,
             slideShadows: false,
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-            dynamicBullets: true
         },
         navigation: {
             nextEl: '.swiper-button-next',
@@ -233,46 +242,36 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isProcessing || currentTab === newTab) return;
         isProcessing = true;
 
+        // Mevcut aktif tab ve içeriği bul
         const oldContent = document.getElementById(`${currentTab}-content`);
+        const oldButton = document.querySelector(`.tab-btn[data-tab="${currentTab}"]`);
+
+        // Yeni aktif olacak tab ve içeriği bul
         const newContent = document.getElementById(`${newTab}-content`);
-        
-        // Eski içeriği gizle
-        oldContent.style.display = 'none';
+        const newButton = document.querySelector(`.tab-btn[data-tab="${newTab}"]`);
+
+        // Active class'larını güncelle
         oldContent.classList.remove('active');
-
-        // Yeni içeriği göster
-        newContent.style.display = 'block';
+        oldButton.classList.remove('active');
         newContent.classList.add('active');
+        newButton.classList.add('active');
 
-        // Button durumlarını güncelle
-        document.querySelector(`.tab-btn[data-tab="${currentTab}"]`).classList.remove('active');
-        document.querySelector(`.tab-btn[data-tab="${newTab}"]`).classList.add('active');
-
-        // Slider'ı resetle ve güncelle
+        // Yeni sekmeye ait slider'ı güncelle
         const swiper = newTab === 'badges' ? badgesSwiper : achievementsSwiper;
-        swiper.el.classList.remove('filtering');
-        swiper.slides.forEach(slide => {
-            slide.style.display = '';
-            slide.style.transform = '';
-            slide.style.opacity = '';
-        });
+        swiper.update(); // Slider'ın boyutlarını ve pozisyonunu yeniden hesapla
 
-        // Swiper'ı güncelle ve sarsıntısız başlangıç
-        swiper.update();
-        swiper.slideTo(1, 0, false);
-
-        // Aktif filtreyi uygula
+        // Aktif filtreyi yeniden uygula
         const activeFilter = newContent.querySelector('.filter-btn.active');
         if (activeFilter) {
             filterItems(newContent, activeFilter.dataset.filter);
         }
 
         currentTab = newTab;
-        
-        // Kısa bir süre sonra yeni tıklamalara izin ver
+
+        // İşlemci kilidini kısa bir süre sonra aç
         setTimeout(() => {
             isProcessing = false;
-        }, 200);
+        }, 300); // transition süresiyle eşleşti
     }
 
     // Tab butonlarına tıklama olayı
@@ -398,4 +397,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endsection 
+@endsection

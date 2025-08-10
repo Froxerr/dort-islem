@@ -109,7 +109,7 @@
                 padding: 2rem;
                 max-width: 90%;
             }
-            
+
             .form-title {
                 font-size: 1.8rem;
             }
@@ -118,117 +118,60 @@
 @endsection
 
 @section('content')
-<div class="nature-bg">
-    <div class="stars"></div>
-    <div class="twinkling"></div>
+    <div class="nature-bg">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
 
-    <div class="content-wrapper">
-        <form method="POST" action="{{ route('login') }}" class="auth-form">
-            @csrf
-            <h1 class="form-title">Kaşif Girişi</h1>
+        <div class="content-wrapper">
+            <form method="POST" action="{{ route('login') }}" class="auth-form">
+                @csrf
+                <h1 class="form-title">Kaşif Girişi</h1>
 
-            <div class="form-group">
-                <label for="email" class="form-label">E-posta Adresin</label>
-                <input id="email" type="email" class="form-input @error('email') is-invalid @enderror"
-                       name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-                @error('email')
+                <div class="form-group">
+                    <label for="email" class="form-label">E-posta Adresin</label>
+                    <input id="email" type="email" class="form-input @error('email') is-invalid @enderror"
+                           name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    @error('email')
                     <span class="error-message">{{ $message }}</span>
-                @enderror
-            </div>
+                    @enderror
+                </div>
 
-            <div class="form-group">
-                <label for="password" class="form-label">Gizli Şifren</label>
-                <input id="password" type="password" class="form-input @error('password') is-invalid @enderror"
-                       name="password" required autocomplete="current-password">
-                @error('password')
+                <div class="form-group">
+                    <label for="password" class="form-label">Gizli Şifren</label>
+                    <input id="password" type="password" class="form-input @error('password') is-invalid @enderror"
+                           name="password" required autocomplete="current-password">
+                    @error('password')
                     <span class="error-message">{{ $message }}</span>
-                @enderror
-            </div>
+                    @enderror
+                </div>
 
-            <button type="submit" class="auth-button">
-                Maceraya Devam Et!
-            </button>
+                <button type="submit" class="auth-button">
+                    Maceraya Devam Et!
+                </button>
 
-            <div class="auth-link">
-                Henüz bir kaşif değil misin?
-                <a href="{{ route('register') }}">Hemen Kaydol!</a>
-            </div>
-        </form>
+                <div class="auth-link">
+                    Henüz bir kaşif değil misin?
+                    <a href="{{ route('register') }}">Hemen Kaydol!</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="bubo-container">
+            <img src="/assets/img/dalkus-left.png" alt="Bilge Baykuş Bubo">
+            <div class="speech-bubble">Tekrar hoş geldin kaşif! Maceralarına kaldığın yerden devam edebilirsin.</div>
+        </div>
     </div>
 
-    <div class="bubo-container">
-        <img src="/assets/img/dalkus-left.png" alt="Bilge Baykuş Bubo">
-        <div class="speech-bubble">Tekrar hoş geldin kaşif! Maceralarına kaldığın yerden devam edebilirsin.</div>
-    </div>
-</div>
-
-<!-- Verileri JSON olarak sakla -->
-<script id="app-data" type="application/json">
-    {
-        "topics": [],
-        "difficultyLevels": []
-    }
-</script>
+    <!-- Verileri JSON olarak sakla -->
+    <script id="app-data" type="application/json">
+        {
+            "topics": [],
+            "difficultyLevels": []
+        }
+    </script>
 @endsection
 
 @section('js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="{{ asset('assets/js/anasayfa.js') }}"></script>
-<script>
-// Login sayfası için özel JavaScript
-document.addEventListener('DOMContentLoaded', () => {
-    // Takım yıldızları olmadan yıldızları oluştur
-    createStars();
-    
-    // Baykuş animasyonları
-    const isMobile = window.innerWidth <= 768;
-    const duration = isMobile ? 0.7 : 1;
-    
-    const speechBubble = document.querySelector('.speech-bubble');
-    const buboContainer = document.querySelector('.bubo-container');
-    
-    // Başlangıçta konuşma balonunu gizle
-    speechBubble.style.opacity = 0;
-    speechBubble.style.visibility = 'hidden';
-    speechBubble.style.display = 'none';
-    
-    // Başlangıç animasyonları
-    const startTimeline = gsap.timeline({
-        onComplete: () => {
-            setTimeout(() => {
-                animateSpeechBubble(speechBubble, true, "Tekrar hoş geldin kaşif! Maceralarına kaldığın yerden devam edebilirsin.");
-                
-                setTimeout(() => {
-                    animateSpeechBubble(speechBubble, false);
-                }, 5000);
-            }, 500);
-        }
-    });
-
-    startTimeline
-        .from(buboContainer, {
-            x: 100,
-            opacity: 0,
-            duration: duration * 1.5,
-            ease: "back.out(1.7)",
-            onComplete: () => {
-                gsap.to(buboContainer, {
-                    rotation: isMobile ? 2 : 3,
-                    duration: 2,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: "power1.inOut",
-                    transformOrigin: "top center"
-                });
-            }
-        })
-        .from('.auth-form', {
-            scale: 0,
-            opacity: 0,
-            duration: duration * 1.2,
-            ease: "elastic.out(1, 0.5)",
-            delay: 0.3
-        });
-});
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="{{asset('assets/js/login-register.js')}}"></script>
 @endsection

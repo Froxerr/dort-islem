@@ -1,12 +1,4002 @@
 [
-  { "level": 1, "xp_required_for_next": 100 },
-  { "level": 2, "xp_required_for_next": 250 },
-  { "level": 3, "xp_required_for_next": 450 },
-  { "level": 4, "xp_required_for_next": 700 },
-  { "level": 5, "xp_required_for_next": 1000 },
-  { "level": 6, "xp_required_for_next": 1350 },
-  { "level": 7, "xp_required_for_next": 1750 },
-  { "level": 8, "xp_required_for_next": 2200 },
-  { "level": 9, "xp_required_for_next": 2700 },
-  { "level": 10, "xp_required_for_next": 3250 }
+    {
+        "level": 1,
+        "xp_required_for_next": 100
+    },
+    {
+        "level": 2,
+        "xp_required_for_next": 250
+    },
+    {
+        "level": 3,
+        "xp_required_for_next": 450
+    },
+    {
+        "level": 4,
+        "xp_required_for_next": 700
+    },
+    {
+        "level": 5,
+        "xp_required_for_next": 1000
+    },
+    {
+        "level": 6,
+        "xp_required_for_next": 1350
+    },
+    {
+        "level": 7,
+        "xp_required_for_next": 1750
+    },
+    {
+        "level": 8,
+        "xp_required_for_next": 2200
+    },
+    {
+        "level": 9,
+        "xp_required_for_next": 2700
+    },
+    {
+        "level": 10,
+        "xp_required_for_next": 3250
+    },
+    {
+        "level": 11,
+        "xp_required_for_next": 3648
+    },
+    {
+        "level": 12,
+        "xp_required_for_next": 4156
+    },
+    {
+        "level": 13,
+        "xp_required_for_next": 4687
+    },
+    {
+        "level": 14,
+        "xp_required_for_next": 5238
+    },
+    {
+        "level": 15,
+        "xp_required_for_next": 5809
+    },
+    {
+        "level": 16,
+        "xp_required_for_next": 6400
+    },
+    {
+        "level": 17,
+        "xp_required_for_next": 7009
+    },
+    {
+        "level": 18,
+        "xp_required_for_next": 7636
+    },
+    {
+        "level": 19,
+        "xp_required_for_next": 8281
+    },
+    {
+        "level": 20,
+        "xp_required_for_next": 8944
+    },
+    {
+        "level": 21,
+        "xp_required_for_next": 9623
+    },
+    {
+        "level": 22,
+        "xp_required_for_next": 10318
+    },
+    {
+        "level": 23,
+        "xp_required_for_next": 11030
+    },
+    {
+        "level": 24,
+        "xp_required_for_next": 11757
+    },
+    {
+        "level": 25,
+        "xp_required_for_next": 12500
+    },
+    {
+        "level": 26,
+        "xp_required_for_next": 13257
+    },
+    {
+        "level": 27,
+        "xp_required_for_next": 14029
+    },
+    {
+        "level": 28,
+        "xp_required_for_next": 14816
+    },
+    {
+        "level": 29,
+        "xp_required_for_next": 15616
+    },
+    {
+        "level": 30,
+        "xp_required_for_next": 16431
+    },
+    {
+        "level": 31,
+        "xp_required_for_next": 17260
+    },
+    {
+        "level": 32,
+        "xp_required_for_next": 18101
+    },
+    {
+        "level": 33,
+        "xp_required_for_next": 18957
+    },
+    {
+        "level": 34,
+        "xp_required_for_next": 19825
+    },
+    {
+        "level": 35,
+        "xp_required_for_next": 20706
+    },
+    {
+        "level": 36,
+        "xp_required_for_next": 21600
+    },
+    {
+        "level": 37,
+        "xp_required_for_next": 22506
+    },
+    {
+        "level": 38,
+        "xp_required_for_next": 23424
+    },
+    {
+        "level": 39,
+        "xp_required_for_next": 24355
+    },
+    {
+        "level": 40,
+        "xp_required_for_next": 25298
+    },
+    {
+        "level": 41,
+        "xp_required_for_next": 26252
+    },
+    {
+        "level": 42,
+        "xp_required_for_next": 27219
+    },
+    {
+        "level": 43,
+        "xp_required_for_next": 28196
+    },
+    {
+        "level": 44,
+        "xp_required_for_next": 29186
+    },
+    {
+        "level": 45,
+        "xp_required_for_next": 30186
+    },
+    {
+        "level": 46,
+        "xp_required_for_next": 31198
+    },
+    {
+        "level": 47,
+        "xp_required_for_next": 32221
+    },
+    {
+        "level": 48,
+        "xp_required_for_next": 33255
+    },
+    {
+        "level": 49,
+        "xp_required_for_next": 34300
+    },
+    {
+        "level": 50,
+        "xp_required_for_next": 35355
+    },
+    {
+        "level": 51,
+        "xp_required_for_next": 36855
+    },
+    {
+        "level": 52,
+        "xp_required_for_next": 38355
+    },
+    {
+        "level": 53,
+        "xp_required_for_next": 39855
+    },
+    {
+        "level": 54,
+        "xp_required_for_next": 41355
+    },
+    {
+        "level": 55,
+        "xp_required_for_next": 42855
+    },
+    {
+        "level": 56,
+        "xp_required_for_next": 44355
+    },
+    {
+        "level": 57,
+        "xp_required_for_next": 45855
+    },
+    {
+        "level": 58,
+        "xp_required_for_next": 47355
+    },
+    {
+        "level": 59,
+        "xp_required_for_next": 48855
+    },
+    {
+        "level": 60,
+        "xp_required_for_next": 50355
+    },
+    {
+        "level": 61,
+        "xp_required_for_next": 51855
+    },
+    {
+        "level": 62,
+        "xp_required_for_next": 53355
+    },
+    {
+        "level": 63,
+        "xp_required_for_next": 54855
+    },
+    {
+        "level": 64,
+        "xp_required_for_next": 56355
+    },
+    {
+        "level": 65,
+        "xp_required_for_next": 57855
+    },
+    {
+        "level": 66,
+        "xp_required_for_next": 59355
+    },
+    {
+        "level": 67,
+        "xp_required_for_next": 60855
+    },
+    {
+        "level": 68,
+        "xp_required_for_next": 62355
+    },
+    {
+        "level": 69,
+        "xp_required_for_next": 63855
+    },
+    {
+        "level": 70,
+        "xp_required_for_next": 65355
+    },
+    {
+        "level": 71,
+        "xp_required_for_next": 66855
+    },
+    {
+        "level": 72,
+        "xp_required_for_next": 68355
+    },
+    {
+        "level": 73,
+        "xp_required_for_next": 69855
+    },
+    {
+        "level": 74,
+        "xp_required_for_next": 71355
+    },
+    {
+        "level": 75,
+        "xp_required_for_next": 72855
+    },
+    {
+        "level": 76,
+        "xp_required_for_next": 74355
+    },
+    {
+        "level": 77,
+        "xp_required_for_next": 75855
+    },
+    {
+        "level": 78,
+        "xp_required_for_next": 77355
+    },
+    {
+        "level": 79,
+        "xp_required_for_next": 78855
+    },
+    {
+        "level": 80,
+        "xp_required_for_next": 80355
+    },
+    {
+        "level": 81,
+        "xp_required_for_next": 81855
+    },
+    {
+        "level": 82,
+        "xp_required_for_next": 83355
+    },
+    {
+        "level": 83,
+        "xp_required_for_next": 84855
+    },
+    {
+        "level": 84,
+        "xp_required_for_next": 86355
+    },
+    {
+        "level": 85,
+        "xp_required_for_next": 87855
+    },
+    {
+        "level": 86,
+        "xp_required_for_next": 89355
+    },
+    {
+        "level": 87,
+        "xp_required_for_next": 90855
+    },
+    {
+        "level": 88,
+        "xp_required_for_next": 92355
+    },
+    {
+        "level": 89,
+        "xp_required_for_next": 93855
+    },
+    {
+        "level": 90,
+        "xp_required_for_next": 95355
+    },
+    {
+        "level": 91,
+        "xp_required_for_next": 96855
+    },
+    {
+        "level": 92,
+        "xp_required_for_next": 98355
+    },
+    {
+        "level": 93,
+        "xp_required_for_next": 99855
+    },
+    {
+        "level": 94,
+        "xp_required_for_next": 101355
+    },
+    {
+        "level": 95,
+        "xp_required_for_next": 102855
+    },
+    {
+        "level": 96,
+        "xp_required_for_next": 104355
+    },
+    {
+        "level": 97,
+        "xp_required_for_next": 105855
+    },
+    {
+        "level": 98,
+        "xp_required_for_next": 107355
+    },
+    {
+        "level": 99,
+        "xp_required_for_next": 108855
+    },
+    {
+        "level": 100,
+        "xp_required_for_next": 110355
+    },
+    {
+        "level": 101,
+        "xp_required_for_next": 112355
+    },
+    {
+        "level": 102,
+        "xp_required_for_next": 114355
+    },
+    {
+        "level": 103,
+        "xp_required_for_next": 116355
+    },
+    {
+        "level": 104,
+        "xp_required_for_next": 118355
+    },
+    {
+        "level": 105,
+        "xp_required_for_next": 120355
+    },
+    {
+        "level": 106,
+        "xp_required_for_next": 122355
+    },
+    {
+        "level": 107,
+        "xp_required_for_next": 124355
+    },
+    {
+        "level": 108,
+        "xp_required_for_next": 126355
+    },
+    {
+        "level": 109,
+        "xp_required_for_next": 128355
+    },
+    {
+        "level": 110,
+        "xp_required_for_next": 130355
+    },
+    {
+        "level": 111,
+        "xp_required_for_next": 132355
+    },
+    {
+        "level": 112,
+        "xp_required_for_next": 134355
+    },
+    {
+        "level": 113,
+        "xp_required_for_next": 136355
+    },
+    {
+        "level": 114,
+        "xp_required_for_next": 138355
+    },
+    {
+        "level": 115,
+        "xp_required_for_next": 140355
+    },
+    {
+        "level": 116,
+        "xp_required_for_next": 142355
+    },
+    {
+        "level": 117,
+        "xp_required_for_next": 144355
+    },
+    {
+        "level": 118,
+        "xp_required_for_next": 146355
+    },
+    {
+        "level": 119,
+        "xp_required_for_next": 148355
+    },
+    {
+        "level": 120,
+        "xp_required_for_next": 150355
+    },
+    {
+        "level": 121,
+        "xp_required_for_next": 152355
+    },
+    {
+        "level": 122,
+        "xp_required_for_next": 154355
+    },
+    {
+        "level": 123,
+        "xp_required_for_next": 156355
+    },
+    {
+        "level": 124,
+        "xp_required_for_next": 158355
+    },
+    {
+        "level": 125,
+        "xp_required_for_next": 160355
+    },
+    {
+        "level": 126,
+        "xp_required_for_next": 162355
+    },
+    {
+        "level": 127,
+        "xp_required_for_next": 164355
+    },
+    {
+        "level": 128,
+        "xp_required_for_next": 166355
+    },
+    {
+        "level": 129,
+        "xp_required_for_next": 168355
+    },
+    {
+        "level": 130,
+        "xp_required_for_next": 170355
+    },
+    {
+        "level": 131,
+        "xp_required_for_next": 172355
+    },
+    {
+        "level": 132,
+        "xp_required_for_next": 174355
+    },
+    {
+        "level": 133,
+        "xp_required_for_next": 176355
+    },
+    {
+        "level": 134,
+        "xp_required_for_next": 178355
+    },
+    {
+        "level": 135,
+        "xp_required_for_next": 180355
+    },
+    {
+        "level": 136,
+        "xp_required_for_next": 182355
+    },
+    {
+        "level": 137,
+        "xp_required_for_next": 184355
+    },
+    {
+        "level": 138,
+        "xp_required_for_next": 186355
+    },
+    {
+        "level": 139,
+        "xp_required_for_next": 188355
+    },
+    {
+        "level": 140,
+        "xp_required_for_next": 190355
+    },
+    {
+        "level": 141,
+        "xp_required_for_next": 192355
+    },
+    {
+        "level": 142,
+        "xp_required_for_next": 194355
+    },
+    {
+        "level": 143,
+        "xp_required_for_next": 196355
+    },
+    {
+        "level": 144,
+        "xp_required_for_next": 198355
+    },
+    {
+        "level": 145,
+        "xp_required_for_next": 200355
+    },
+    {
+        "level": 146,
+        "xp_required_for_next": 202355
+    },
+    {
+        "level": 147,
+        "xp_required_for_next": 204355
+    },
+    {
+        "level": 148,
+        "xp_required_for_next": 206355
+    },
+    {
+        "level": 149,
+        "xp_required_for_next": 208355
+    },
+    {
+        "level": 150,
+        "xp_required_for_next": 210355
+    },
+    {
+        "level": 151,
+        "xp_required_for_next": 212355
+    },
+    {
+        "level": 152,
+        "xp_required_for_next": 214355
+    },
+    {
+        "level": 153,
+        "xp_required_for_next": 216355
+    },
+    {
+        "level": 154,
+        "xp_required_for_next": 218355
+    },
+    {
+        "level": 155,
+        "xp_required_for_next": 220355
+    },
+    {
+        "level": 156,
+        "xp_required_for_next": 222355
+    },
+    {
+        "level": 157,
+        "xp_required_for_next": 224355
+    },
+    {
+        "level": 158,
+        "xp_required_for_next": 226355
+    },
+    {
+        "level": 159,
+        "xp_required_for_next": 228355
+    },
+    {
+        "level": 160,
+        "xp_required_for_next": 230355
+    },
+    {
+        "level": 161,
+        "xp_required_for_next": 232355
+    },
+    {
+        "level": 162,
+        "xp_required_for_next": 234355
+    },
+    {
+        "level": 163,
+        "xp_required_for_next": 236355
+    },
+    {
+        "level": 164,
+        "xp_required_for_next": 238355
+    },
+    {
+        "level": 165,
+        "xp_required_for_next": 240355
+    },
+    {
+        "level": 166,
+        "xp_required_for_next": 242355
+    },
+    {
+        "level": 167,
+        "xp_required_for_next": 244355
+    },
+    {
+        "level": 168,
+        "xp_required_for_next": 246355
+    },
+    {
+        "level": 169,
+        "xp_required_for_next": 248355
+    },
+    {
+        "level": 170,
+        "xp_required_for_next": 250355
+    },
+    {
+        "level": 171,
+        "xp_required_for_next": 252355
+    },
+    {
+        "level": 172,
+        "xp_required_for_next": 254355
+    },
+    {
+        "level": 173,
+        "xp_required_for_next": 256355
+    },
+    {
+        "level": 174,
+        "xp_required_for_next": 258355
+    },
+    {
+        "level": 175,
+        "xp_required_for_next": 260355
+    },
+    {
+        "level": 176,
+        "xp_required_for_next": 262355
+    },
+    {
+        "level": 177,
+        "xp_required_for_next": 264355
+    },
+    {
+        "level": 178,
+        "xp_required_for_next": 266355
+    },
+    {
+        "level": 179,
+        "xp_required_for_next": 268355
+    },
+    {
+        "level": 180,
+        "xp_required_for_next": 270355
+    },
+    {
+        "level": 181,
+        "xp_required_for_next": 272355
+    },
+    {
+        "level": 182,
+        "xp_required_for_next": 274355
+    },
+    {
+        "level": 183,
+        "xp_required_for_next": 276355
+    },
+    {
+        "level": 184,
+        "xp_required_for_next": 278355
+    },
+    {
+        "level": 185,
+        "xp_required_for_next": 280355
+    },
+    {
+        "level": 186,
+        "xp_required_for_next": 282355
+    },
+    {
+        "level": 187,
+        "xp_required_for_next": 284355
+    },
+    {
+        "level": 188,
+        "xp_required_for_next": 286355
+    },
+    {
+        "level": 189,
+        "xp_required_for_next": 288355
+    },
+    {
+        "level": 190,
+        "xp_required_for_next": 290355
+    },
+    {
+        "level": 191,
+        "xp_required_for_next": 292355
+    },
+    {
+        "level": 192,
+        "xp_required_for_next": 294355
+    },
+    {
+        "level": 193,
+        "xp_required_for_next": 296355
+    },
+    {
+        "level": 194,
+        "xp_required_for_next": 298355
+    },
+    {
+        "level": 195,
+        "xp_required_for_next": 300355
+    },
+    {
+        "level": 196,
+        "xp_required_for_next": 302355
+    },
+    {
+        "level": 197,
+        "xp_required_for_next": 304355
+    },
+    {
+        "level": 198,
+        "xp_required_for_next": 306355
+    },
+    {
+        "level": 199,
+        "xp_required_for_next": 308355
+    },
+    {
+        "level": 200,
+        "xp_required_for_next": 310355
+    },
+    {
+        "level": 201,
+        "xp_required_for_next": 312855
+    },
+    {
+        "level": 202,
+        "xp_required_for_next": 315355
+    },
+    {
+        "level": 203,
+        "xp_required_for_next": 317855
+    },
+    {
+        "level": 204,
+        "xp_required_for_next": 320355
+    },
+    {
+        "level": 205,
+        "xp_required_for_next": 322855
+    },
+    {
+        "level": 206,
+        "xp_required_for_next": 325355
+    },
+    {
+        "level": 207,
+        "xp_required_for_next": 327855
+    },
+    {
+        "level": 208,
+        "xp_required_for_next": 330355
+    },
+    {
+        "level": 209,
+        "xp_required_for_next": 332855
+    },
+    {
+        "level": 210,
+        "xp_required_for_next": 335355
+    },
+    {
+        "level": 211,
+        "xp_required_for_next": 337855
+    },
+    {
+        "level": 212,
+        "xp_required_for_next": 340355
+    },
+    {
+        "level": 213,
+        "xp_required_for_next": 342855
+    },
+    {
+        "level": 214,
+        "xp_required_for_next": 345355
+    },
+    {
+        "level": 215,
+        "xp_required_for_next": 347855
+    },
+    {
+        "level": 216,
+        "xp_required_for_next": 350355
+    },
+    {
+        "level": 217,
+        "xp_required_for_next": 352855
+    },
+    {
+        "level": 218,
+        "xp_required_for_next": 355355
+    },
+    {
+        "level": 219,
+        "xp_required_for_next": 357855
+    },
+    {
+        "level": 220,
+        "xp_required_for_next": 360355
+    },
+    {
+        "level": 221,
+        "xp_required_for_next": 362855
+    },
+    {
+        "level": 222,
+        "xp_required_for_next": 365355
+    },
+    {
+        "level": 223,
+        "xp_required_for_next": 367855
+    },
+    {
+        "level": 224,
+        "xp_required_for_next": 370355
+    },
+    {
+        "level": 225,
+        "xp_required_for_next": 372855
+    },
+    {
+        "level": 226,
+        "xp_required_for_next": 375355
+    },
+    {
+        "level": 227,
+        "xp_required_for_next": 377855
+    },
+    {
+        "level": 228,
+        "xp_required_for_next": 380355
+    },
+    {
+        "level": 229,
+        "xp_required_for_next": 382855
+    },
+    {
+        "level": 230,
+        "xp_required_for_next": 385355
+    },
+    {
+        "level": 231,
+        "xp_required_for_next": 387855
+    },
+    {
+        "level": 232,
+        "xp_required_for_next": 390355
+    },
+    {
+        "level": 233,
+        "xp_required_for_next": 392855
+    },
+    {
+        "level": 234,
+        "xp_required_for_next": 395355
+    },
+    {
+        "level": 235,
+        "xp_required_for_next": 397855
+    },
+    {
+        "level": 236,
+        "xp_required_for_next": 400355
+    },
+    {
+        "level": 237,
+        "xp_required_for_next": 402855
+    },
+    {
+        "level": 238,
+        "xp_required_for_next": 405355
+    },
+    {
+        "level": 239,
+        "xp_required_for_next": 407855
+    },
+    {
+        "level": 240,
+        "xp_required_for_next": 410355
+    },
+    {
+        "level": 241,
+        "xp_required_for_next": 412855
+    },
+    {
+        "level": 242,
+        "xp_required_for_next": 415355
+    },
+    {
+        "level": 243,
+        "xp_required_for_next": 417855
+    },
+    {
+        "level": 244,
+        "xp_required_for_next": 420355
+    },
+    {
+        "level": 245,
+        "xp_required_for_next": 422855
+    },
+    {
+        "level": 246,
+        "xp_required_for_next": 425355
+    },
+    {
+        "level": 247,
+        "xp_required_for_next": 427855
+    },
+    {
+        "level": 248,
+        "xp_required_for_next": 430355
+    },
+    {
+        "level": 249,
+        "xp_required_for_next": 432855
+    },
+    {
+        "level": 250,
+        "xp_required_for_next": 435355
+    },
+    {
+        "level": 251,
+        "xp_required_for_next": 437855
+    },
+    {
+        "level": 252,
+        "xp_required_for_next": 440355
+    },
+    {
+        "level": 253,
+        "xp_required_for_next": 442855
+    },
+    {
+        "level": 254,
+        "xp_required_for_next": 445355
+    },
+    {
+        "level": 255,
+        "xp_required_for_next": 447855
+    },
+    {
+        "level": 256,
+        "xp_required_for_next": 450355
+    },
+    {
+        "level": 257,
+        "xp_required_for_next": 452855
+    },
+    {
+        "level": 258,
+        "xp_required_for_next": 455355
+    },
+    {
+        "level": 259,
+        "xp_required_for_next": 457855
+    },
+    {
+        "level": 260,
+        "xp_required_for_next": 460355
+    },
+    {
+        "level": 261,
+        "xp_required_for_next": 462855
+    },
+    {
+        "level": 262,
+        "xp_required_for_next": 465355
+    },
+    {
+        "level": 263,
+        "xp_required_for_next": 467855
+    },
+    {
+        "level": 264,
+        "xp_required_for_next": 470355
+    },
+    {
+        "level": 265,
+        "xp_required_for_next": 472855
+    },
+    {
+        "level": 266,
+        "xp_required_for_next": 475355
+    },
+    {
+        "level": 267,
+        "xp_required_for_next": 477855
+    },
+    {
+        "level": 268,
+        "xp_required_for_next": 480355
+    },
+    {
+        "level": 269,
+        "xp_required_for_next": 482855
+    },
+    {
+        "level": 270,
+        "xp_required_for_next": 485355
+    },
+    {
+        "level": 271,
+        "xp_required_for_next": 487855
+    },
+    {
+        "level": 272,
+        "xp_required_for_next": 490355
+    },
+    {
+        "level": 273,
+        "xp_required_for_next": 492855
+    },
+    {
+        "level": 274,
+        "xp_required_for_next": 495355
+    },
+    {
+        "level": 275,
+        "xp_required_for_next": 497855
+    },
+    {
+        "level": 276,
+        "xp_required_for_next": 500355
+    },
+    {
+        "level": 277,
+        "xp_required_for_next": 502855
+    },
+    {
+        "level": 278,
+        "xp_required_for_next": 505355
+    },
+    {
+        "level": 279,
+        "xp_required_for_next": 507855
+    },
+    {
+        "level": 280,
+        "xp_required_for_next": 510355
+    },
+    {
+        "level": 281,
+        "xp_required_for_next": 512855
+    },
+    {
+        "level": 282,
+        "xp_required_for_next": 515355
+    },
+    {
+        "level": 283,
+        "xp_required_for_next": 517855
+    },
+    {
+        "level": 284,
+        "xp_required_for_next": 520355
+    },
+    {
+        "level": 285,
+        "xp_required_for_next": 522855
+    },
+    {
+        "level": 286,
+        "xp_required_for_next": 525355
+    },
+    {
+        "level": 287,
+        "xp_required_for_next": 527855
+    },
+    {
+        "level": 288,
+        "xp_required_for_next": 530355
+    },
+    {
+        "level": 289,
+        "xp_required_for_next": 532855
+    },
+    {
+        "level": 290,
+        "xp_required_for_next": 535355
+    },
+    {
+        "level": 291,
+        "xp_required_for_next": 537855
+    },
+    {
+        "level": 292,
+        "xp_required_for_next": 540355
+    },
+    {
+        "level": 293,
+        "xp_required_for_next": 542855
+    },
+    {
+        "level": 294,
+        "xp_required_for_next": 545355
+    },
+    {
+        "level": 295,
+        "xp_required_for_next": 547855
+    },
+    {
+        "level": 296,
+        "xp_required_for_next": 550355
+    },
+    {
+        "level": 297,
+        "xp_required_for_next": 552855
+    },
+    {
+        "level": 298,
+        "xp_required_for_next": 555355
+    },
+    {
+        "level": 299,
+        "xp_required_for_next": 557855
+    },
+    {
+        "level": 300,
+        "xp_required_for_next": 560355
+    },
+    {
+        "level": 301,
+        "xp_required_for_next": 562855
+    },
+    {
+        "level": 302,
+        "xp_required_for_next": 565355
+    },
+    {
+        "level": 303,
+        "xp_required_for_next": 567855
+    },
+    {
+        "level": 304,
+        "xp_required_for_next": 570355
+    },
+    {
+        "level": 305,
+        "xp_required_for_next": 572855
+    },
+    {
+        "level": 306,
+        "xp_required_for_next": 575355
+    },
+    {
+        "level": 307,
+        "xp_required_for_next": 577855
+    },
+    {
+        "level": 308,
+        "xp_required_for_next": 580355
+    },
+    {
+        "level": 309,
+        "xp_required_for_next": 582855
+    },
+    {
+        "level": 310,
+        "xp_required_for_next": 585355
+    },
+    {
+        "level": 311,
+        "xp_required_for_next": 587855
+    },
+    {
+        "level": 312,
+        "xp_required_for_next": 590355
+    },
+    {
+        "level": 313,
+        "xp_required_for_next": 592855
+    },
+    {
+        "level": 314,
+        "xp_required_for_next": 595355
+    },
+    {
+        "level": 315,
+        "xp_required_for_next": 597855
+    },
+    {
+        "level": 316,
+        "xp_required_for_next": 600355
+    },
+    {
+        "level": 317,
+        "xp_required_for_next": 602855
+    },
+    {
+        "level": 318,
+        "xp_required_for_next": 605355
+    },
+    {
+        "level": 319,
+        "xp_required_for_next": 607855
+    },
+    {
+        "level": 320,
+        "xp_required_for_next": 610355
+    },
+    {
+        "level": 321,
+        "xp_required_for_next": 612855
+    },
+    {
+        "level": 322,
+        "xp_required_for_next": 615355
+    },
+    {
+        "level": 323,
+        "xp_required_for_next": 617855
+    },
+    {
+        "level": 324,
+        "xp_required_for_next": 620355
+    },
+    {
+        "level": 325,
+        "xp_required_for_next": 622855
+    },
+    {
+        "level": 326,
+        "xp_required_for_next": 625355
+    },
+    {
+        "level": 327,
+        "xp_required_for_next": 627855
+    },
+    {
+        "level": 328,
+        "xp_required_for_next": 630355
+    },
+    {
+        "level": 329,
+        "xp_required_for_next": 632855
+    },
+    {
+        "level": 330,
+        "xp_required_for_next": 635355
+    },
+    {
+        "level": 331,
+        "xp_required_for_next": 637855
+    },
+    {
+        "level": 332,
+        "xp_required_for_next": 640355
+    },
+    {
+        "level": 333,
+        "xp_required_for_next": 642855
+    },
+    {
+        "level": 334,
+        "xp_required_for_next": 645355
+    },
+    {
+        "level": 335,
+        "xp_required_for_next": 647855
+    },
+    {
+        "level": 336,
+        "xp_required_for_next": 650355
+    },
+    {
+        "level": 337,
+        "xp_required_for_next": 652855
+    },
+    {
+        "level": 338,
+        "xp_required_for_next": 655355
+    },
+    {
+        "level": 339,
+        "xp_required_for_next": 657855
+    },
+    {
+        "level": 340,
+        "xp_required_for_next": 660355
+    },
+    {
+        "level": 341,
+        "xp_required_for_next": 662855
+    },
+    {
+        "level": 342,
+        "xp_required_for_next": 665355
+    },
+    {
+        "level": 343,
+        "xp_required_for_next": 667855
+    },
+    {
+        "level": 344,
+        "xp_required_for_next": 670355
+    },
+    {
+        "level": 345,
+        "xp_required_for_next": 672855
+    },
+    {
+        "level": 346,
+        "xp_required_for_next": 675355
+    },
+    {
+        "level": 347,
+        "xp_required_for_next": 677855
+    },
+    {
+        "level": 348,
+        "xp_required_for_next": 680355
+    },
+    {
+        "level": 349,
+        "xp_required_for_next": 682855
+    },
+    {
+        "level": 350,
+        "xp_required_for_next": 685355
+    },
+    {
+        "level": 351,
+        "xp_required_for_next": 687855
+    },
+    {
+        "level": 352,
+        "xp_required_for_next": 690355
+    },
+    {
+        "level": 353,
+        "xp_required_for_next": 692855
+    },
+    {
+        "level": 354,
+        "xp_required_for_next": 695355
+    },
+    {
+        "level": 355,
+        "xp_required_for_next": 697855
+    },
+    {
+        "level": 356,
+        "xp_required_for_next": 700355
+    },
+    {
+        "level": 357,
+        "xp_required_for_next": 702855
+    },
+    {
+        "level": 358,
+        "xp_required_for_next": 705355
+    },
+    {
+        "level": 359,
+        "xp_required_for_next": 707855
+    },
+    {
+        "level": 360,
+        "xp_required_for_next": 710355
+    },
+    {
+        "level": 361,
+        "xp_required_for_next": 712855
+    },
+    {
+        "level": 362,
+        "xp_required_for_next": 715355
+    },
+    {
+        "level": 363,
+        "xp_required_for_next": 717855
+    },
+    {
+        "level": 364,
+        "xp_required_for_next": 720355
+    },
+    {
+        "level": 365,
+        "xp_required_for_next": 722855
+    },
+    {
+        "level": 366,
+        "xp_required_for_next": 725355
+    },
+    {
+        "level": 367,
+        "xp_required_for_next": 727855
+    },
+    {
+        "level": 368,
+        "xp_required_for_next": 730355
+    },
+    {
+        "level": 369,
+        "xp_required_for_next": 732855
+    },
+    {
+        "level": 370,
+        "xp_required_for_next": 735355
+    },
+    {
+        "level": 371,
+        "xp_required_for_next": 737855
+    },
+    {
+        "level": 372,
+        "xp_required_for_next": 740355
+    },
+    {
+        "level": 373,
+        "xp_required_for_next": 742855
+    },
+    {
+        "level": 374,
+        "xp_required_for_next": 745355
+    },
+    {
+        "level": 375,
+        "xp_required_for_next": 747855
+    },
+    {
+        "level": 376,
+        "xp_required_for_next": 750355
+    },
+    {
+        "level": 377,
+        "xp_required_for_next": 752855
+    },
+    {
+        "level": 378,
+        "xp_required_for_next": 755355
+    },
+    {
+        "level": 379,
+        "xp_required_for_next": 757855
+    },
+    {
+        "level": 380,
+        "xp_required_for_next": 760355
+    },
+    {
+        "level": 381,
+        "xp_required_for_next": 762855
+    },
+    {
+        "level": 382,
+        "xp_required_for_next": 765355
+    },
+    {
+        "level": 383,
+        "xp_required_for_next": 767855
+    },
+    {
+        "level": 384,
+        "xp_required_for_next": 770355
+    },
+    {
+        "level": 385,
+        "xp_required_for_next": 772855
+    },
+    {
+        "level": 386,
+        "xp_required_for_next": 775355
+    },
+    {
+        "level": 387,
+        "xp_required_for_next": 777855
+    },
+    {
+        "level": 388,
+        "xp_required_for_next": 780355
+    },
+    {
+        "level": 389,
+        "xp_required_for_next": 782855
+    },
+    {
+        "level": 390,
+        "xp_required_for_next": 785355
+    },
+    {
+        "level": 391,
+        "xp_required_for_next": 787855
+    },
+    {
+        "level": 392,
+        "xp_required_for_next": 790355
+    },
+    {
+        "level": 393,
+        "xp_required_for_next": 792855
+    },
+    {
+        "level": 394,
+        "xp_required_for_next": 795355
+    },
+    {
+        "level": 395,
+        "xp_required_for_next": 797855
+    },
+    {
+        "level": 396,
+        "xp_required_for_next": 800355
+    },
+    {
+        "level": 397,
+        "xp_required_for_next": 802855
+    },
+    {
+        "level": 398,
+        "xp_required_for_next": 805355
+    },
+    {
+        "level": 399,
+        "xp_required_for_next": 807855
+    },
+    {
+        "level": 400,
+        "xp_required_for_next": 810355
+    },
+    {
+        "level": 401,
+        "xp_required_for_next": 812855
+    },
+    {
+        "level": 402,
+        "xp_required_for_next": 815355
+    },
+    {
+        "level": 403,
+        "xp_required_for_next": 817855
+    },
+    {
+        "level": 404,
+        "xp_required_for_next": 820355
+    },
+    {
+        "level": 405,
+        "xp_required_for_next": 822855
+    },
+    {
+        "level": 406,
+        "xp_required_for_next": 825355
+    },
+    {
+        "level": 407,
+        "xp_required_for_next": 827855
+    },
+    {
+        "level": 408,
+        "xp_required_for_next": 830355
+    },
+    {
+        "level": 409,
+        "xp_required_for_next": 832855
+    },
+    {
+        "level": 410,
+        "xp_required_for_next": 835355
+    },
+    {
+        "level": 411,
+        "xp_required_for_next": 837855
+    },
+    {
+        "level": 412,
+        "xp_required_for_next": 840355
+    },
+    {
+        "level": 413,
+        "xp_required_for_next": 842855
+    },
+    {
+        "level": 414,
+        "xp_required_for_next": 845355
+    },
+    {
+        "level": 415,
+        "xp_required_for_next": 847855
+    },
+    {
+        "level": 416,
+        "xp_required_for_next": 850355
+    },
+    {
+        "level": 417,
+        "xp_required_for_next": 852855
+    },
+    {
+        "level": 418,
+        "xp_required_for_next": 855355
+    },
+    {
+        "level": 419,
+        "xp_required_for_next": 857855
+    },
+    {
+        "level": 420,
+        "xp_required_for_next": 860355
+    },
+    {
+        "level": 421,
+        "xp_required_for_next": 862855
+    },
+    {
+        "level": 422,
+        "xp_required_for_next": 865355
+    },
+    {
+        "level": 423,
+        "xp_required_for_next": 867855
+    },
+    {
+        "level": 424,
+        "xp_required_for_next": 870355
+    },
+    {
+        "level": 425,
+        "xp_required_for_next": 872855
+    },
+    {
+        "level": 426,
+        "xp_required_for_next": 875355
+    },
+    {
+        "level": 427,
+        "xp_required_for_next": 877855
+    },
+    {
+        "level": 428,
+        "xp_required_for_next": 880355
+    },
+    {
+        "level": 429,
+        "xp_required_for_next": 882855
+    },
+    {
+        "level": 430,
+        "xp_required_for_next": 885355
+    },
+    {
+        "level": 431,
+        "xp_required_for_next": 887855
+    },
+    {
+        "level": 432,
+        "xp_required_for_next": 890355
+    },
+    {
+        "level": 433,
+        "xp_required_for_next": 892855
+    },
+    {
+        "level": 434,
+        "xp_required_for_next": 895355
+    },
+    {
+        "level": 435,
+        "xp_required_for_next": 897855
+    },
+    {
+        "level": 436,
+        "xp_required_for_next": 900355
+    },
+    {
+        "level": 437,
+        "xp_required_for_next": 902855
+    },
+    {
+        "level": 438,
+        "xp_required_for_next": 905355
+    },
+    {
+        "level": 439,
+        "xp_required_for_next": 907855
+    },
+    {
+        "level": 440,
+        "xp_required_for_next": 910355
+    },
+    {
+        "level": 441,
+        "xp_required_for_next": 912855
+    },
+    {
+        "level": 442,
+        "xp_required_for_next": 915355
+    },
+    {
+        "level": 443,
+        "xp_required_for_next": 917855
+    },
+    {
+        "level": 444,
+        "xp_required_for_next": 920355
+    },
+    {
+        "level": 445,
+        "xp_required_for_next": 922855
+    },
+    {
+        "level": 446,
+        "xp_required_for_next": 925355
+    },
+    {
+        "level": 447,
+        "xp_required_for_next": 927855
+    },
+    {
+        "level": 448,
+        "xp_required_for_next": 930355
+    },
+    {
+        "level": 449,
+        "xp_required_for_next": 932855
+    },
+    {
+        "level": 450,
+        "xp_required_for_next": 935355
+    },
+    {
+        "level": 451,
+        "xp_required_for_next": 937855
+    },
+    {
+        "level": 452,
+        "xp_required_for_next": 940355
+    },
+    {
+        "level": 453,
+        "xp_required_for_next": 942855
+    },
+    {
+        "level": 454,
+        "xp_required_for_next": 945355
+    },
+    {
+        "level": 455,
+        "xp_required_for_next": 947855
+    },
+    {
+        "level": 456,
+        "xp_required_for_next": 950355
+    },
+    {
+        "level": 457,
+        "xp_required_for_next": 952855
+    },
+    {
+        "level": 458,
+        "xp_required_for_next": 955355
+    },
+    {
+        "level": 459,
+        "xp_required_for_next": 957855
+    },
+    {
+        "level": 460,
+        "xp_required_for_next": 960355
+    },
+    {
+        "level": 461,
+        "xp_required_for_next": 962855
+    },
+    {
+        "level": 462,
+        "xp_required_for_next": 965355
+    },
+    {
+        "level": 463,
+        "xp_required_for_next": 967855
+    },
+    {
+        "level": 464,
+        "xp_required_for_next": 970355
+    },
+    {
+        "level": 465,
+        "xp_required_for_next": 972855
+    },
+    {
+        "level": 466,
+        "xp_required_for_next": 975355
+    },
+    {
+        "level": 467,
+        "xp_required_for_next": 977855
+    },
+    {
+        "level": 468,
+        "xp_required_for_next": 980355
+    },
+    {
+        "level": 469,
+        "xp_required_for_next": 982855
+    },
+    {
+        "level": 470,
+        "xp_required_for_next": 985355
+    },
+    {
+        "level": 471,
+        "xp_required_for_next": 987855
+    },
+    {
+        "level": 472,
+        "xp_required_for_next": 990355
+    },
+    {
+        "level": 473,
+        "xp_required_for_next": 992855
+    },
+    {
+        "level": 474,
+        "xp_required_for_next": 995355
+    },
+    {
+        "level": 475,
+        "xp_required_for_next": 997855
+    },
+    {
+        "level": 476,
+        "xp_required_for_next": 1000355
+    },
+    {
+        "level": 477,
+        "xp_required_for_next": 1002855
+    },
+    {
+        "level": 478,
+        "xp_required_for_next": 1005355
+    },
+    {
+        "level": 479,
+        "xp_required_for_next": 1007855
+    },
+    {
+        "level": 480,
+        "xp_required_for_next": 1010355
+    },
+    {
+        "level": 481,
+        "xp_required_for_next": 1012855
+    },
+    {
+        "level": 482,
+        "xp_required_for_next": 1015355
+    },
+    {
+        "level": 483,
+        "xp_required_for_next": 1017855
+    },
+    {
+        "level": 484,
+        "xp_required_for_next": 1020355
+    },
+    {
+        "level": 485,
+        "xp_required_for_next": 1022855
+    },
+    {
+        "level": 486,
+        "xp_required_for_next": 1025355
+    },
+    {
+        "level": 487,
+        "xp_required_for_next": 1027855
+    },
+    {
+        "level": 488,
+        "xp_required_for_next": 1030355
+    },
+    {
+        "level": 489,
+        "xp_required_for_next": 1032855
+    },
+    {
+        "level": 490,
+        "xp_required_for_next": 1035355
+    },
+    {
+        "level": 491,
+        "xp_required_for_next": 1037855
+    },
+    {
+        "level": 492,
+        "xp_required_for_next": 1040355
+    },
+    {
+        "level": 493,
+        "xp_required_for_next": 1042855
+    },
+    {
+        "level": 494,
+        "xp_required_for_next": 1045355
+    },
+    {
+        "level": 495,
+        "xp_required_for_next": 1047855
+    },
+    {
+        "level": 496,
+        "xp_required_for_next": 1050355
+    },
+    {
+        "level": 497,
+        "xp_required_for_next": 1052855
+    },
+    {
+        "level": 498,
+        "xp_required_for_next": 1055355
+    },
+    {
+        "level": 499,
+        "xp_required_for_next": 1057855
+    },
+    {
+        "level": 500,
+        "xp_required_for_next": 1060355
+    },
+    {
+        "level": 501,
+        "xp_required_for_next": 1062855
+    },
+    {
+        "level": 502,
+        "xp_required_for_next": 1065355
+    },
+    {
+        "level": 503,
+        "xp_required_for_next": 1067855
+    },
+    {
+        "level": 504,
+        "xp_required_for_next": 1070355
+    },
+    {
+        "level": 505,
+        "xp_required_for_next": 1072855
+    },
+    {
+        "level": 506,
+        "xp_required_for_next": 1075355
+    },
+    {
+        "level": 507,
+        "xp_required_for_next": 1077855
+    },
+    {
+        "level": 508,
+        "xp_required_for_next": 1080355
+    },
+    {
+        "level": 509,
+        "xp_required_for_next": 1082855
+    },
+    {
+        "level": 510,
+        "xp_required_for_next": 1085355
+    },
+    {
+        "level": 511,
+        "xp_required_for_next": 1087855
+    },
+    {
+        "level": 512,
+        "xp_required_for_next": 1090355
+    },
+    {
+        "level": 513,
+        "xp_required_for_next": 1092855
+    },
+    {
+        "level": 514,
+        "xp_required_for_next": 1095355
+    },
+    {
+        "level": 515,
+        "xp_required_for_next": 1097855
+    },
+    {
+        "level": 516,
+        "xp_required_for_next": 1100355
+    },
+    {
+        "level": 517,
+        "xp_required_for_next": 1102855
+    },
+    {
+        "level": 518,
+        "xp_required_for_next": 1105355
+    },
+    {
+        "level": 519,
+        "xp_required_for_next": 1107855
+    },
+    {
+        "level": 520,
+        "xp_required_for_next": 1110355
+    },
+    {
+        "level": 521,
+        "xp_required_for_next": 1112855
+    },
+    {
+        "level": 522,
+        "xp_required_for_next": 1115355
+    },
+    {
+        "level": 523,
+        "xp_required_for_next": 1117855
+    },
+    {
+        "level": 524,
+        "xp_required_for_next": 1120355
+    },
+    {
+        "level": 525,
+        "xp_required_for_next": 1122855
+    },
+    {
+        "level": 526,
+        "xp_required_for_next": 1125355
+    },
+    {
+        "level": 527,
+        "xp_required_for_next": 1127855
+    },
+    {
+        "level": 528,
+        "xp_required_for_next": 1130355
+    },
+    {
+        "level": 529,
+        "xp_required_for_next": 1132855
+    },
+    {
+        "level": 530,
+        "xp_required_for_next": 1135355
+    },
+    {
+        "level": 531,
+        "xp_required_for_next": 1137855
+    },
+    {
+        "level": 532,
+        "xp_required_for_next": 1140355
+    },
+    {
+        "level": 533,
+        "xp_required_for_next": 1142855
+    },
+    {
+        "level": 534,
+        "xp_required_for_next": 1145355
+    },
+    {
+        "level": 535,
+        "xp_required_for_next": 1147855
+    },
+    {
+        "level": 536,
+        "xp_required_for_next": 1150355
+    },
+    {
+        "level": 537,
+        "xp_required_for_next": 1152855
+    },
+    {
+        "level": 538,
+        "xp_required_for_next": 1155355
+    },
+    {
+        "level": 539,
+        "xp_required_for_next": 1157855
+    },
+    {
+        "level": 540,
+        "xp_required_for_next": 1160355
+    },
+    {
+        "level": 541,
+        "xp_required_for_next": 1162855
+    },
+    {
+        "level": 542,
+        "xp_required_for_next": 1165355
+    },
+    {
+        "level": 543,
+        "xp_required_for_next": 1167855
+    },
+    {
+        "level": 544,
+        "xp_required_for_next": 1170355
+    },
+    {
+        "level": 545,
+        "xp_required_for_next": 1172855
+    },
+    {
+        "level": 546,
+        "xp_required_for_next": 1175355
+    },
+    {
+        "level": 547,
+        "xp_required_for_next": 1177855
+    },
+    {
+        "level": 548,
+        "xp_required_for_next": 1180355
+    },
+    {
+        "level": 549,
+        "xp_required_for_next": 1182855
+    },
+    {
+        "level": 550,
+        "xp_required_for_next": 1185355
+    },
+    {
+        "level": 551,
+        "xp_required_for_next": 1187855
+    },
+    {
+        "level": 552,
+        "xp_required_for_next": 1190355
+    },
+    {
+        "level": 553,
+        "xp_required_for_next": 1192855
+    },
+    {
+        "level": 554,
+        "xp_required_for_next": 1195355
+    },
+    {
+        "level": 555,
+        "xp_required_for_next": 1197855
+    },
+    {
+        "level": 556,
+        "xp_required_for_next": 1200355
+    },
+    {
+        "level": 557,
+        "xp_required_for_next": 1202855
+    },
+    {
+        "level": 558,
+        "xp_required_for_next": 1205355
+    },
+    {
+        "level": 559,
+        "xp_required_for_next": 1207855
+    },
+    {
+        "level": 560,
+        "xp_required_for_next": 1210355
+    },
+    {
+        "level": 561,
+        "xp_required_for_next": 1212855
+    },
+    {
+        "level": 562,
+        "xp_required_for_next": 1215355
+    },
+    {
+        "level": 563,
+        "xp_required_for_next": 1217855
+    },
+    {
+        "level": 564,
+        "xp_required_for_next": 1220355
+    },
+    {
+        "level": 565,
+        "xp_required_for_next": 1222855
+    },
+    {
+        "level": 566,
+        "xp_required_for_next": 1225355
+    },
+    {
+        "level": 567,
+        "xp_required_for_next": 1227855
+    },
+    {
+        "level": 568,
+        "xp_required_for_next": 1230355
+    },
+    {
+        "level": 569,
+        "xp_required_for_next": 1232855
+    },
+    {
+        "level": 570,
+        "xp_required_for_next": 1235355
+    },
+    {
+        "level": 571,
+        "xp_required_for_next": 1237855
+    },
+    {
+        "level": 572,
+        "xp_required_for_next": 1240355
+    },
+    {
+        "level": 573,
+        "xp_required_for_next": 1242855
+    },
+    {
+        "level": 574,
+        "xp_required_for_next": 1245355
+    },
+    {
+        "level": 575,
+        "xp_required_for_next": 1247855
+    },
+    {
+        "level": 576,
+        "xp_required_for_next": 1250355
+    },
+    {
+        "level": 577,
+        "xp_required_for_next": 1252855
+    },
+    {
+        "level": 578,
+        "xp_required_for_next": 1255355
+    },
+    {
+        "level": 579,
+        "xp_required_for_next": 1257855
+    },
+    {
+        "level": 580,
+        "xp_required_for_next": 1260355
+    },
+    {
+        "level": 581,
+        "xp_required_for_next": 1262855
+    },
+    {
+        "level": 582,
+        "xp_required_for_next": 1265355
+    },
+    {
+        "level": 583,
+        "xp_required_for_next": 1267855
+    },
+    {
+        "level": 584,
+        "xp_required_for_next": 1270355
+    },
+    {
+        "level": 585,
+        "xp_required_for_next": 1272855
+    },
+    {
+        "level": 586,
+        "xp_required_for_next": 1275355
+    },
+    {
+        "level": 587,
+        "xp_required_for_next": 1277855
+    },
+    {
+        "level": 588,
+        "xp_required_for_next": 1280355
+    },
+    {
+        "level": 589,
+        "xp_required_for_next": 1282855
+    },
+    {
+        "level": 590,
+        "xp_required_for_next": 1285355
+    },
+    {
+        "level": 591,
+        "xp_required_for_next": 1287855
+    },
+    {
+        "level": 592,
+        "xp_required_for_next": 1290355
+    },
+    {
+        "level": 593,
+        "xp_required_for_next": 1292855
+    },
+    {
+        "level": 594,
+        "xp_required_for_next": 1295355
+    },
+    {
+        "level": 595,
+        "xp_required_for_next": 1297855
+    },
+    {
+        "level": 596,
+        "xp_required_for_next": 1300355
+    },
+    {
+        "level": 597,
+        "xp_required_for_next": 1302855
+    },
+    {
+        "level": 598,
+        "xp_required_for_next": 1305355
+    },
+    {
+        "level": 599,
+        "xp_required_for_next": 1307855
+    },
+    {
+        "level": 600,
+        "xp_required_for_next": 1310355
+    },
+    {
+        "level": 601,
+        "xp_required_for_next": 1312855
+    },
+    {
+        "level": 602,
+        "xp_required_for_next": 1315355
+    },
+    {
+        "level": 603,
+        "xp_required_for_next": 1317855
+    },
+    {
+        "level": 604,
+        "xp_required_for_next": 1320355
+    },
+    {
+        "level": 605,
+        "xp_required_for_next": 1322855
+    },
+    {
+        "level": 606,
+        "xp_required_for_next": 1325355
+    },
+    {
+        "level": 607,
+        "xp_required_for_next": 1327855
+    },
+    {
+        "level": 608,
+        "xp_required_for_next": 1330355
+    },
+    {
+        "level": 609,
+        "xp_required_for_next": 1332855
+    },
+    {
+        "level": 610,
+        "xp_required_for_next": 1335355
+    },
+    {
+        "level": 611,
+        "xp_required_for_next": 1337855
+    },
+    {
+        "level": 612,
+        "xp_required_for_next": 1340355
+    },
+    {
+        "level": 613,
+        "xp_required_for_next": 1342855
+    },
+    {
+        "level": 614,
+        "xp_required_for_next": 1345355
+    },
+    {
+        "level": 615,
+        "xp_required_for_next": 1347855
+    },
+    {
+        "level": 616,
+        "xp_required_for_next": 1350355
+    },
+    {
+        "level": 617,
+        "xp_required_for_next": 1352855
+    },
+    {
+        "level": 618,
+        "xp_required_for_next": 1355355
+    },
+    {
+        "level": 619,
+        "xp_required_for_next": 1357855
+    },
+    {
+        "level": 620,
+        "xp_required_for_next": 1360355
+    },
+    {
+        "level": 621,
+        "xp_required_for_next": 1362855
+    },
+    {
+        "level": 622,
+        "xp_required_for_next": 1365355
+    },
+    {
+        "level": 623,
+        "xp_required_for_next": 1367855
+    },
+    {
+        "level": 624,
+        "xp_required_for_next": 1370355
+    },
+    {
+        "level": 625,
+        "xp_required_for_next": 1372855
+    },
+    {
+        "level": 626,
+        "xp_required_for_next": 1375355
+    },
+    {
+        "level": 627,
+        "xp_required_for_next": 1377855
+    },
+    {
+        "level": 628,
+        "xp_required_for_next": 1380355
+    },
+    {
+        "level": 629,
+        "xp_required_for_next": 1382855
+    },
+    {
+        "level": 630,
+        "xp_required_for_next": 1385355
+    },
+    {
+        "level": 631,
+        "xp_required_for_next": 1387855
+    },
+    {
+        "level": 632,
+        "xp_required_for_next": 1390355
+    },
+    {
+        "level": 633,
+        "xp_required_for_next": 1392855
+    },
+    {
+        "level": 634,
+        "xp_required_for_next": 1395355
+    },
+    {
+        "level": 635,
+        "xp_required_for_next": 1397855
+    },
+    {
+        "level": 636,
+        "xp_required_for_next": 1400355
+    },
+    {
+        "level": 637,
+        "xp_required_for_next": 1402855
+    },
+    {
+        "level": 638,
+        "xp_required_for_next": 1405355
+    },
+    {
+        "level": 639,
+        "xp_required_for_next": 1407855
+    },
+    {
+        "level": 640,
+        "xp_required_for_next": 1410355
+    },
+    {
+        "level": 641,
+        "xp_required_for_next": 1412855
+    },
+    {
+        "level": 642,
+        "xp_required_for_next": 1415355
+    },
+    {
+        "level": 643,
+        "xp_required_for_next": 1417855
+    },
+    {
+        "level": 644,
+        "xp_required_for_next": 1420355
+    },
+    {
+        "level": 645,
+        "xp_required_for_next": 1422855
+    },
+    {
+        "level": 646,
+        "xp_required_for_next": 1425355
+    },
+    {
+        "level": 647,
+        "xp_required_for_next": 1427855
+    },
+    {
+        "level": 648,
+        "xp_required_for_next": 1430355
+    },
+    {
+        "level": 649,
+        "xp_required_for_next": 1432855
+    },
+    {
+        "level": 650,
+        "xp_required_for_next": 1435355
+    },
+    {
+        "level": 651,
+        "xp_required_for_next": 1437855
+    },
+    {
+        "level": 652,
+        "xp_required_for_next": 1440355
+    },
+    {
+        "level": 653,
+        "xp_required_for_next": 1442855
+    },
+    {
+        "level": 654,
+        "xp_required_for_next": 1445355
+    },
+    {
+        "level": 655,
+        "xp_required_for_next": 1447855
+    },
+    {
+        "level": 656,
+        "xp_required_for_next": 1450355
+    },
+    {
+        "level": 657,
+        "xp_required_for_next": 1452855
+    },
+    {
+        "level": 658,
+        "xp_required_for_next": 1455355
+    },
+    {
+        "level": 659,
+        "xp_required_for_next": 1457855
+    },
+    {
+        "level": 660,
+        "xp_required_for_next": 1460355
+    },
+    {
+        "level": 661,
+        "xp_required_for_next": 1462855
+    },
+    {
+        "level": 662,
+        "xp_required_for_next": 1465355
+    },
+    {
+        "level": 663,
+        "xp_required_for_next": 1467855
+    },
+    {
+        "level": 664,
+        "xp_required_for_next": 1470355
+    },
+    {
+        "level": 665,
+        "xp_required_for_next": 1472855
+    },
+    {
+        "level": 666,
+        "xp_required_for_next": 1475355
+    },
+    {
+        "level": 667,
+        "xp_required_for_next": 1477855
+    },
+    {
+        "level": 668,
+        "xp_required_for_next": 1480355
+    },
+    {
+        "level": 669,
+        "xp_required_for_next": 1482855
+    },
+    {
+        "level": 670,
+        "xp_required_for_next": 1485355
+    },
+    {
+        "level": 671,
+        "xp_required_for_next": 1487855
+    },
+    {
+        "level": 672,
+        "xp_required_for_next": 1490355
+    },
+    {
+        "level": 673,
+        "xp_required_for_next": 1492855
+    },
+    {
+        "level": 674,
+        "xp_required_for_next": 1495355
+    },
+    {
+        "level": 675,
+        "xp_required_for_next": 1497855
+    },
+    {
+        "level": 676,
+        "xp_required_for_next": 1500355
+    },
+    {
+        "level": 677,
+        "xp_required_for_next": 1502855
+    },
+    {
+        "level": 678,
+        "xp_required_for_next": 1505355
+    },
+    {
+        "level": 679,
+        "xp_required_for_next": 1507855
+    },
+    {
+        "level": 680,
+        "xp_required_for_next": 1510355
+    },
+    {
+        "level": 681,
+        "xp_required_for_next": 1512855
+    },
+    {
+        "level": 682,
+        "xp_required_for_next": 1515355
+    },
+    {
+        "level": 683,
+        "xp_required_for_next": 1517855
+    },
+    {
+        "level": 684,
+        "xp_required_for_next": 1520355
+    },
+    {
+        "level": 685,
+        "xp_required_for_next": 1522855
+    },
+    {
+        "level": 686,
+        "xp_required_for_next": 1525355
+    },
+    {
+        "level": 687,
+        "xp_required_for_next": 1527855
+    },
+    {
+        "level": 688,
+        "xp_required_for_next": 1530355
+    },
+    {
+        "level": 689,
+        "xp_required_for_next": 1532855
+    },
+    {
+        "level": 690,
+        "xp_required_for_next": 1535355
+    },
+    {
+        "level": 691,
+        "xp_required_for_next": 1537855
+    },
+    {
+        "level": 692,
+        "xp_required_for_next": 1540355
+    },
+    {
+        "level": 693,
+        "xp_required_for_next": 1542855
+    },
+    {
+        "level": 694,
+        "xp_required_for_next": 1545355
+    },
+    {
+        "level": 695,
+        "xp_required_for_next": 1547855
+    },
+    {
+        "level": 696,
+        "xp_required_for_next": 1550355
+    },
+    {
+        "level": 697,
+        "xp_required_for_next": 1552855
+    },
+    {
+        "level": 698,
+        "xp_required_for_next": 1555355
+    },
+    {
+        "level": 699,
+        "xp_required_for_next": 1557855
+    },
+    {
+        "level": 700,
+        "xp_required_for_next": 1560355
+    },
+    {
+        "level": 701,
+        "xp_required_for_next": 1562855
+    },
+    {
+        "level": 702,
+        "xp_required_for_next": 1565355
+    },
+    {
+        "level": 703,
+        "xp_required_for_next": 1567855
+    },
+    {
+        "level": 704,
+        "xp_required_for_next": 1570355
+    },
+    {
+        "level": 705,
+        "xp_required_for_next": 1572855
+    },
+    {
+        "level": 706,
+        "xp_required_for_next": 1575355
+    },
+    {
+        "level": 707,
+        "xp_required_for_next": 1577855
+    },
+    {
+        "level": 708,
+        "xp_required_for_next": 1580355
+    },
+    {
+        "level": 709,
+        "xp_required_for_next": 1582855
+    },
+    {
+        "level": 710,
+        "xp_required_for_next": 1585355
+    },
+    {
+        "level": 711,
+        "xp_required_for_next": 1587855
+    },
+    {
+        "level": 712,
+        "xp_required_for_next": 1590355
+    },
+    {
+        "level": 713,
+        "xp_required_for_next": 1592855
+    },
+    {
+        "level": 714,
+        "xp_required_for_next": 1595355
+    },
+    {
+        "level": 715,
+        "xp_required_for_next": 1597855
+    },
+    {
+        "level": 716,
+        "xp_required_for_next": 1600355
+    },
+    {
+        "level": 717,
+        "xp_required_for_next": 1602855
+    },
+    {
+        "level": 718,
+        "xp_required_for_next": 1605355
+    },
+    {
+        "level": 719,
+        "xp_required_for_next": 1607855
+    },
+    {
+        "level": 720,
+        "xp_required_for_next": 1610355
+    },
+    {
+        "level": 721,
+        "xp_required_for_next": 1612855
+    },
+    {
+        "level": 722,
+        "xp_required_for_next": 1615355
+    },
+    {
+        "level": 723,
+        "xp_required_for_next": 1617855
+    },
+    {
+        "level": 724,
+        "xp_required_for_next": 1620355
+    },
+    {
+        "level": 725,
+        "xp_required_for_next": 1622855
+    },
+    {
+        "level": 726,
+        "xp_required_for_next": 1625355
+    },
+    {
+        "level": 727,
+        "xp_required_for_next": 1627855
+    },
+    {
+        "level": 728,
+        "xp_required_for_next": 1630355
+    },
+    {
+        "level": 729,
+        "xp_required_for_next": 1632855
+    },
+    {
+        "level": 730,
+        "xp_required_for_next": 1635355
+    },
+    {
+        "level": 731,
+        "xp_required_for_next": 1637855
+    },
+    {
+        "level": 732,
+        "xp_required_for_next": 1640355
+    },
+    {
+        "level": 733,
+        "xp_required_for_next": 1642855
+    },
+    {
+        "level": 734,
+        "xp_required_for_next": 1645355
+    },
+    {
+        "level": 735,
+        "xp_required_for_next": 1647855
+    },
+    {
+        "level": 736,
+        "xp_required_for_next": 1650355
+    },
+    {
+        "level": 737,
+        "xp_required_for_next": 1652855
+    },
+    {
+        "level": 738,
+        "xp_required_for_next": 1655355
+    },
+    {
+        "level": 739,
+        "xp_required_for_next": 1657855
+    },
+    {
+        "level": 740,
+        "xp_required_for_next": 1660355
+    },
+    {
+        "level": 741,
+        "xp_required_for_next": 1662855
+    },
+    {
+        "level": 742,
+        "xp_required_for_next": 1665355
+    },
+    {
+        "level": 743,
+        "xp_required_for_next": 1667855
+    },
+    {
+        "level": 744,
+        "xp_required_for_next": 1670355
+    },
+    {
+        "level": 745,
+        "xp_required_for_next": 1672855
+    },
+    {
+        "level": 746,
+        "xp_required_for_next": 1675355
+    },
+    {
+        "level": 747,
+        "xp_required_for_next": 1677855
+    },
+    {
+        "level": 748,
+        "xp_required_for_next": 1680355
+    },
+    {
+        "level": 749,
+        "xp_required_for_next": 1682855
+    },
+    {
+        "level": 750,
+        "xp_required_for_next": 1685355
+    },
+    {
+        "level": 751,
+        "xp_required_for_next": 1687855
+    },
+    {
+        "level": 752,
+        "xp_required_for_next": 1690355
+    },
+    {
+        "level": 753,
+        "xp_required_for_next": 1692855
+    },
+    {
+        "level": 754,
+        "xp_required_for_next": 1695355
+    },
+    {
+        "level": 755,
+        "xp_required_for_next": 1697855
+    },
+    {
+        "level": 756,
+        "xp_required_for_next": 1700355
+    },
+    {
+        "level": 757,
+        "xp_required_for_next": 1702855
+    },
+    {
+        "level": 758,
+        "xp_required_for_next": 1705355
+    },
+    {
+        "level": 759,
+        "xp_required_for_next": 1707855
+    },
+    {
+        "level": 760,
+        "xp_required_for_next": 1710355
+    },
+    {
+        "level": 761,
+        "xp_required_for_next": 1712855
+    },
+    {
+        "level": 762,
+        "xp_required_for_next": 1715355
+    },
+    {
+        "level": 763,
+        "xp_required_for_next": 1717855
+    },
+    {
+        "level": 764,
+        "xp_required_for_next": 1720355
+    },
+    {
+        "level": 765,
+        "xp_required_for_next": 1722855
+    },
+    {
+        "level": 766,
+        "xp_required_for_next": 1725355
+    },
+    {
+        "level": 767,
+        "xp_required_for_next": 1727855
+    },
+    {
+        "level": 768,
+        "xp_required_for_next": 1730355
+    },
+    {
+        "level": 769,
+        "xp_required_for_next": 1732855
+    },
+    {
+        "level": 770,
+        "xp_required_for_next": 1735355
+    },
+    {
+        "level": 771,
+        "xp_required_for_next": 1737855
+    },
+    {
+        "level": 772,
+        "xp_required_for_next": 1740355
+    },
+    {
+        "level": 773,
+        "xp_required_for_next": 1742855
+    },
+    {
+        "level": 774,
+        "xp_required_for_next": 1745355
+    },
+    {
+        "level": 775,
+        "xp_required_for_next": 1747855
+    },
+    {
+        "level": 776,
+        "xp_required_for_next": 1750355
+    },
+    {
+        "level": 777,
+        "xp_required_for_next": 1752855
+    },
+    {
+        "level": 778,
+        "xp_required_for_next": 1755355
+    },
+    {
+        "level": 779,
+        "xp_required_for_next": 1757855
+    },
+    {
+        "level": 780,
+        "xp_required_for_next": 1760355
+    },
+    {
+        "level": 781,
+        "xp_required_for_next": 1762855
+    },
+    {
+        "level": 782,
+        "xp_required_for_next": 1765355
+    },
+    {
+        "level": 783,
+        "xp_required_for_next": 1767855
+    },
+    {
+        "level": 784,
+        "xp_required_for_next": 1770355
+    },
+    {
+        "level": 785,
+        "xp_required_for_next": 1772855
+    },
+    {
+        "level": 786,
+        "xp_required_for_next": 1775355
+    },
+    {
+        "level": 787,
+        "xp_required_for_next": 1777855
+    },
+    {
+        "level": 788,
+        "xp_required_for_next": 1780355
+    },
+    {
+        "level": 789,
+        "xp_required_for_next": 1782855
+    },
+    {
+        "level": 790,
+        "xp_required_for_next": 1785355
+    },
+    {
+        "level": 791,
+        "xp_required_for_next": 1787855
+    },
+    {
+        "level": 792,
+        "xp_required_for_next": 1790355
+    },
+    {
+        "level": 793,
+        "xp_required_for_next": 1792855
+    },
+    {
+        "level": 794,
+        "xp_required_for_next": 1795355
+    },
+    {
+        "level": 795,
+        "xp_required_for_next": 1797855
+    },
+    {
+        "level": 796,
+        "xp_required_for_next": 1800355
+    },
+    {
+        "level": 797,
+        "xp_required_for_next": 1802855
+    },
+    {
+        "level": 798,
+        "xp_required_for_next": 1805355
+    },
+    {
+        "level": 799,
+        "xp_required_for_next": 1807855
+    },
+    {
+        "level": 800,
+        "xp_required_for_next": 1810355
+    },
+    {
+        "level": 801,
+        "xp_required_for_next": 1812855
+    },
+    {
+        "level": 802,
+        "xp_required_for_next": 1815355
+    },
+    {
+        "level": 803,
+        "xp_required_for_next": 1817855
+    },
+    {
+        "level": 804,
+        "xp_required_for_next": 1820355
+    },
+    {
+        "level": 805,
+        "xp_required_for_next": 1822855
+    },
+    {
+        "level": 806,
+        "xp_required_for_next": 1825355
+    },
+    {
+        "level": 807,
+        "xp_required_for_next": 1827855
+    },
+    {
+        "level": 808,
+        "xp_required_for_next": 1830355
+    },
+    {
+        "level": 809,
+        "xp_required_for_next": 1832855
+    },
+    {
+        "level": 810,
+        "xp_required_for_next": 1835355
+    },
+    {
+        "level": 811,
+        "xp_required_for_next": 1837855
+    },
+    {
+        "level": 812,
+        "xp_required_for_next": 1840355
+    },
+    {
+        "level": 813,
+        "xp_required_for_next": 1842855
+    },
+    {
+        "level": 814,
+        "xp_required_for_next": 1845355
+    },
+    {
+        "level": 815,
+        "xp_required_for_next": 1847855
+    },
+    {
+        "level": 816,
+        "xp_required_for_next": 1850355
+    },
+    {
+        "level": 817,
+        "xp_required_for_next": 1852855
+    },
+    {
+        "level": 818,
+        "xp_required_for_next": 1855355
+    },
+    {
+        "level": 819,
+        "xp_required_for_next": 1857855
+    },
+    {
+        "level": 820,
+        "xp_required_for_next": 1860355
+    },
+    {
+        "level": 821,
+        "xp_required_for_next": 1862855
+    },
+    {
+        "level": 822,
+        "xp_required_for_next": 1865355
+    },
+    {
+        "level": 823,
+        "xp_required_for_next": 1867855
+    },
+    {
+        "level": 824,
+        "xp_required_for_next": 1870355
+    },
+    {
+        "level": 825,
+        "xp_required_for_next": 1872855
+    },
+    {
+        "level": 826,
+        "xp_required_for_next": 1875355
+    },
+    {
+        "level": 827,
+        "xp_required_for_next": 1877855
+    },
+    {
+        "level": 828,
+        "xp_required_for_next": 1880355
+    },
+    {
+        "level": 829,
+        "xp_required_for_next": 1882855
+    },
+    {
+        "level": 830,
+        "xp_required_for_next": 1885355
+    },
+    {
+        "level": 831,
+        "xp_required_for_next": 1887855
+    },
+    {
+        "level": 832,
+        "xp_required_for_next": 1890355
+    },
+    {
+        "level": 833,
+        "xp_required_for_next": 1892855
+    },
+    {
+        "level": 834,
+        "xp_required_for_next": 1895355
+    },
+    {
+        "level": 835,
+        "xp_required_for_next": 1897855
+    },
+    {
+        "level": 836,
+        "xp_required_for_next": 1900355
+    },
+    {
+        "level": 837,
+        "xp_required_for_next": 1902855
+    },
+    {
+        "level": 838,
+        "xp_required_for_next": 1905355
+    },
+    {
+        "level": 839,
+        "xp_required_for_next": 1907855
+    },
+    {
+        "level": 840,
+        "xp_required_for_next": 1910355
+    },
+    {
+        "level": 841,
+        "xp_required_for_next": 1912855
+    },
+    {
+        "level": 842,
+        "xp_required_for_next": 1915355
+    },
+    {
+        "level": 843,
+        "xp_required_for_next": 1917855
+    },
+    {
+        "level": 844,
+        "xp_required_for_next": 1920355
+    },
+    {
+        "level": 845,
+        "xp_required_for_next": 1922855
+    },
+    {
+        "level": 846,
+        "xp_required_for_next": 1925355
+    },
+    {
+        "level": 847,
+        "xp_required_for_next": 1927855
+    },
+    {
+        "level": 848,
+        "xp_required_for_next": 1930355
+    },
+    {
+        "level": 849,
+        "xp_required_for_next": 1932855
+    },
+    {
+        "level": 850,
+        "xp_required_for_next": 1935355
+    },
+    {
+        "level": 851,
+        "xp_required_for_next": 1937855
+    },
+    {
+        "level": 852,
+        "xp_required_for_next": 1940355
+    },
+    {
+        "level": 853,
+        "xp_required_for_next": 1942855
+    },
+    {
+        "level": 854,
+        "xp_required_for_next": 1945355
+    },
+    {
+        "level": 855,
+        "xp_required_for_next": 1947855
+    },
+    {
+        "level": 856,
+        "xp_required_for_next": 1950355
+    },
+    {
+        "level": 857,
+        "xp_required_for_next": 1952855
+    },
+    {
+        "level": 858,
+        "xp_required_for_next": 1955355
+    },
+    {
+        "level": 859,
+        "xp_required_for_next": 1957855
+    },
+    {
+        "level": 860,
+        "xp_required_for_next": 1960355
+    },
+    {
+        "level": 861,
+        "xp_required_for_next": 1962855
+    },
+    {
+        "level": 862,
+        "xp_required_for_next": 1965355
+    },
+    {
+        "level": 863,
+        "xp_required_for_next": 1967855
+    },
+    {
+        "level": 864,
+        "xp_required_for_next": 1970355
+    },
+    {
+        "level": 865,
+        "xp_required_for_next": 1972855
+    },
+    {
+        "level": 866,
+        "xp_required_for_next": 1975355
+    },
+    {
+        "level": 867,
+        "xp_required_for_next": 1977855
+    },
+    {
+        "level": 868,
+        "xp_required_for_next": 1980355
+    },
+    {
+        "level": 869,
+        "xp_required_for_next": 1982855
+    },
+    {
+        "level": 870,
+        "xp_required_for_next": 1985355
+    },
+    {
+        "level": 871,
+        "xp_required_for_next": 1987855
+    },
+    {
+        "level": 872,
+        "xp_required_for_next": 1990355
+    },
+    {
+        "level": 873,
+        "xp_required_for_next": 1992855
+    },
+    {
+        "level": 874,
+        "xp_required_for_next": 1995355
+    },
+    {
+        "level": 875,
+        "xp_required_for_next": 1997855
+    },
+    {
+        "level": 876,
+        "xp_required_for_next": 2000355
+    },
+    {
+        "level": 877,
+        "xp_required_for_next": 2002855
+    },
+    {
+        "level": 878,
+        "xp_required_for_next": 2005355
+    },
+    {
+        "level": 879,
+        "xp_required_for_next": 2007855
+    },
+    {
+        "level": 880,
+        "xp_required_for_next": 2010355
+    },
+    {
+        "level": 881,
+        "xp_required_for_next": 2012855
+    },
+    {
+        "level": 882,
+        "xp_required_for_next": 2015355
+    },
+    {
+        "level": 883,
+        "xp_required_for_next": 2017855
+    },
+    {
+        "level": 884,
+        "xp_required_for_next": 2020355
+    },
+    {
+        "level": 885,
+        "xp_required_for_next": 2022855
+    },
+    {
+        "level": 886,
+        "xp_required_for_next": 2025355
+    },
+    {
+        "level": 887,
+        "xp_required_for_next": 2027855
+    },
+    {
+        "level": 888,
+        "xp_required_for_next": 2030355
+    },
+    {
+        "level": 889,
+        "xp_required_for_next": 2032855
+    },
+    {
+        "level": 890,
+        "xp_required_for_next": 2035355
+    },
+    {
+        "level": 891,
+        "xp_required_for_next": 2037855
+    },
+    {
+        "level": 892,
+        "xp_required_for_next": 2040355
+    },
+    {
+        "level": 893,
+        "xp_required_for_next": 2042855
+    },
+    {
+        "level": 894,
+        "xp_required_for_next": 2045355
+    },
+    {
+        "level": 895,
+        "xp_required_for_next": 2047855
+    },
+    {
+        "level": 896,
+        "xp_required_for_next": 2050355
+    },
+    {
+        "level": 897,
+        "xp_required_for_next": 2052855
+    },
+    {
+        "level": 898,
+        "xp_required_for_next": 2055355
+    },
+    {
+        "level": 899,
+        "xp_required_for_next": 2057855
+    },
+    {
+        "level": 900,
+        "xp_required_for_next": 2060355
+    },
+    {
+        "level": 901,
+        "xp_required_for_next": 2062855
+    },
+    {
+        "level": 902,
+        "xp_required_for_next": 2065355
+    },
+    {
+        "level": 903,
+        "xp_required_for_next": 2067855
+    },
+    {
+        "level": 904,
+        "xp_required_for_next": 2070355
+    },
+    {
+        "level": 905,
+        "xp_required_for_next": 2072855
+    },
+    {
+        "level": 906,
+        "xp_required_for_next": 2075355
+    },
+    {
+        "level": 907,
+        "xp_required_for_next": 2077855
+    },
+    {
+        "level": 908,
+        "xp_required_for_next": 2080355
+    },
+    {
+        "level": 909,
+        "xp_required_for_next": 2082855
+    },
+    {
+        "level": 910,
+        "xp_required_for_next": 2085355
+    },
+    {
+        "level": 911,
+        "xp_required_for_next": 2087855
+    },
+    {
+        "level": 912,
+        "xp_required_for_next": 2090355
+    },
+    {
+        "level": 913,
+        "xp_required_for_next": 2092855
+    },
+    {
+        "level": 914,
+        "xp_required_for_next": 2095355
+    },
+    {
+        "level": 915,
+        "xp_required_for_next": 2097855
+    },
+    {
+        "level": 916,
+        "xp_required_for_next": 2100355
+    },
+    {
+        "level": 917,
+        "xp_required_for_next": 2102855
+    },
+    {
+        "level": 918,
+        "xp_required_for_next": 2105355
+    },
+    {
+        "level": 919,
+        "xp_required_for_next": 2107855
+    },
+    {
+        "level": 920,
+        "xp_required_for_next": 2110355
+    },
+    {
+        "level": 921,
+        "xp_required_for_next": 2112855
+    },
+    {
+        "level": 922,
+        "xp_required_for_next": 2115355
+    },
+    {
+        "level": 923,
+        "xp_required_for_next": 2117855
+    },
+    {
+        "level": 924,
+        "xp_required_for_next": 2120355
+    },
+    {
+        "level": 925,
+        "xp_required_for_next": 2122855
+    },
+    {
+        "level": 926,
+        "xp_required_for_next": 2125355
+    },
+    {
+        "level": 927,
+        "xp_required_for_next": 2127855
+    },
+    {
+        "level": 928,
+        "xp_required_for_next": 2130355
+    },
+    {
+        "level": 929,
+        "xp_required_for_next": 2132855
+    },
+    {
+        "level": 930,
+        "xp_required_for_next": 2135355
+    },
+    {
+        "level": 931,
+        "xp_required_for_next": 2137855
+    },
+    {
+        "level": 932,
+        "xp_required_for_next": 2140355
+    },
+    {
+        "level": 933,
+        "xp_required_for_next": 2142855
+    },
+    {
+        "level": 934,
+        "xp_required_for_next": 2145355
+    },
+    {
+        "level": 935,
+        "xp_required_for_next": 2147855
+    },
+    {
+        "level": 936,
+        "xp_required_for_next": 2150355
+    },
+    {
+        "level": 937,
+        "xp_required_for_next": 2152855
+    },
+    {
+        "level": 938,
+        "xp_required_for_next": 2155355
+    },
+    {
+        "level": 939,
+        "xp_required_for_next": 2157855
+    },
+    {
+        "level": 940,
+        "xp_required_for_next": 2160355
+    },
+    {
+        "level": 941,
+        "xp_required_for_next": 2162855
+    },
+    {
+        "level": 942,
+        "xp_required_for_next": 2165355
+    },
+    {
+        "level": 943,
+        "xp_required_for_next": 2167855
+    },
+    {
+        "level": 944,
+        "xp_required_for_next": 2170355
+    },
+    {
+        "level": 945,
+        "xp_required_for_next": 2172855
+    },
+    {
+        "level": 946,
+        "xp_required_for_next": 2175355
+    },
+    {
+        "level": 947,
+        "xp_required_for_next": 2177855
+    },
+    {
+        "level": 948,
+        "xp_required_for_next": 2180355
+    },
+    {
+        "level": 949,
+        "xp_required_for_next": 2182855
+    },
+    {
+        "level": 950,
+        "xp_required_for_next": 2185355
+    },
+    {
+        "level": 951,
+        "xp_required_for_next": 2187855
+    },
+    {
+        "level": 952,
+        "xp_required_for_next": 2190355
+    },
+    {
+        "level": 953,
+        "xp_required_for_next": 2192855
+    },
+    {
+        "level": 954,
+        "xp_required_for_next": 2195355
+    },
+    {
+        "level": 955,
+        "xp_required_for_next": 2197855
+    },
+    {
+        "level": 956,
+        "xp_required_for_next": 2200355
+    },
+    {
+        "level": 957,
+        "xp_required_for_next": 2202855
+    },
+    {
+        "level": 958,
+        "xp_required_for_next": 2205355
+    },
+    {
+        "level": 959,
+        "xp_required_for_next": 2207855
+    },
+    {
+        "level": 960,
+        "xp_required_for_next": 2210355
+    },
+    {
+        "level": 961,
+        "xp_required_for_next": 2212855
+    },
+    {
+        "level": 962,
+        "xp_required_for_next": 2215355
+    },
+    {
+        "level": 963,
+        "xp_required_for_next": 2217855
+    },
+    {
+        "level": 964,
+        "xp_required_for_next": 2220355
+    },
+    {
+        "level": 965,
+        "xp_required_for_next": 2222855
+    },
+    {
+        "level": 966,
+        "xp_required_for_next": 2225355
+    },
+    {
+        "level": 967,
+        "xp_required_for_next": 2227855
+    },
+    {
+        "level": 968,
+        "xp_required_for_next": 2230355
+    },
+    {
+        "level": 969,
+        "xp_required_for_next": 2232855
+    },
+    {
+        "level": 970,
+        "xp_required_for_next": 2235355
+    },
+    {
+        "level": 971,
+        "xp_required_for_next": 2237855
+    },
+    {
+        "level": 972,
+        "xp_required_for_next": 2240355
+    },
+    {
+        "level": 973,
+        "xp_required_for_next": 2242855
+    },
+    {
+        "level": 974,
+        "xp_required_for_next": 2245355
+    },
+    {
+        "level": 975,
+        "xp_required_for_next": 2247855
+    },
+    {
+        "level": 976,
+        "xp_required_for_next": 2250355
+    },
+    {
+        "level": 977,
+        "xp_required_for_next": 2252855
+    },
+    {
+        "level": 978,
+        "xp_required_for_next": 2255355
+    },
+    {
+        "level": 979,
+        "xp_required_for_next": 2257855
+    },
+    {
+        "level": 980,
+        "xp_required_for_next": 2260355
+    },
+    {
+        "level": 981,
+        "xp_required_for_next": 2262855
+    },
+    {
+        "level": 982,
+        "xp_required_for_next": 2265355
+    },
+    {
+        "level": 983,
+        "xp_required_for_next": 2267855
+    },
+    {
+        "level": 984,
+        "xp_required_for_next": 2270355
+    },
+    {
+        "level": 985,
+        "xp_required_for_next": 2272855
+    },
+    {
+        "level": 986,
+        "xp_required_for_next": 2275355
+    },
+    {
+        "level": 987,
+        "xp_required_for_next": 2277855
+    },
+    {
+        "level": 988,
+        "xp_required_for_next": 2280355
+    },
+    {
+        "level": 989,
+        "xp_required_for_next": 2282855
+    },
+    {
+        "level": 990,
+        "xp_required_for_next": 2285355
+    },
+    {
+        "level": 991,
+        "xp_required_for_next": 2287855
+    },
+    {
+        "level": 992,
+        "xp_required_for_next": 2290355
+    },
+    {
+        "level": 993,
+        "xp_required_for_next": 2292855
+    },
+    {
+        "level": 994,
+        "xp_required_for_next": 2295355
+    },
+    {
+        "level": 995,
+        "xp_required_for_next": 2297855
+    },
+    {
+        "level": 996,
+        "xp_required_for_next": 2300355
+    },
+    {
+        "level": 997,
+        "xp_required_for_next": 2302855
+    },
+    {
+        "level": 998,
+        "xp_required_for_next": 2305355
+    },
+    {
+        "level": 999,
+        "xp_required_for_next": 2307855
+    },
+    {
+        "level": 1000,
+        "xp_required_for_next": 2310355
+    }
 ]
