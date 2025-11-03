@@ -1621,3 +1621,93 @@
         height: 2px;
     }
 }
+
+@media (max-width: 768px) {
+    .calculator-screen,
+    .screen-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .timer-container,
+    .score-display {
+        position: static;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin: 6px 0 0 0;
+    }
+
+    .score-display {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .calculator {
+        width: 100%;
+        max-width: 480px;
+    }
+}
+@media (max-width: 480px) {
+    .calculator {
+        max-width: 420px;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .question-display .number {
+        min-width: 72px;
+    }
+}
+@media (max-width: 480px) {
+    .question-display {
+        font-size: 22px;
+        gap: 8px;
+    }
+    .question-display .number {
+        min-width: auto;
+        padding: 8px 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .operation-buttons {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .op-btn {
+        padding: 12px 18px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .start-button { padding: 14px 24px; font-size: 16px; }
+    .login-button { padding: 12px 20px; font-size: 14px; }
+}
+
+@media (max-width: 480px) {
+    .bubo-container { display: none; }
+}
+
+@media (max-width: 768px) {
+    .timer-text { font-size: 20px; min-width: 34px; }
+    .timer-bar-container {
+        left: 4px;
+        width: calc(100% - 8px);
+    }
+}
+
+@media (max-width: 768px) {
+    .result-bubble { padding: 18px; }
+    .result-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .result-col { min-width: 100%; }
+    .summary-item { padding: 6px 0; }
+}

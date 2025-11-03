@@ -54,7 +54,7 @@ let completedConstellations = []; // Tamamlanan takım yıldızlarının indeksl
 // 10 farklı takım yıldızı deseni
 const constellationData = [
     { // 0 - Büyük Ayı (Ursa Major)
-        name: "Büyük Ayı", 
+        name: "Büyük Ayı",
         stars: [[20, 30], [40, 25], [70, 20], [100, 30], [130, 45], [160, 40], [190, 50]],
         connections: [[0,1], [1,2], [2,3], [3,4], [4,5], [5,6]]
     },
@@ -458,7 +458,8 @@ function handleDifficultySelection(difficultyId, difficultyName, xpMultiplier) {
     sessionData.xpMultiplier = xpMultiplier;
 
     // Soru üret
-    const question = questionGenerator.generateQuestion(sessionData.selectedTopic, difficultyName);
+    const difficulty = (currentQuestion && currentQuestion.difficulty) || sessionData.difficultyName;
+    const question = questionGenerator.generateQuestion(selectedTopic, difficulty);
 
     // Mevcut hesap makinesini kaldır
     gsap.to(oldCalculator, {
@@ -867,7 +868,7 @@ function handleTimeUp() {
 document.addEventListener('DOMContentLoaded', () => {
     createStars();
     createConstellations(); // Takım yıldızlarını oluştur
-    
+
     // İlk appData yüklemesi
     const appDataScript = document.getElementById('app-data');
     if (appDataScript) {
@@ -1300,7 +1301,7 @@ function resetGameState() {
     };
     gameActive = false;
     gameStartTime = null;
-    
+
     // Takım yıldızlarını sıfırla
     resetConstellations();
 
@@ -1708,7 +1709,7 @@ function updateConstellationDisplay() {
         } else if (index === activeConstellation) {
             // Mevcut takım yıldızı
             svg.className = 'constellation building';
-            
+
             // İlerlemeye göre yıldızları ve çizgileri aktifleştir
             const activeStarsCount = constellationProgress;
             const activeLinesCount = Math.max(0, constellationProgress - 1);
@@ -1746,19 +1747,19 @@ function progressConstellation() {
     if (constellationProgress >= 10) {
         // Tamamlanan takım yıldızının indexi
         const completedConstellation = activeConstellation;
-        
+
         // Tamamlanan takım yıldızını listeye ekle
         if (!completedConstellations.includes(completedConstellation)) {
             completedConstellations.push(completedConstellation);
         }
-        
+
         // Eğer tüm takım yıldızları tamamlandıysa
         if (completedConstellations.length >= 10) {
             // Tüm takım yıldızları tamamlandı! Yeniden başla
             completedConstellations = [];
             activeConstellation = Math.floor(Math.random() * 10);
             constellationProgress = 0;
-            
+
             // Özel tebrik mesajı
             const speechBubble = document.querySelector('.speech-bubble');
             if (speechBubble) {
@@ -1772,12 +1773,12 @@ function progressConstellation() {
                     availableConstellations.push(i);
                 }
             }
-            
+
             // Rastgele yeni takım yıldızı seç
             activeConstellation = availableConstellations[Math.floor(Math.random() * availableConstellations.length)];
             constellationProgress = 0;
         }
-        
+
         // Tamamlanma efektini göster
         showConstellationCompleteEffect(completedConstellation);
     }
@@ -1795,10 +1796,10 @@ function regressConstellation() {
         // En son tamamlanan takım yıldızını tekrar aktif yap
         const lastCompletedIndex = completedConstellations.length - 1;
         const lastCompleted = completedConstellations[lastCompletedIndex];
-        
+
         // Son tamamlanan takım yıldızını listeden çıkar
         completedConstellations.splice(lastCompletedIndex, 1);
-        
+
         // O takım yıldızını tekrar aktif yap ve 9/10 progress ver
         activeConstellation = lastCompleted;
         constellationProgress = 9;
@@ -1815,7 +1816,7 @@ function showConstellationCompleteEffect(constellationIndex) {
 
     // Parlama efekti için geçici animasyon
     completedSvg.style.filter = 'drop-shadow(0 0 15px rgba(255, 255, 255, 1)) brightness(1.5)';
-    
+
     setTimeout(() => {
         completedSvg.style.filter = 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.8))';
     }, 1000);
@@ -1833,10 +1834,10 @@ function resetConstellations() {
     activeConstellation = Math.floor(Math.random() * 10); // Rastgele takım yıldızı seç (0-9)
     totalCorrectAnswers = 0;
     completedConstellations = []; // Tamamlanan takım yıldızlarını sıfırla
-    
+
     // Takım yıldızlarını yeniden oluştur
     createConstellations();
-    
+
     // Progress göstergesini gizle
     const progressElement = document.querySelector('.constellation-progress');
     if (progressElement) {

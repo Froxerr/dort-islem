@@ -8,7 +8,13 @@ window.QuestionGenerator = class QuestionGenerator {
             4: '÷'   // Bölme
         };
     }
-
+    formatNumber(n) {
+        if (n == null || Number.isNaN(Number(n))) return '';
+        const num = Number(n);
+        const opts = Number.isInteger(num) ? { maximumFractionDigits: 0 }
+            : { minimumFractionDigits: 0, maximumFractionDigits: 2 };
+        return num.toLocaleString('tr-TR', opts);
+    }
     /**
      * Belirli bir aralıkta rastgele bir tam sayı üretir.
      */
@@ -20,6 +26,8 @@ window.QuestionGenerator = class QuestionGenerator {
      * Ana soru üretme fonksiyonu.
      */
     generateQuestion(topicId, difficulty) {
+        difficulty = (difficulty || '').trim();
+        if (difficulty === 'Dahi') difficulty = 'Deha';
         const operator = this.operators[topicId];
         let num1, num2, answer;
 
@@ -82,6 +90,6 @@ window.QuestionGenerator = class QuestionGenerator {
                 break;
         }
 
-        return { num1, num2, operator, answer };
+        return { num1, num2, operator, answer, difficulty };
     }
 };
