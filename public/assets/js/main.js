@@ -1,21 +1,23 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const centerCloud = document.getElementById('centerCloud');
-    const calculator = document.getElementById('calculator');
-    const decorativeClouds = document.querySelectorAll('.profile-cloud, .profile-cloud-secondary, .decoration-cloud-1, .decoration-cloud-2, .decoration-cloud-3, .decoration-cloud-4');
-    const speechBubble = document.querySelector('.speech-bubble');
-    const sectionTitle = document.getElementById('sectionTitle');
-    const topicsGrid = document.getElementById('topicsGrid');
-    const difficultyGrid = document.getElementById('difficultyGrid');
-    const calculationArea = document.getElementById('calculationArea');
-    const feedback = document.getElementById('feedback');
-    const countdownDisplay = document.getElementById('countdown');
-    const correctCountDisplay = document.getElementById('correctCount');
-    const wrongCountDisplay = document.getElementById('wrongCount');
-    const timerProgress = document.getElementById('timerProgress');
-    const calculatorClose = document.getElementById('calculatorClose');
-    const exitDialog = document.getElementById('exitDialog');
-    const confirmExit = document.getElementById('confirmExit');
-    const cancelExit = document.getElementById('cancelExit');
+document.addEventListener("DOMContentLoaded", function () {
+    const centerCloud = document.getElementById("centerCloud");
+    const calculator = document.getElementById("calculator");
+    const decorativeClouds = document.querySelectorAll(
+        ".profile-cloud, .profile-cloud-secondary, .decoration-cloud-1, .decoration-cloud-2, .decoration-cloud-3, .decoration-cloud-4",
+    );
+    const speechBubble = document.querySelector(".speech-bubble");
+    const sectionTitle = document.getElementById("sectionTitle");
+    const topicsGrid = document.getElementById("topicsGrid");
+    const difficultyGrid = document.getElementById("difficultyGrid");
+    const calculationArea = document.getElementById("calculationArea");
+    const feedback = document.getElementById("feedback");
+    const countdownDisplay = document.getElementById("countdown");
+    const correctCountDisplay = document.getElementById("correctCount");
+    const wrongCountDisplay = document.getElementById("wrongCount");
+    const timerProgress = document.getElementById("timerProgress");
+    const calculatorClose = document.getElementById("calculatorClose");
+    const exitDialog = document.getElementById("exitDialog");
+    const confirmExit = document.getElementById("confirmExit");
+    const cancelExit = document.getElementById("cancelExit");
 
     const questionGenerator = new QuestionGenerator();
 
@@ -25,13 +27,13 @@ document.addEventListener('DOMContentLoaded', function() {
         favorite_topic_id: null,
         auto_next_question: false,
         show_correct_answers: true,
-        sound_effects: true
+        sound_effects: true,
     };
 
     let selectedTopicId = null;
     let selectedLevelId = null;
-    let selectedTopicName = '';
-    let selectedDifficultyName = '';
+    let selectedTopicName = "";
+    let selectedDifficultyName = "";
     let selectedDifficultyMultiplier = 1;
     let correctCount = 0;
     let wrongCount = 0;
@@ -42,25 +44,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // İlk konuşma baloncuğu için zamanlayıcı
     let initialTimeout = setTimeout(() => {
-        speechBubble.classList.add('hide');
+        speechBubble.classList.add("hide");
     }, 5000);
 
     // Merkez buluta tıklama
-    centerCloud.addEventListener('click', function() {
-        this.classList.add('hide');
-        decorativeClouds.forEach(cloud => {
-            cloud.classList.add('hide');
+    centerCloud.addEventListener("click", function () {
+        this.classList.add("hide");
+        decorativeClouds.forEach((cloud) => {
+            cloud.classList.add("hide");
         });
 
         // Calculator'ı göster ve animasyonunu başlat
-        calculator.style.display = 'flex';
+        calculator.style.display = "flex";
         setTimeout(() => {
-            calculator.style.transform = 'translate(-50%, -50%) scale(1)';
-            calculator.style.opacity = '1';
+            calculator.style.transform = "translate(-50%, -50%) scale(1)";
+            calculator.style.opacity = "1";
 
             // Eğer favori konu ayarlanmışsa direkt o konuya geç
             if (settings.favorite_topic_id) {
-                const favoriteTopicElement = document.querySelector(`[data-topic-id="${settings.favorite_topic_id}"]`);
+                const favoriteTopicElement = document.querySelector(
+                    `[data-topic-id="${settings.favorite_topic_id}"]`,
+                );
                 if (favoriteTopicElement) {
                     setTimeout(() => {
                         favoriteTopicElement.click();
@@ -71,49 +75,53 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Konu seçimi için
-    const topicItems = document.querySelectorAll('.topic-item');
-    const difficultyItems = document.querySelectorAll('.difficulty-item');
+    const topicItems = document.querySelectorAll(".topic-item");
+    const difficultyItems = document.querySelectorAll(".difficulty-item");
     let currentTimeout;
 
-    topicItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
+    topicItems.forEach((item) => {
+        item.addEventListener("mouseenter", function () {
             const topicName = this.dataset.topicName;
             clearTimeout(currentTimeout);
             clearTimeout(initialTimeout);
             speechBubble.textContent = `${topicName} konusunu seçmek ister misin?`;
-            speechBubble.classList.remove('hide');
+            speechBubble.classList.remove("hide");
         });
 
-        item.addEventListener('mouseleave', function() {
+        item.addEventListener("mouseleave", function () {
             currentTimeout = setTimeout(() => {
-                speechBubble.classList.add('hide');
+                speechBubble.classList.add("hide");
             }, 300);
         });
 
-        item.addEventListener('click', function() {
+        item.addEventListener("click", function () {
             // Önceki seçili konuyu temizle
-            document.querySelectorAll('.topic-item').forEach(t => t.classList.remove('selected'));
+            document
+                .querySelectorAll(".topic-item")
+                .forEach((t) => t.classList.remove("selected"));
             // Yeni konuyu seç
-            this.classList.add('selected');
+            this.classList.add("selected");
 
             selectedTopicId = this.dataset.topicId;
             selectedTopicName = this.dataset.topicName;
 
             // Başlığı değiştir
-            sectionTitle.classList.add('fade-out');
-            topicsGrid.classList.add('fade-out');
+            sectionTitle.classList.add("fade-out");
+            topicsGrid.classList.add("fade-out");
 
             setTimeout(() => {
-                sectionTitle.textContent = 'Zorluk Seviyesi Seçiniz';
-                sectionTitle.classList.remove('fade-out');
-                topicsGrid.style.display = 'none';
-                topicsGrid.classList.add('hidden');
-                difficultyGrid.style.display = 'grid';
-                difficultyGrid.classList.remove('fade-out');
+                sectionTitle.textContent = "Zorluk Seviyesi Seçiniz";
+                sectionTitle.classList.remove("fade-out");
+                topicsGrid.style.display = "none";
+                topicsGrid.classList.add("hidden");
+                difficultyGrid.style.display = "grid";
+                difficultyGrid.classList.remove("fade-out");
 
                 // Eğer varsayılan zorluk ayarlanmışsa direkt o zorluğa geç
                 if (settings.default_difficulty_id) {
-                    const defaultDifficultyElement = document.querySelector(`[data-level-id="${settings.default_difficulty_id}"]`);
+                    const defaultDifficultyElement = document.querySelector(
+                        `[data-level-id="${settings.default_difficulty_id}"]`,
+                    );
                     if (defaultDifficultyElement) {
                         setTimeout(() => {
                             defaultDifficultyElement.click();
@@ -123,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 500);
 
             speechBubble.textContent = `${selectedTopicName} konusu için zorluk seviyesi seç!`;
-            speechBubble.classList.remove('hide');
+            speechBubble.classList.remove("hide");
         });
     });
 
@@ -131,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function startCountdown() {
         timeLeft = 60;
         isGameActive = true;
-        countdownDisplay.style.color = '#2563eb';
-        timerProgress.style.backgroundColor = '#3b82f6';
+        countdownDisplay.style.color = "#2563eb";
+        timerProgress.style.backgroundColor = "#3b82f6";
         updateTimerBar();
 
         countdownInterval = setInterval(() => {
@@ -141,8 +149,8 @@ document.addEventListener('DOMContentLoaded', function() {
             updateTimerBar();
 
             if (timeLeft <= 10) {
-                countdownDisplay.style.color = '#dc2626';
-                timerProgress.style.backgroundColor = '#dc2626';
+                countdownDisplay.style.color = "#dc2626";
+                timerProgress.style.backgroundColor = "#dc2626";
             }
 
             if (timeLeft <= 0) {
@@ -159,22 +167,22 @@ document.addEventListener('DOMContentLoaded', function() {
     function endGame() {
         clearInterval(countdownInterval);
         isGameActive = false;
-        document.getElementById('answer').disabled = true;
-        document.getElementById('checkAnswer').disabled = true;
+        document.getElementById("answer").disabled = true;
+        document.getElementById("checkAnswer").disabled = true;
         showResultScreen();
     }
 
     function resetGame() {
         correctCount = 0;
         wrongCount = 0;
-        correctCountDisplay.textContent = '0';
-        wrongCountDisplay.textContent = '0';
-        feedback.innerHTML = '';
-        countdownDisplay.style.color = '#2563eb';
-        timerProgress.style.backgroundColor = '#3b82f6';
-        timerProgress.style.width = '100%';
-        document.getElementById('answer').disabled = false;
-        document.getElementById('checkAnswer').disabled = false;
+        correctCountDisplay.textContent = "0";
+        wrongCountDisplay.textContent = "0";
+        feedback.innerHTML = "";
+        countdownDisplay.style.color = "#2563eb";
+        timerProgress.style.backgroundColor = "#3b82f6";
+        timerProgress.style.width = "100%";
+        document.getElementById("answer").disabled = false;
+        document.getElementById("checkAnswer").disabled = false;
     }
 
     function startGame() {
@@ -184,43 +192,46 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Zorluk seviyesi seçimi için
-    difficultyItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
+    difficultyItems.forEach((item) => {
+        item.addEventListener("mouseenter", function () {
             const levelName = this.dataset.levelName;
             clearTimeout(currentTimeout);
             speechBubble.textContent = `${levelName} seviyesini seçmek ister misin?`;
-            speechBubble.classList.remove('hide');
+            speechBubble.classList.remove("hide");
         });
 
-        item.addEventListener('mouseleave', function() {
+        item.addEventListener("mouseleave", function () {
             currentTimeout = setTimeout(() => {
-                speechBubble.classList.add('hide');
+                speechBubble.classList.add("hide");
             }, 300);
         });
 
-        item.addEventListener('click', function() {
+        item.addEventListener("click", function () {
             selectedLevelId = this.dataset.levelId;
             selectedDifficultyName = this.dataset.levelName;
             // xp_multiplier'ı float olarak al ve kontrol et
-            selectedDifficultyMultiplier = parseFloat(this.dataset.xpMultiplier) || 1;
+            selectedDifficultyMultiplier =
+                parseFloat(this.dataset.xpMultiplier) || 1;
 
-            difficultyGrid.classList.add('fade-out');
+            difficultyGrid.classList.add("fade-out");
 
             setTimeout(() => {
-                difficultyGrid.style.display = 'none';
-                document.querySelector('.calculator-top').style.display = 'none';
-                calculationArea.style.display = 'block';
+                difficultyGrid.style.display = "none";
+                document.querySelector(".calculator-top").style.display =
+                    "none";
+                calculationArea.style.display = "block";
                 startGame();
             }, 500);
 
             speechBubble.textContent = `Harika! ${selectedDifficultyName} seviyesinde başlıyoruz!`;
-            speechBubble.classList.remove('hide');
+            speechBubble.classList.remove("hide");
         });
     });
 
     function calculateFinalScore() {
         const totalQuestions = correctCount + wrongCount;
-        const accuracyRate = totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+        const accuracyRate =
+            totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
 
         // Temel puan hesaplama
         let baseScore = correctCount * 10;
@@ -236,28 +247,34 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Nihai puanı hesapla
-        const finalScore = Math.floor(baseScore * bonusMultiplier * selectedDifficultyMultiplier);
+        const finalScore = Math.floor(
+            baseScore * bonusMultiplier * selectedDifficultyMultiplier,
+        );
 
         return {
             accuracyRate: accuracyRate,
             bonusMultiplier: bonusMultiplier,
             xpMultiplier: selectedDifficultyMultiplier,
             finalScore: finalScore,
-            baseScore: baseScore
+            baseScore: baseScore,
         };
     }
 
     function getMotivationalMessage(accuracyRate) {
-        if (accuracyRate > 95) return "Neredeyse Kusursuz! Muhteşem bir performans!";
+        if (accuracyRate > 95)
+            return "Neredeyse Kusursuz! Muhteşem bir performans!";
         if (accuracyRate > 80) return "Harika Odaklanma! Çok iyi iş çıkardın!";
         if (accuracyRate > 65) return "İyi iş! Gelişmeye devam et!";
-        if (accuracyRate > 50) return "Güzel çaba! Biraz daha pratik yapmalısın.";
+        if (accuracyRate > 50)
+            return "Güzel çaba! Biraz daha pratik yapmalısın.";
         return "Denemeye devam et! Her pratik seni geliştirir.";
     }
 
     function showResultScreen() {
         const scoreData = calculateFinalScore();
-        const motivationalMessage = getMotivationalMessage(scoreData.accuracyRate);
+        const motivationalMessage = getMotivationalMessage(
+            scoreData.accuracyRate,
+        );
 
         const resultHTML = `
             <div class="result-bubble">
@@ -306,18 +323,20 @@ document.addEventListener('DOMContentLoaded', function() {
         saveQuizSession(scoreData);
 
         // Mevcut hesap makinesini kaldır ve sonuç ekranını göster
-        calculationArea.style.display = 'none';
-        document.querySelector('.calculator-bottom').insertAdjacentHTML('beforeend', resultHTML);
+        calculationArea.style.display = "none";
+        document
+            .querySelector(".calculator-bottom")
+            .insertAdjacentHTML("beforeend", resultHTML);
 
         // Sonuç ekranını göster
-        const resultBubble = document.querySelector('.result-bubble');
-        resultBubble.style.display = 'block';
+        const resultBubble = document.querySelector(".result-bubble");
+        resultBubble.style.display = "block";
     }
 
     // Yeni restart fonksiyonu
-    window.restartQuiz = function() {
+    window.restartQuiz = function () {
         // Sonuç ekranını kaldır
-        const resultBubble = document.querySelector('.result-bubble');
+        const resultBubble = document.querySelector(".result-bubble");
         if (resultBubble) {
             resultBubble.remove();
         }
@@ -332,25 +351,25 @@ document.addEventListener('DOMContentLoaded', function() {
             // Sadece oyun verilerini sıfırla
             correctCount = 0;
             wrongCount = 0;
-            correctCountDisplay.textContent = '0';
-            wrongCountDisplay.textContent = '0';
+            correctCountDisplay.textContent = "0";
+            wrongCountDisplay.textContent = "0";
             timeLeft = 60;
             isGameActive = false;
 
             // Input ve butonları sıfırla
-            document.getElementById('answer').value = '';
-            document.getElementById('answer').disabled = false;
-            document.getElementById('checkAnswer').disabled = false;
+            document.getElementById("answer").value = "";
+            document.getElementById("answer").disabled = false;
+            document.getElementById("checkAnswer").disabled = false;
 
             // Hesaplama alanını göster ve oyunu başlat
-            calculationArea.style.display = 'block';
-            document.querySelector('.calculator-top').style.display = 'none';
+            calculationArea.style.display = "block";
+            document.querySelector(".calculator-top").style.display = "none";
 
             // Baykuş mesajını güncelle
             speechBubble.textContent = `${selectedTopicName} - ${selectedDifficultyName} ile tekrar başlıyoruz!`;
-            speechBubble.classList.remove('hide');
+            speechBubble.classList.remove("hide");
             setTimeout(() => {
-                speechBubble.classList.add('hide');
+                speechBubble.classList.add("hide");
             }, 2000);
 
             // Oyunu başlat
@@ -367,68 +386,72 @@ document.addEventListener('DOMContentLoaded', function() {
         isGameActive = false;
 
         // Input ve butonları sıfırla
-        document.getElementById('answer').value = '';
-        document.getElementById('answer').disabled = false;
-        document.getElementById('checkAnswer').disabled = false;
+        document.getElementById("answer").value = "";
+        document.getElementById("answer").disabled = false;
+        document.getElementById("checkAnswer").disabled = false;
 
         // Görünümü sıfırla
-        calculationArea.style.display = 'none';
-        difficultyGrid.style.display = 'none';
-        topicsGrid.style.display = 'grid';
-        topicsGrid.classList.remove('fade-out', 'hidden');
-        document.querySelector('.calculator-top').style.display = 'block';
+        calculationArea.style.display = "none";
+        difficultyGrid.style.display = "none";
+        topicsGrid.style.display = "grid";
+        topicsGrid.classList.remove("fade-out", "hidden");
+        document.querySelector(".calculator-top").style.display = "block";
 
         // Seçili konuyu temizle
-        document.querySelectorAll('.topic-item').forEach(t => t.classList.remove('selected'));
+        document
+            .querySelectorAll(".topic-item")
+            .forEach((t) => t.classList.remove("selected"));
 
         // Section title'ı sıfırla
-        sectionTitle.textContent = 'Konu Seçiniz';
-        sectionTitle.classList.remove('fade-out');
+        sectionTitle.textContent = "Konu Seçiniz";
+        sectionTitle.classList.remove("fade-out");
 
         // Baykuş mesajını güncelle
-        speechBubble.textContent = 'Yeni bir konu seçmeye hazır mısın?';
-        speechBubble.classList.remove('hide');
+        speechBubble.textContent = "Yeni bir konu seçmeye hazır mısın?";
+        speechBubble.classList.remove("hide");
         setTimeout(() => {
-            speechBubble.classList.add('hide');
+            speechBubble.classList.add("hide");
         }, 3000);
     };
 
     async function saveQuizSession(scoreData) {
         try {
-
-            const response = await fetch('/quiz-sessions', {
-                method: 'POST',
+            const response = await fetch("/quiz-sessions", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]',
+                    ).content,
                 },
-                credentials: 'include',
+                credentials: "include",
                 body: JSON.stringify({
                     topic_id: selectedTopicId,
                     difficulty_level_id: selectedLevelId,
                     score: scoreData.baseScore,
                     xp_earned: scoreData.finalScore,
                     total_questions: correctCount + wrongCount,
-                    correct_answers: correctCount
-                })
+                    correct_answers: correctCount,
+                }),
             });
 
             const status = response.status;
 
             if (!response.ok) {
                 if (response.status === 401) {
-                    window.location.href = '/login';
+                    window.location.href = "/login";
                     return;
                 }
-                throw new Error('Quiz session kaydedilemedi');
+                throw new Error("Quiz session kaydedilemedi");
             }
 
-
             const responseData = await response.json();
-            if (responseData.notifications && responseData.notifications.length > 0) {
-
+            if (
+                responseData.notifications &&
+                responseData.notifications.length > 0
+            ) {
                 // Bildirimleri sıraya koy
                 const notifications = [...responseData.notifications];
 
@@ -440,20 +463,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const notification = notifications.shift();
 
-                    if (notification.type === 'App\\Notifications\\LevelUpEarned') {
+                    if (
+                        notification.type ===
+                        "App\\Notifications\\LevelUpEarned"
+                    ) {
                         showLevelUpNotification(notification);
-                    }
-                    else if (notification.type === 'App\\Notifications\\BadgeEarned') {
+                    } else if (
+                        notification.type === "App\\Notifications\\BadgeEarned"
+                    ) {
                         showBadgeNotification(notification);
                     }
 
                     // Bir sonraki bildirimi göstermek için event dinleyicisi ekle
-                    const modal = document.querySelector('.achievement-modal');
+                    const modal = document.querySelector(".achievement-modal");
                     if (modal) {
-                        const continueBtn = modal.querySelector('.continue-btn');
+                        const continueBtn =
+                            modal.querySelector(".continue-btn");
                         if (continueBtn) {
                             const originalClick = continueBtn.onclick;
-                            continueBtn.onclick = function(e) {
+                            continueBtn.onclick = function (e) {
                                 if (originalClick) originalClick.call(this, e);
                                 setTimeout(showNextNotification, 500);
                             };
@@ -463,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
             }
         } catch (error) {
-            console.error('Quiz session kaydetme hatası:');
+            console.error("Quiz session kaydetme hatası:");
             throw error;
         }
     }
@@ -471,92 +499,130 @@ document.addEventListener('DOMContentLoaded', function() {
     // Soru oluşturma fonksiyonu
     function generateQuestion(topicId, levelId) {
         let difficulty;
-        switch(levelId) {
-            case '1': difficulty = 'Kolay'; break;
-            case '2': difficulty = 'Orta'; break;
-            case '3': difficulty = 'Zor'; break;
-            case '4': difficulty = 'Deha'; break;
-            default: difficulty = 'Kolay';
+        switch (levelId) {
+            case "1":
+                difficulty = "Kolay";
+                break;
+            case "2":
+                difficulty = "Orta";
+                break;
+            case "3":
+                difficulty = "Zor";
+                break;
+            case "4":
+                difficulty = "Deha";
+                break;
+            default:
+                difficulty = "Kolay";
         }
 
-        const question = questionGenerator.generateQuestion(topicId, difficulty);
+        const question = questionGenerator.generateQuestion(
+            topicId,
+            difficulty,
+        );
 
-        document.getElementById('number1').textContent = question.num1;
-        document.getElementById('operator').textContent = question.operator;
-        document.getElementById('number2').textContent = question.num2;
-        document.getElementById('answer').value = '';
+        document.getElementById("number1").textContent = question.num1;
+        document.getElementById("operator").textContent = question.operator;
+        document.getElementById("number2").textContent = question.num2;
+        document.getElementById("answer").value = "";
     }
 
     // Cevap kontrolü için event listener
-    document.getElementById('checkAnswer').addEventListener('click', checkAnswer);
-    document.getElementById('answer').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && isGameActive) {
-            checkAnswer();
-        }
-    });
+    document
+        .getElementById("checkAnswer")
+        .addEventListener("click", checkAnswer);
+    document
+        .getElementById("answer")
+        .addEventListener("keypress", function (e) {
+            if (e.key === "Enter" && isGameActive) {
+                checkAnswer();
+            }
+        });
 
     function showCorrectEffect() {
         // Body ve container için flash efekti
-        document.body.classList.add('correct-flash');
-        document.querySelector('.main-container').classList.add('correct-flash');
-        document.querySelector('.calculation-area').classList.add('correct-flash');
+        document.body.classList.add("correct-flash");
+        document
+            .querySelector(".main-container")
+            .classList.add("correct-flash");
+        document
+            .querySelector(".calculation-area")
+            .classList.add("correct-flash");
 
         // Doğru sayacı için parlama efekti
-        const correctCounter = document.querySelector('.correct-answers');
-        correctCounter.classList.add('glow');
+        const correctCounter = document.querySelector(".correct-answers");
+        correctCounter.classList.add("glow");
 
         // Efektleri temizle
         setTimeout(() => {
-            document.body.classList.remove('correct-flash');
-            document.querySelector('.main-container').classList.remove('correct-flash');
-            document.querySelector('.calculation-area').classList.remove('correct-flash');
-            correctCounter.classList.remove('glow');
+            document.body.classList.remove("correct-flash");
+            document
+                .querySelector(".main-container")
+                .classList.remove("correct-flash");
+            document
+                .querySelector(".calculation-area")
+                .classList.remove("correct-flash");
+            correctCounter.classList.remove("glow");
         }, 500);
     }
 
     function showWrongEffect() {
         // Body ve container için flash efekti
-        document.body.classList.add('wrong-flash');
-        document.querySelector('.main-container').classList.add('wrong-flash');
-        document.querySelector('.calculation-area').classList.add('wrong-flash');
+        document.body.classList.add("wrong-flash");
+        document.querySelector(".main-container").classList.add("wrong-flash");
+        document
+            .querySelector(".calculation-area")
+            .classList.add("wrong-flash");
 
         // Yanlış sayacı için parlama efekti
-        const wrongCounter = document.querySelector('.wrong-answers');
-        wrongCounter.classList.add('glow');
+        const wrongCounter = document.querySelector(".wrong-answers");
+        wrongCounter.classList.add("glow");
 
         // Efektleri temizle
         setTimeout(() => {
-            document.body.classList.remove('wrong-flash');
-            document.querySelector('.main-container').classList.remove('wrong-flash');
-            document.querySelector('.calculation-area').classList.remove('wrong-flash');
-            wrongCounter.classList.remove('glow');
+            document.body.classList.remove("wrong-flash");
+            document
+                .querySelector(".main-container")
+                .classList.remove("wrong-flash");
+            document
+                .querySelector(".calculation-area")
+                .classList.remove("wrong-flash");
+            wrongCounter.classList.remove("glow");
         }, 500);
     }
 
     function checkAnswer() {
         if (!isGameActive) return;
 
-        const num1Text = document.getElementById('number1').textContent;
-        const num2Text = document.getElementById('number2').textContent;
-        const operator = document.getElementById('operator').textContent;
-        const answerInput = document.getElementById('answer');
-        const checkButton = document.getElementById('checkAnswer'); // Butonu seçiyoruz
+        const num1Text = document.getElementById("number1").textContent;
+        const num2Text = document.getElementById("number2").textContent;
+        const operator = document.getElementById("operator").textContent;
+        const answerInput = document.getElementById("answer");
+        const checkButton = document.getElementById("checkAnswer"); // Butonu seçiyoruz
 
-        const userAnswer = parseFloat(answerInput.value.replace(',', '.'));
+        const userAnswer = parseFloat(answerInput.value.replace(",", "."));
 
         if (isNaN(userAnswer)) {
             return;
         }
 
-        const num1 = parseFloat(num1Text.replace(',', '.'));
-        const num2 = parseFloat(num2Text.replace(',', '.'));
+        const num1 = parseFloat(num1Text.replace(",", "."));
+        const num2 = parseFloat(num2Text.replace(",", "."));
 
         let correctAnswer;
-        switch(operator) {
-            case '+': correctAnswer = num1 + num2; break;
-            case '-': correctAnswer = num1 - num2; break;
-            case '×': correctAnswer = num1 * num2; break;
-            case '÷': correctAnswer = num1 / num2; break;
+        switch (operator) {
+            case "+":
+                correctAnswer = num1 + num2;
+                break;
+            case "-":
+                correctAnswer = num1 - num2;
+                break;
+            case "×":
+                correctAnswer = num1 * num2;
+                break;
+            case "÷":
+                correctAnswer = num1 / num2;
+                break;
         }
 
         const isCorrect = Math.abs(userAnswer - correctAnswer) < 0.001;
@@ -565,21 +631,20 @@ document.addEventListener('DOMContentLoaded', function() {
             // DOĞRU CEVAP BLOĞU
             correctCount++;
             correctCountDisplay.textContent = correctCount;
-            speechBubble.textContent = 'Harika! Devam et!';
+            speechBubble.textContent = "Harika! Devam et!";
             showCorrectEffect();
 
             if (settings.auto_next_question) {
                 setTimeout(() => {
-                    answerInput.value = '';
+                    answerInput.value = "";
                     generateQuestion(selectedTopicId, selectedLevelId);
                     answerInput.focus();
                 }, 1000);
             } else {
-                answerInput.value = '';
+                answerInput.value = "";
                 generateQuestion(selectedTopicId, selectedLevelId);
                 answerInput.focus();
             }
-
         } else {
             // YANLIŞ CEVAP BLOĞU
             wrongCount++;
@@ -591,55 +656,45 @@ document.addEventListener('DOMContentLoaded', function() {
             if (settings.show_correct_answers) {
                 speechBubble.textContent = `Yanlış! Doğru cevap: ${formattedCorrectAnswer}`;
             } else {
-                speechBubble.textContent = 'Yanlış cevap, devam et!';
+                speechBubble.textContent = "Yanlış cevap, devam et!";
             }
 
-            // --- İSTENEN DÜZELTME ---
-            // Hem input hem de buton kilitleniyor.
-            answerInput.disabled = true;
-            checkButton.disabled = true;
-
-            setTimeout(() => {
-                answerInput.value = '';
-                generateQuestion(selectedTopicId, selectedLevelId);
-
-                // Kilitler açılıyor.
-                answerInput.disabled = false;
-                checkButton.disabled = false;
-                answerInput.focus();
-            }, 2000);
+            // Yeni soruya beklemeden geç
+            answerInput.value = "";
+            generateQuestion(selectedTopicId, selectedLevelId);
+            answerInput.focus();
         }
 
-        speechBubble.classList.remove('hide');
+        speechBubble.classList.remove("hide");
         setTimeout(() => {
-            speechBubble.classList.add('hide');
+            speechBubble.classList.add("hide");
         }, 1800);
     }
 
     // Enter tuşu ile cevap gönderme
-    document.getElementById('answer').addEventListener('keyup', function(e) {
-        if (e.key === 'Enter' && isGameActive) {
+    document.getElementById("answer").addEventListener("keyup", function (e) {
+        if (e.key === "Enter" && isGameActive) {
             checkAnswer();
         }
     });
 
     // Close butonu için event listener
-    calculatorClose.addEventListener('click', function() {
+    calculatorClose.addEventListener("click", function () {
         if (isGameActive) {
-            exitDialog.style.display = 'flex';
+            exitDialog.style.display = "flex";
         } else {
             closeCalculator();
         }
     });
 
     // Dialog butonları için event listeners
-    confirmExit.addEventListener('click', function() {
-        exitDialog.style.display = 'none';
+    confirmExit.addEventListener("click", function () {
+        exitDialog.style.display = "none";
         closeCalculator();
     });
 
-    cancelExit.addEventListener('click', function() {
-        exitDialog.style.display = 'none';
+    cancelExit.addEventListener("click", function () {
+        exitDialog.style.display = "none";
     });
 
     function closeCalculator() {
@@ -649,31 +704,31 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Calculator'ı gizle ve transform'u sıfırla
-        calculator.style.transform = 'translate(-50%, -50%) scale(0)';
-        calculator.style.opacity = '0';
+        calculator.style.transform = "translate(-50%, -50%) scale(0)";
+        calculator.style.opacity = "0";
 
         // İlk setTimeout: Calculator'ın kaybolmasını bekle
         setTimeout(() => {
-            calculator.style.display = 'none';
+            calculator.style.display = "none";
 
             // İkinci setTimeout: Merkez bulutu göster
             setTimeout(() => {
                 // Merkez bulutu ve dekoratif bulutları göster
-                centerCloud.classList.remove('hide');
-                decorativeClouds.forEach(cloud => {
-                    cloud.classList.remove('hide');
+                centerCloud.classList.remove("hide");
+                decorativeClouds.forEach((cloud) => {
+                    cloud.classList.remove("hide");
                 });
             }, 50);
 
             // İçerikleri sıfırla
-            calculationArea.style.display = 'none';
-            difficultyGrid.style.display = 'none';
-            topicsGrid.style.display = 'grid';
-            topicsGrid.classList.remove('fade-out', 'hidden');
-            document.querySelector('.calculator-top').style.display = 'block';
+            calculationArea.style.display = "none";
+            difficultyGrid.style.display = "none";
+            topicsGrid.style.display = "grid";
+            topicsGrid.classList.remove("fade-out", "hidden");
+            document.querySelector(".calculator-top").style.display = "block";
 
             // Sonuç ekranını temizle
-            const resultBubble = document.querySelector('.result-bubble');
+            const resultBubble = document.querySelector(".result-bubble");
             if (resultBubble) {
                 resultBubble.remove();
             }
@@ -687,16 +742,18 @@ document.addEventListener('DOMContentLoaded', function() {
             isGameActive = false;
 
             // Input ve butonları sıfırla
-            document.getElementById('answer').value = '';
-            document.getElementById('answer').disabled = false;
-            document.getElementById('checkAnswer').disabled = false;
+            document.getElementById("answer").value = "";
+            document.getElementById("answer").disabled = false;
+            document.getElementById("checkAnswer").disabled = false;
 
             // Seçili konuyu temizle
-            document.querySelectorAll('.topic-item').forEach(t => t.classList.remove('selected'));
+            document
+                .querySelectorAll(".topic-item")
+                .forEach((t) => t.classList.remove("selected"));
 
             // Section title'ı sıfırla
-            sectionTitle.textContent = 'Konu Seçiniz';
-            sectionTitle.classList.remove('fade-out');
+            sectionTitle.textContent = "Konu Seçiniz";
+            sectionTitle.classList.remove("fade-out");
         }, 300);
     }
 });

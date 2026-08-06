@@ -140,7 +140,7 @@
     // Kullanıcı tercihleri
     window.userSettings = @json($userSettings);
 </script>
-<script src="{{ asset('assets/js/main.js') }}"></script>
+<script src="{{ asset('assets/js/main.js') }}?v={{ filemtime(public_path('assets/js/main.js')) }}"></script>
 <script src="{{ asset('assets/js/questionGenerator.js') }}"></script>
 <script src="{{ asset('assets/js/achievements.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>

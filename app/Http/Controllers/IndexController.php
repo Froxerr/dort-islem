@@ -21,11 +21,16 @@ class IndexController extends Controller
                 return $topic;
             });
 
-        $difficultyLevels = DifficultyLevel::select('id', 'name')
+        $difficultyLevels = DifficultyLevel::select(
+                'id',
+                'name',
+                'xp_multiplier'
+            )
             ->get()
             ->map(function ($level) {
-                // Seviye adına göre resim yolunu ayarla
-                $level->image_path = 'assets/img/levels/' . strtolower($level->name) . '.png';
+                $level->image_path =
+                    'assets/img/levels/' . strtolower($level->name) . '.png';
+
                 return $level;
             });
 

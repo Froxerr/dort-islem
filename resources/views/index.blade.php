@@ -35,6 +35,6 @@
 
 @section('js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="{{ asset('assets/js/questionGenerator.js') }}"></script>
-<script src="{{ asset('assets/js/anasayfa.js') }}"></script>
+<script src="{{ asset('assets/js/questionGenerator.js') }}?v={{ filemtime(public_path('assets/js/questionGenerator.js')) }}"></script>
+<script src="{{ asset('assets/js/anasayfa.js') }}?v={{ filemtime(public_path('assets/js/anasayfa.js')) }}"></script>
 @endsection
